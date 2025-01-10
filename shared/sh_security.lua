@@ -137,8 +137,8 @@ if IsDuplicityVersion() then
 		else
 			_RegisterNetEvent(encrypted_event_name, ...)
 			_RegisterNetEvent(encrypted_event_name,  function()
-				if not (GetCurrentResourceName() == "monitor" or GetCurrentResourceName() == "SecureServe") then
-					exports['SecureServe']:CheckTime(event_name, os.time(), source)
+				if not (GetCurrentResourceName() == "monitor" or GetCurrentResourceName() == "core") then
+					exports['core']:CheckTime(event_name, os.time(), source)
 				end
 			end)
 
@@ -147,14 +147,14 @@ if IsDuplicityVersion() then
 			_RegisterNetEvent(event_name, function(...)
 				if not event_name or type(event_name) ~= "string" then
 					local TE = TriggerEvent
-					local rencrypted_event_namea = encryptEventName("SecureServe:Server:Methods:PunishPlayer", encryption_key)
-					TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. event_name, webhook, 2147483647)
+					local rencrypted_event_namea = encryptEventName("core:admin:PunishPlayer", encryption_key)
+					TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. event_name, 'events_anticheat', 'Ban')
 				end
-				if not exports['SecureServe']:IsEventWhitelisted(decryptEventName(event_name, encryption_key)) then
+				if not exports['core']:IsEventWhitelisted(decryptEventName(event_name, encryption_key)) then
 					if source and GetPlayerPing(source) > 0 then
 						local TE = TriggerEvent
-						local rencrypted_event_namea = encryptEventName("SecureServe:Server:Methods:PunishPlayer", encryption_key)
-						TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. event_name, webhook, 2147483647)
+						local rencrypted_event_namea = encryptEventName("core:admin:PunishPlayer", encryption_key)
+						TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. event_name, 'events_anticheat', 'Ban')
 					end
 				end
 			end)
@@ -187,14 +187,14 @@ if IsDuplicityVersion() then
 				_RegisterNetEvent(decrypted_name, function(...)
 					if not event_name or type(event_name) ~= "string" then
 						local TE = TriggerEvent
-						local rencrypted_event_namea = encryptEventName("SecureServe:Server:Methods:PunishPlayer", encryption_key)
-						TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. decrypted_name, webhook, 2147483647)
+						local rencrypted_event_namea = encryptEventName("core:admin:PunishPlayer", encryption_key)
+						TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. decrypted_name, 'events_anticheat', 'Ban')
 					end
-					if not exports['SecureServe']:IsEventWhitelisted(decrypted_name) then
+					if not exports['core']:IsEventWhitelisted(decrypted_name) then
 						if source and GetPlayerPing(source) > 0 then
 							local TE = TriggerEvent
-							local rencrypted_event_namea = encryptEventName("SecureServe:Server:Methods:PunishPlayer", encryption_key)
-							TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. decrypted_name, webhook, 2147483647)
+							local rencrypted_event_namea = encryptEventName("core:admin:PunishPlayer", encryption_key)
+							TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. decrypted_name, 'events_anticheat', 'Ban')
 						end
 					end
 				end)
@@ -210,11 +210,11 @@ else
 	local whitelistedEvents = {}
 
 	Citizen.CreateThread(_ANTICHEAT.MODULE.LPH_JIT_MAX(function()
-		if GetCurrentResourceName() == "monitor" or GetCurrentResourceName() == "SecureServe" then
+		if GetCurrentResourceName() == "monitor" or GetCurrentResourceName() == "core" then
 			whitelistedEvents = {}
 		else
 			local success, events = pcall(function()
-				return exports['SecureServe']:GetEventWhitelist()
+				return exports['core']:GetEventWhitelist()
 			end)
 	
 			if success and events then
@@ -239,7 +239,7 @@ else
 	local _TriggerServerEvent = TriggerServerEvent
 	TriggerServerEvent = _ANTICHEAT.MODULE.LPH_JIT_MAX(function(event_name, ...)
 		local value = false
-		if GetCurrentResourceName() == "monitor" or GetCurrentResourceName() == "SecureServe" then
+		if GetCurrentResourceName() == "monitor" or GetCurrentResourceName() == "core" then
 			value = false
 		elseif whitelistedEvents[event_name] or fxEvents[event_name] then
 			value = true
@@ -249,9 +249,9 @@ else
 		if not value then
 			local encrypted_event_name = encryptEventName(event_name, encryption_key)
 			_TriggerServerEvent(encrypted_event_name, ...)
-			if not  (GetCurrentResourceName() == "monitor" or GetCurrentResourceName() == "SecureServe") then
+			if not  (GetCurrentResourceName() == "monitor" or GetCurrentResourceName() == "core") then
 				if allowed then
-					exports['SecureServe']:TriggeredEvent(event_name, GlobalState.SecureServe)
+					exports['core']:TriggeredEvent(event_name, _ANTICHEAT.EventsTime)
 				end
 			end
 		else
@@ -281,7 +281,7 @@ else
 	AddExplosion = function(x, y, z, explosionType, damageScale, isAudible, isInvisible, cameraShake)
 		local resourceName = GetCurrentResourceName()
 		if isValidResource(resourceName) then
-			TriggerServerEvent("SecureServe:Explosions:Whitelist", {
+			TriggerServerEvent("core:Explosions:Whitelist", {
 				source = GetPlayerServerId(PlayerId()),
 				resource = resourceName
 			})
@@ -293,7 +293,7 @@ else
 	AddExplosionWithUserVfx = function(x, y, z, explosionType, damageScale, isAudible, isInvisible, cameraShake)
 		local resourceName = GetCurrentResourceName()
 		if isValidResource(resourceName) then
-			TriggerServerEvent("SecureServe:Explosions:Whitelist", {
+			TriggerServerEvent("core:Explosions:Whitelist", {
 				source = GetPlayerServerId(PlayerId()),
 				resource = resourceName
 			})
@@ -305,7 +305,7 @@ else
 	ExplodeVehicle = function(vehicle, isAudible, isInvisible)
 		local resourceName = GetCurrentResourceName()
 		if isValidResource(resourceName) then
-			TriggerServerEvent("SecureServe:Explosions:Whitelist", {
+			TriggerServerEvent("core:Explosions:Whitelist", {
 				source = GetPlayerServerId(PlayerId()),
 				resource = resourceName
 			})
@@ -317,7 +317,7 @@ else
 	NetworkExplodeVehicle = function(vehicle, isAudible, isInvisible, damageScale)
 		local resourceName = GetCurrentResourceName()
 		if isValidResource(resourceName) then
-			TriggerServerEvent("SecureServe:Explosions:Whitelist", {
+			TriggerServerEvent("core:Explosions:Whitelist", {
 				source = GetPlayerServerId(PlayerId()),
 				resource = resourceName
 			})
@@ -329,7 +329,7 @@ else
 	ShootSingleBulletBetweenCoords = function(x1, y1, z1, x2, y2, z2, damage, isAudible, weaponHash, owner, isExplosiveAmmo, ignoreEntity, speed)
 		local resourceName = GetCurrentResourceName()
 		if isValidResource(resourceName) then
-			TriggerServerEvent("SecureServe:Explosions:Whitelist", {
+			TriggerServerEvent("core:Explosions:Whitelist", {
 				source = GetPlayerServerId(PlayerId()),
 				resource = resourceName
 			})

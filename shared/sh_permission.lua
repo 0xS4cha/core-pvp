@@ -7,7 +7,7 @@ _PERMISSION = {
     ['KICK'] = 2,
     ['manageWeather'] = 5,
     ['manageDoors'] = 5,
-    ['anticheat'] = 4
+    ['anticheat'] = 100
 }
 
 

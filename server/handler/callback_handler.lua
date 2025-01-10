@@ -31,8 +31,7 @@ TriggerClientCallback = function(src, eventName, ...)
 end
 
 local stored = {}
-RegisterNetEvent('__pmc_callback:server')
-AddEventHandler('__pmc_callback:server', function(eventName, ticket, ...)
+RegisterNetEvent('__pmc_callback:server', function(eventName, ticket, ...)
 
     stored[ticket] = true
 	local s = source

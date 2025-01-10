@@ -538,8 +538,7 @@ AddEventHandler('skinchanger:modelLoaded', function()
 	-- cleanGradenderPlayer()
 end)
 
-RegisterNetEvent('skinchanger:loadSkin')
-AddEventHandler('skinchanger:loadSkin', function(skin, cb)
+RegisterNetEvent('skinchanger:loadSkin', function(skin, cb)
 	if skin['sex'] ~= LastSex then
 		LoadSkin = skin
 
@@ -561,8 +560,7 @@ AddEventHandler('skinchanger:loadSkin', function(skin, cb)
 	LastSex = skin['sex']
 end)
 
-RegisterNetEvent('skinchanger:loadClothes')
-AddEventHandler('skinchanger:loadClothes', function(playerSkin, clothesSkin)
+RegisterNetEvent('skinchanger:loadClothes', function(playerSkin, clothesSkin)
 	if playerSkin['sex'] ~= LastSex then
 		LoadClothes = {
 			playerSkin = playerSkin,
