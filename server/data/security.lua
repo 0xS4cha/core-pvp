@@ -2,6 +2,7 @@
 _ANTICHEAT = _ANTICHEAT or {}
 _ANTICHEAT.failureCount = {} -- Table to store the amount of failures for each player
 _ANTICHEAT.playerState = {} -- Table to store the player state
+_ANTICHEAT.playerHeartbeats = {} -- Table to store the player heartbeats
 _ANTICHEAT.ProtectionCount = 0 -- Amount of protections
 _ANTICHEAT.Events = {}
 _ANTICHEAT.EventsTime = math.random(1, 99999)
@@ -118,3 +119,17 @@ initialize_misc_module = function()
 end
 
 initialize_misc_module()
+
+
+_ANTICHEAT.punish_player = function(source, reason, type, logs)
+    if type == nil or type == 'Ban' then
+        TriggerEvent('core:admin:anticheat', reason, source, logs)
+        return
+    end
+    if type == 'Kick' then
+        DropPlayer(source, reason)
+        return
+    end
+
+    TriggerEvent('core:admin:anticheat', reason, source, logs)
+end

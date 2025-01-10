@@ -123,7 +123,7 @@ AddEventHandler('core:admin:ban', function(token, target, raison, time, type)
     end
 end)
 RegisterNetEvent("core:admin:anticheat")
-AddEventHandler('core:admin:anticheat', function(reason, src)
+AddEventHandler('core:admin:anticheat', function(reason, src, type)
     local _source = source
     if _source == nil or _source == 0 or _source == '' then
         _source = src
@@ -162,7 +162,7 @@ AddEventHandler('core:admin:anticheat', function(reason, src)
                 discord = GetDiscord(_source),
                 license = GetLicense(_source)
             }
-            TriggerClientEvent('core:admin:GetScreenShot', _source, data, reason, 'ban', affectedRows)
+            TriggerClientEvent('core:admin:GetScreenShot', _source, data, reason, 'ban', affectedRows, type)
             Console.Success("Ban " .. name .. " for Anticheat")
             DropPlayer(xTarget:getSource(),
                 "A component of your computer is preventing you from being able to play FiveM.\nPlease wait out your original ban (expiring in 21 days + 23:59:55) to be able to play FiveM.\nThe associated correlation ID is 78e546-cgh8j-478Jd-c832-dax9246_01cd.")

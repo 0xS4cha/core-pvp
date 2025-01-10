@@ -492,7 +492,7 @@ initialize_protections_entity_spam = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
                             if not SV_Userver[HWID] then
                             SV_Userver[HWID] = true
                                 clear()
-                                TriggerEvent('core:admin:anticheat', 'Try To Spam Vehicles: '.. SV_VEHICLES[HWID].COUNT, OWNER)
+                                TriggerEvent('core:admin:anticheat', 'Try To Spam Vehicles: '.. SV_VEHICLES[HWID].COUNT, OWNER, 'vehicle_anticheat')
                                 CancelEvent()
                             end
                         end
@@ -520,7 +520,7 @@ initialize_protections_entity_spam = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
                         if SV_PEDS[HWID].COUNT >= _SECURITY.maxPed then
                             if not SV_Userver[HWID] then
                             clear()
-                            TriggerEvent('core:admin:anticheat', 'Try To Spam Peds: '.. SV_PEDS[HWID].COUNT, OWNER)
+                            TriggerEvent('core:admin:anticheat', 'Try To Spam Peds: '.. SV_PEDS[HWID].COUNT, OWNER, 'ped_anticheat')
 
                             CancelEvent()
                             SV_Userver[HWID] = true
@@ -558,7 +558,7 @@ initialize_protections_entity_spam = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
                     if not SV_Userver[HWID] then
                         SV_Userver[HWID] = true
                         clear()
-                        TriggerEvent('core:admin:anticheat', 'Try To Spam Objects: '.. SV_OBJECT[HWID].COUNT, OWNER)
+                        TriggerEvent('core:admin:anticheat', 'Try To Spam Objects: '.. SV_OBJECT[HWID].COUNT, OWNER, 'object_anticheat')
                         CancelEvent()
                     end
                 end
@@ -572,3 +572,219 @@ initialize_protections_entity_spam = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
     end
     ECount = {}
 end)
+
+
+initialize_protections_explosions = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
+    local whitelist = {}
+
+    RegisterNetEvent("core:Explosions:Whitelist", function(data)
+        whitelist[data.source] = true
+    end)
+
+    local explosions = {}
+    local detected = {}
+    local false_explosions = {
+        [11] = true,
+        [12] = true,
+        [13] = true,
+        [24] = true,
+        [30] = true,
+    }
+
+    AddEventHandler('explosionEvent', function(sender, ev)
+        explosions[sender] = explosions[sender] or {}
+        
+        
+        if GetPlayerPing(sender) > 0 then
+            if whitelist[sender] then
+                whitelist[sender] = false
+            else
+                -- punish_player(sender, "Try To Spam Objects: ", webhook, time)
+                Console.Warn("Beta explosion detected source", sender)
+            end
+        end
+
+        for k, v in pairs(_SECURITY.Protection.BlacklistedExplosions) do
+            if ev.explosionType == v.id then
+                local explosionInfo = string.format("Explosion Type: %d, Position: (%.2f, %.2f, %.2f)", ev.explosionType, ev.posX, ev.posY, ev.posZ)
+
+                if v.limit and explosions[sender][v.id] and explosions[sender][v.id] >= v.limit then
+                    TriggerEvent('core:admin:anticheat', 'Try To Spam Explosions: '.. explosions[sender][v.id], sender, 'explosion_anticheat')
+                    return
+                end
+
+                explosions[sender][v.id] = (explosions[sender][v.id] or 0) + 1
+
+                if v.limit and explosions[sender][v.id] > v.limit then
+                    TriggerEvent('core:admin:anticheat', 'Try To Spam Explosions: '.. explosions[sender][v.id], sender, 'explosion_anticheat')
+                    return
+                end
+
+                if v.limit then
+                    if explosions[sender][v.id] > v.limit then
+                        if false_explosions[ev.explosionType] then return end
+                        if not detected[sender] then
+                            detected[sender] = true
+                            CancelEvent()
+                            TriggerEvent('core:admin:anticheat', 'Try To Spam Explosions: '.. explosions[sender][v.id], sender, 'explosion_anticheat')
+
+                        end
+                    end
+                end
+
+                if v.audio and ev.isAudible == false then
+                    TriggerEvent('core:admin:anticheat', 'Used inaudible explosion. ' .. explosionInfo, sender, 'explosion_anticheat')
+                    return
+                end
+
+                if v.invisible and ev.isInvisible == true then
+                    TriggerEvent('core:admin:anticheat', 'Used invisible explosion. ' .. explosionInfo, sender, 'explosion_anticheat')
+                    return
+                end
+
+                if v.damageScale and ev.damageScale > 1.0 then
+                    TriggerEvent('core:admin:anticheat', 'Used boosted explosion. ' .. explosionInfo, sender, 'explosion_anticheat')
+                    return
+                end
+
+                if _SECURITY.Protection.CancelOtherExplosions then
+                    for k, v in pairs(_SECURITY.Protection.BlacklistedExplosions) do
+                        if ev.explosionType ~= v.id then
+                            CancelEvent()
+                        end
+                    end
+                end
+            end
+        end
+
+        if ev.ownerNetId == 0 then
+            CancelEvent()
+        end
+    end)
+
+end)
+
+
+
+AddEventHandler('entityCreating', function(entity)
+    local model
+    local owner
+    local entityType
+
+    if not DoesEntityExist(entity) then
+        CancelEvent()
+        return
+    end
+
+    if DoesEntityExist(entity) then
+        model = GetEntityModel(entity)
+        entityType = GetEntityType(entity)
+        owner = NetworkGetEntityOwner(entity)
+    end
+    if entityType == 3 then
+        for _, player in pairs(GetPlayers()) do
+            local playerPed = GetPlayerPed(player)
+            local playerCoords = GetEntityCoords(playerPed)
+            local entityCoords = GetEntityCoords(entity)
+            local distance = #(playerCoords - entityCoords)
+
+            if distance < 5 then
+                CancelEvent()
+            end
+        end
+    end
+end)
+
+
+local function onPlayerDisconnected()
+    local playerId = source
+    _ANTICHEAT.playerHeartbeats[playerId] = nil
+end
+AddEventHandler("playerDropped", onPlayerDisconnected)
+
+RegisterNetEvent("mMkHcvct3uIg04STT16I:cbnF2cR9ZTt8NmNx2jQS", function(key)
+    local playerId = source
+    if string.len(key) < 15 or string.len(key) > 35 or key == nil then
+        punish_player(playerId, "Tried to stop the anticheat", webhook, -1)
+    else
+        _ANTICHEAT.playerHeartbeats[playerId] = os.time()
+    end
+end)
+
+Citizen.CreateThread(_ANTICHEAT.MODULE.LPH_JIT_MAX(function()
+    while true do
+        Citizen.Wait(10 * 1000)
+        for playerId, lastHeartbeatTime in pairs(_ANTICHEAT.playerHeartbeats) do
+            if lastHeartbeatTime == nil then return end
+            local currentTime = os.time()
+            local timeSinceLastHeartbeat = currentTime - lastHeartbeatTime
+            if timeSinceLastHeartbeat > 15 * 1000 then
+                Console.Warn(("Player [%s] %s didn't sent any heartbeat to the server in required time. Last response: %s seconds ago"):format(playerId, GetPlayerName(playerId), timeSinceLastHeartbeat), "info")
+                TriggerEvent('core:admin:anticheat', 'Tried to stop the anticheat', playerId)
+                _ANTICHEAT.playerHeartbeats[playerId] = nil
+            end
+        end
+    end
+end))
+
+
+initialize_server_protections_play_sound = function()
+    if (Anti_Play_Sound_enabled) then
+        if (GetConvar("sv_enableNetworkedSounds", "true") == "false") then return end
+        SetConvar("sv_enableNetworkedSounds", "false")
+    end
+end
+
+
+initialize_protections_ptfx = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
+    local particlesSpawned = {}
+    AddEventHandler('ptFxEvent', function(sender, data)
+        if (Anti_Particles_enabled) then
+            particlesSpawned[sender] = (particlesSpawned[sender] or 0) + 1
+            if (particlesSpawned[sender] > Anti_Particles_limit) then
+                CancelEvent()
+                _ANTICHEAT.punish_player(sender, "Anti Particle Spam",  Anti_Particles_time, "particle_anticheat")                
+                return
+            end
+            if (data.effectHash == 2341015072) then
+                CancelEvent()
+                _ANTICHEAT.punish_player(sender, "Anti Fire Player",  Anti_Particles_time, "fire_anticheat")                
+            end
+            CancelEvent()
+        end
+    end)
+end)
+
+
+AddEventHandler('entityCreating', function(entity)
+    local model
+    local owner
+    local entityType
+  
+    if not DoesEntityExist(entity) then
+      CancelEvent()
+      return
+    end
+  
+    if DoesEntityExist(entity) then
+      model = GetEntityModel(entity)
+      entityType = GetEntityType(entity)
+      owner = NetworkGetEntityOwner(entity)
+    end
+    if entityType == 2 and DoesEntityExist(entity) then
+        local src = NetworkGetEntityOwner(entity)
+        local entityPopulationType = GetEntityPopulationType(entity)
+    
+        if src == nil or owner == nil then
+          CancelEvent()
+        end
+
+        for k, v in pairs(_SECURITY.Protection.BlacklistedVehicles) do
+            if model == GetHashKey(v.name) then
+                _ANTICHEAT.punish_player(source, "Blacklisted Vehicle (" .. v.name .. ")",  'Ban', "fire_anticheat")     
+
+            CancelEvent()
+            end
+        end
+    end
+end)  
