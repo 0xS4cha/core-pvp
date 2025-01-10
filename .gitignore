@@ -1,0 +1,14 @@
+# Ignore everything in /web
+/web/*
+
+# Except for /web/build and /web/src
+!/web/build
+!/web/src
+
+# Ignore everything inside /web/build and /web/src by default
+/web/build/*
+/web/src/*
+
+# Allow specific files or folders inside /web/build and /web/src
+!/web/build/**
+!/web/src/**
