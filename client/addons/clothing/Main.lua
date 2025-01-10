@@ -67,7 +67,7 @@ function VariationPedSpawn(id, type, variation, idclothes)
     )
     local originalScale = 1.0
     local newScale = originalScale / 5
-    print(PedClonedVariation, IdClothes[type], id, variation, 2)
+
     SetPedComponentVariation(PedClonedVariation, IdClothes[type], idclothes, variation, 2)
 
 

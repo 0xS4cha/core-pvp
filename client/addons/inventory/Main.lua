@@ -38,7 +38,6 @@ function OpenInventory()
         end)
         Items = {}
         for k,v in pairs(inv) do
-            print(json.encode(v))
             if v.name == 'money' then
                 v.count = Utils.Round(v.count, 0)
             end

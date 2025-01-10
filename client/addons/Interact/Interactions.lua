@@ -38,7 +38,7 @@ local function checkParams(entity, options)
     return true
 end
 
---#TODO: Add a way to filter interactions based on the players group
+
 local function filterInteractions()
     local myGroups = 'police'
 

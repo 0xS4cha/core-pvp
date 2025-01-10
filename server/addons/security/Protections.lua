@@ -397,7 +397,7 @@ for k,v in pairs(_SECURITY.Protection.BlacklistedObjects) do
 end
 
 
-initialize_protections_damage = _ANTICHEAT.MODULE.LPH_JIT_MAX(function ()
+initialize_protections_damage = LPH_JIT_MAX(function ()
     AddEventHandler("weaponDamageEvent", function(source, data)
         if true and data.weaponType == 3452007600 and data.weaponDamage == 512 then
             TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (3452007600, 512)', source)
@@ -451,7 +451,7 @@ local function clear()
     end
 end
 
-initialize_protections_entity_spam = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
+initialize_protections_entity_spam = LPH_JIT_MAX(function()
     local SV_VEHICLES = {}
     local SV_PEDS = {}
     local SV_OBJECT = {}
@@ -574,7 +574,7 @@ initialize_protections_entity_spam = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
 end)
 
 
-initialize_protections_explosions = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
+initialize_protections_explosions = LPH_JIT_MAX(function()
     local whitelist = {}
 
     RegisterNetEvent("core:Explosions:Whitelist", function(data)
@@ -711,7 +711,7 @@ RegisterNetEvent("mMkHcvct3uIg04STT16I:cbnF2cR9ZTt8NmNx2jQS", function(key)
     end
 end)
 
-Citizen.CreateThread(_ANTICHEAT.MODULE.LPH_JIT_MAX(function()
+Citizen.CreateThread(LPH_JIT_MAX(function()
     while true do
         Citizen.Wait(10 * 1000)
         for playerId, lastHeartbeatTime in pairs(_ANTICHEAT.playerHeartbeats) do
@@ -736,7 +736,7 @@ initialize_server_protections_play_sound = function()
 end
 
 
-initialize_protections_ptfx = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
+initialize_protections_ptfx = LPH_JIT_MAX(function()
     local particlesSpawned = {}
     AddEventHandler('ptFxEvent', function(sender, data)
         if (Anti_Particles_enabled) then

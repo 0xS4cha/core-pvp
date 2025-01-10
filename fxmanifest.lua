@@ -19,6 +19,7 @@ shared_scripts {
     'static/messages/translation/*.lua',
 
     'shared/sh_*.lua',
+    'module.lua'
 }
 
 

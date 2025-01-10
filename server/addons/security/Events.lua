@@ -2,7 +2,7 @@
 --> [EVENTS] <--
 local encryption_key = "c4a2ec5dc103a3f730460948f2e3c01df39ea4212bc2c82f"
 
-local xor_encrypt = _ANTICHEAT.MODULE.LPH_NO_VIRTUALIZE(function(text, key)
+local xor_encrypt = LPH_NO_VIRTUALIZE(function(text, key)
     local res = {}
     local key_len = #key
     for i = 1, #text do
@@ -12,7 +12,7 @@ local xor_encrypt = _ANTICHEAT.MODULE.LPH_NO_VIRTUALIZE(function(text, key)
     return table.concat(res)
 end)
 
-local encryptEventName = _ANTICHEAT.MODULE.LPH_NO_VIRTUALIZE(function(event_name, key)
+local encryptEventName = LPH_NO_VIRTUALIZE(function(event_name, key)
     local encrypted = xor_encrypt(event_name, key)
     local result = ""
     for i = 1, #encrypted do
@@ -21,7 +21,7 @@ local encryptEventName = _ANTICHEAT.MODULE.LPH_NO_VIRTUALIZE(function(event_name
     return result
 end)
 
-local xor_decrypt = _ANTICHEAT.MODULE.LPH_NO_VIRTUALIZE(function(encrypted_text, key)
+local xor_decrypt = LPH_NO_VIRTUALIZE(function(encrypted_text, key)
     local res = {}
     local key_len = #key
     for i = 1, #encrypted_text do
@@ -31,7 +31,7 @@ local xor_decrypt = _ANTICHEAT.MODULE.LPH_NO_VIRTUALIZE(function(encrypted_text,
     return table.concat(res)
 end)
 
-local decryptEventName = _ANTICHEAT.MODULE.LPH_NO_VIRTUALIZE(function(encrypted_name, key)
+local decryptEventName = LPH_NO_VIRTUALIZE(function(encrypted_name, key)
     local encrypted = {}
     for i = 1, #encrypted_name, 3 do
         local byte_str = encrypted_name:sub(i, i + 2)
@@ -107,6 +107,6 @@ exports('CheckTime', function(event ,time, source)
 end)
 
 
-exports('IsEventWhitelisted', _ANTICHEAT.MODULE.LPH_NO_VIRTUALIZE(function(event_name)
+exports('IsEventWhitelisted', LPH_NO_VIRTUALIZE(function(event_name)
     return _ANTICHEAT.isWhitelisted(event_name)
 end))

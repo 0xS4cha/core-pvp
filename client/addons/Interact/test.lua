@@ -14,7 +14,7 @@ InteractAPI.addModelInteraction({
                     return true
                 end,
                 action = function(entity, coords, args)
-                print(entity, coords, json.encode(args))
+
                 end,
 
              },

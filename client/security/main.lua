@@ -30,23 +30,6 @@ function PrioEvent()
     return true
 end
 
-function TriggerSecurEvent(name, ...) -- Utilsier cette event
-    if PrioEvent() then
-        local time, idPlayer, size, fname  = tostring(GetGameTimer()), tostring(GetPlayerServerId(PlayerId())), tostring(p:getSize()), tostring(p:getFirstname())
-        local message = _TRGSE(fname..time..idPlayer..size)
-        LastTimePlayer -= 1
-        TriggerServerEvent(name, time, message, ...)
-    end
-end
-
-function TriggerSecurGiveEvent(name, token, item, count, ...)
-    if PrioEvent() then
-        local time, idPlayer, size, item, count2, fname =  tostring(GetGameTimer()), tostring(GetPlayerServerId(PlayerId())), tostring(p:getSize()), tostring(item), tostring(count), tostring(p:getFirstname())
-        local message = _TRGSE(idPlayer..time..count2..size..item..fname)
-        LastTimePlayer -= 1
-        TriggerServerEvent(name, time, nil, message, item, count, ...)
-    end
-end
 
 
 

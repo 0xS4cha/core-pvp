@@ -5,7 +5,7 @@ _ANTICHEAT.playerState = {} -- Table to store the player state
 _ANTICHEAT.playerHeartbeats = {} -- Table to store the player heartbeats
 _ANTICHEAT.ProtectionCount = {} -- Amount of protections
 _ANTICHEAT.Events = {}
-_ANTICHEAT.EventsTime = math.random(1, 99999)
+GlobalState.Events = math.random(1, 99999)
 _ANTICHEAT.CheckInterval = 5000 -- Time between each check cycle
 _ANTICHEAT.maxFailures = 40 -- Maximum amount of failures before the player is kicked
 
@@ -16,7 +16,7 @@ RegisterNetEvent('ANTICHEAT:requestConfig', function()
 end)
 
 local function setTimeState()
-    _ANTICHEAT.EventsTime = os.time()
+    GlobalState.Events = os.time()
 end
 
 Citizen.CreateThread(function()

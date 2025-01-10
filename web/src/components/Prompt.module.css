@@ -1,0 +1,74 @@
+.prompt-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  color: var(--white);
+}
+
+.prompt-contain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--degrade-radial-noir);
+  padding: 1.4vw;
+  border-radius: 0.4vw;
+  color: var(--white-50);
+  font-size: 0.7vw;
+  border: solid 0.1vw var(--white-30);
+}
+
+.desc {
+  text-align: center;
+  width: 90%;
+  margin-bottom: 1.5vw;
+  font-weight: 300;
+}
+
+.h1 {
+  color: var(--white);
+  font-size: 1.3vw;
+  margin-bottom: 0.2vw;
+  font-weight: 600;
+}
+
+.b {
+  color: var(--white);
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8vw;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  color: var(--white-50);
+  font-size: 0.8vw;
+  gap: 0.1vw;
+  padding: 0.6vw 2vw;
+  border-radius: 0.2vw;
+  cursor: pointer;
+}
+.btn:hover {
+  filter: brightness(0.8);
+  transition: filter 0.3s;
+}
+
+.refuse {
+  color: var(--white);
+  background: var(--degrade-radial-rouge);
+}
+
+.accept {
+  color: var(--white);
+  background: var(--degrade-radial-vert);
+}/*# sourceMappingURL=Prompt.module.css.map */

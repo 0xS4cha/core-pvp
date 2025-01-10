@@ -74,7 +74,6 @@ function Admin:getPlayerList()
         Wait(100) 
     end
     local plyList = {}
-    print(json.encode(PlayerList))
     for i = 1, #PlayerList.players do
         local v = PlayerList.players[i]
         table.insert(plyList, {name = '['..v.id..'] ~b~['.._PERMISSION_ROLE[v.permission].prefix..']~s~ '..v.name, playerName = v.name, source = v.id, data = v, askX = true})
@@ -581,7 +580,6 @@ local SelectedMenu = {
                     Utils.ShowNotification("~b~Door being initialized~~.")
                 else
                     Console.debugPrint(_MANAGER.DOORS.ADMIN.creator_data)
-                    print(#_MANAGER.DOORS.ADMIN.creator_data.doors)
                     Utils.ShowNotification("~r~You must add at least one door~s~.")
                 end
             else

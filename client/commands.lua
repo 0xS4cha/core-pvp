@@ -91,12 +91,7 @@ RegisterCommand("devprops", function()
     end
 end, false)
 
-RegisterCommand('weapon', function()
-    local pPed = PlayerPedId()
-    print(GetHashKey('WEAPON_UNARMED'))
-    GiveWeaponToPed(pPed, 1593441988, 100000)
-    GiveWeaponToPed(pPed, -1569615261, 100000)
-end, false)
+
 
 local bones = {
     ["SKEL_ROOT"] = 0,
