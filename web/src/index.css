@@ -1,0 +1,122 @@
+/*regles page*/
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*,
+::before,
+::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+:root {
+    --tw-text-opacity: 1:
+    --black:
+        rgba(0, 0, 0, 1);
+    --red:
+        #C33131;
+    --blue:
+        #5088F4;
+    --orange:
+        #ff9c24;
+    --white:
+        rgba(255, 255, 255, 1);
+    --white-70:
+        rgba(255, 255, 255, 0.7);
+    --white-50:
+        rgba(255, 255, 255, 0.5);
+    --white-30:
+        rgba(255, 255, 255, 0.3);
+    --white-0:
+        rgba(255, 255, 255, 0);
+    --green:
+        #3DDE98;
+    --grey:
+        rgba(20, 22, 24, 0.5);
+    --degrade-radial-sombre:
+        linear-gradient(180deg, rgba(21, 77, 187, 0.02) 0%, rgba(21, 77, 187, 0.08) 100%), radial-gradient(50% 50.00% at 50% 50.00%, rgba(27, 28, 30, 0.48) 0%, rgba(27, 28, 30, 0.36) 100%);
+    --degrade-radial-sombre-inverse:
+        linear-gradient(180deg, rgba(27, 28, 30, 0.48) 0%, rgba(27, 28, 30, 0.36),  100%), radial-gradient(50% 50.00% at 50% 50.00%, rgba(21, 77, 187, 0.02) 0%, rgba(21, 77, 187, 0.08) 100%);
+    --degrade-radial-inventory:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(155, 155, 155, 0.089) 0%, rgba(26, 36, 53, 0.767) 100%);
+    --degrade-radial-clair:
+        linear-gradient(-80deg, rgba(255, 255, 255, 0.2) 0%, rgba(154, 191, 224, 0.04) 100%);
+    --degrade-radial:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(26, 36, 53, 0.48) 0%, rgba(26, 36, 53, 0.36) 100%);
+    --degrade-radial-noir:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(39, 42, 48, 0.64) 0%, rgba(39, 42, 48, 0.48) 100%);
+    --degrade-radial-noir-inverse:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(39, 42, 48, 0.48) 0%, rgba(39, 42, 48, 0.64) 100%);
+    --degrade-radial-bleu:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(49, 70, 106, 0.64) 0%, rgba(39, 64, 104, 0.48) 100%);
+    --degrade-radial-rouge:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(211, 99, 99, 0.64) 0%, rgba(218, 32, 32, 0.48) 100%);
+    --degrade-radial-bleu2:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(6, 92, 240, 0.64) 0%, rgba(39, 64, 104, 0.48) 100%);
+     --degrade-radial-bleu2-inverse:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(52, 96, 167, 0.48) 0%, rgba(6, 92, 240, 0.64) 100%);
+
+    --degrade-radial-rose:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(231, 138, 208, 0.64) 0%, rgba(112, 79, 104, 0.48) 100%);
+    --degrade-linear-rose2:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(255, 81, 211, 0.64) 0%, rgba(255, 0, 191, 0.48) 100%);
+    --degrade-radial-jaune:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgb(216, 230, 26, 0.48) 0%, rgb(216, 230, 26, 0.48) 100%);
+    --degrade-radial-vert:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(11, 105, 11, 0.48) 0%, rgba(0, 255, 0, 0.48) 100%);
+     --degrade-radial-vert:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(11, 105, 11, 0.48) 0%, rgba(0, 255, 0, 0.48) 100%);
+    --degrade-radial-vert-inverse:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(0, 255, 0, 0.48) 0%, rgba(11, 105, 11, 0.48) 100%);
+    --degrade-radial-discord:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(88, 101, 242, 0.48) 0%, rgba(7, 21, 175, 0.48)0%);
+    --degrade-radial-discord-inverse:
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(88, 101, 242, 0.48) 0%, rgba(	88, 101, 242, 0.48) 100%);
+
+    --degrade-linear-vert:
+        linear-gradient(180deg, rgb(0, 187, 0) 0%, rgb(11, 105, 11) 100%);
+    --degrade-linear-vert2:
+        linear-gradient(180deg, rgba(0, 187, 0, 0.719) 0%, rgb(11, 105, 11) 100%);
+    --degrade-linear-vert-inverse:
+        linear-gradient(180deg, rgba(11, 105, 11, 0.48) 0%, rgba(0, 255, 0, 0.48) 100%);
+     --degrade-linear-bleu-inverse:
+        linear-gradient(180deg, rgba(49, 70, 106, 0.64) 0%, rgba(39, 144, 241, 0.48) 100%);
+    --degrade-linear-bleu:
+        linear-gradient(180deg, rgba(39, 144, 241, 0.48) 0%, rgba(49, 70, 106, 0.64) 100%);
+    --degrade-linear-noir-inverse:
+        linear-gradient(180deg, rgba(61, 61, 61, 0.64) 0%, rgba(136, 136, 136, 0.48) 100%);
+    --degrade-linear-noir:
+        linear-gradient(180deg, rgba(136, 136, 136, 0.48) 0%, rgba(61, 61, 61, 0.64) 100%);
+
+    --degrade-linear-rouge-inverse:
+        linear-gradient(180deg, rgba(136, 15, 15, 0.64) 0%, rgba(218, 20, 20, 0.48) 100%);
+    --degrade-linear-rouge:
+        linear-gradient(180deg, rgba(218, 20, 20, 0.48) 0%, rgba(136, 15, 15, 0.64) 100%);
+    --degrade-linear-rose:
+        linear-gradient(180deg, rgba(180, 24, 154, 0.48) 0%, rgba(151, 45, 137, 0.64) 100%);
+
+    --degrade-linear-rouge-full:
+        linear-gradient(180deg, rgb(218, 20, 20) 0%, rgb(136, 15, 15) 100%);
+    --degrade-linear-bleu-full:
+        linear-gradient(180deg, rgb(39, 143, 241) 0%, rgb(49, 70, 106) 100%);
+    --degrade-linear-vert-full:
+        linear-gradient(180deg, rgb(0, 255, 0) 0%, rgb(119, 192, 119) 100%);
+    --degrade-linear-vert-blanc:
+    linear-gradient(80deg, rgba(46, 46, 46, 0.64) 0%, rgba(104, 104, 104, 0.48) 100%);
+
+    --FatherColorRadius:
+        #507ace;    
+    --MotherColorRadius:
+        #cf63ca;
+    --MotherSelectedColorRadius:
+        #ff0d86;
+    --FatherSelectedColorRadius:
+        #4b48fc;
+}
+
+#hidden {
+    display: none;
+}
+

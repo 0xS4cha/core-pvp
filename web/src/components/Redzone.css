@@ -1,0 +1,142 @@
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
+
+
+.redzone-container {
+    position: absolute;
+    left: 149vh;
+    bottom: 6em; /* Déplace l'hud vers le haut */
+    background: linear-gradient(0deg, rgba(40,40,46,1) 12%, rgba(57,106,116,0) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Optionnel, pour centrer horizontalement */
+
+
+
+    flex-direction: column;
+    width: 281px;
+    border-radius: 4px;
+    height: 270px;
+}
+
+
+.mavitext2 {
+    font-family: 'Kanit', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+
+    /* or 14px */
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0.1vw;
+
+    color: #00F6F6;
+
+}
+
+.redzone-border {
+    width: 230px;
+    margin: 0 auto;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.26);
+}
+
+.kirmizitext2 {
+    font-family: 'Kanit', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+
+    /* or 14px */
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0.1vw;
+
+    color: #FF4040;
+}
+
+.whitetext2 {
+    font-family: 'Kanit', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+
+    /* or 14px */
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0.1vw;
+
+    color: #FFFFFF;
+}
+
+.player {
+    border-radius: 2px;
+    width: 236px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.player p {
+    font-family: 'Kanit', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 99.5%;
+    /* identical to box height, or 11px */
+
+    letter-spacing: 0.03em;
+
+    color: #FFFFFF;
+
+}
+
+.you {
+    border-radius: 2px;
+    width: 236px;
+    height: 28px;
+    display: flex;
+    justify-content: center; /* Optionnel, pour centrer horizontalement */
+
+    align-items: center;
+    padding: 0 15px;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.you3 {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Optionnel, pour centrer horizontalement */
+    gap: 10px;
+}
+.you2 {
+    border-radius: 2px;
+    width: 236px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Optionnel, pour centrer horizontalement */
+    gap: 10px;
+
+
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.you p {
+    font-family: 'Kanit', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 99.5%;
+    /* identical to box height, or 11px */
+
+    letter-spacing: 0.03em;
+
+    color: #FFFFFF;
+
+}

@@ -1,0 +1,268 @@
+.form-container {
+  padding: 2rem;
+}
+  .container {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: var(--white);
+  }
+  
+  /* Menu Wrapper */
+  .menu {
+    color: var(--white);
+    background: #161616;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  /* Menu Title */
+  .menu-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  /* Form Styles */
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    text-align: left;
+  }
+  
+  .form-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="file"],
+  .form-group input[type="color"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #161616;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--white-70);
+    background-color: #333333;
+    outline: none;
+  }
+  
+
+  
+
+
+  
+  /* Submit Button */
+  .submit-button {
+    padding: 0.75rem;
+    background: var(--degrade-radial-vert);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background: var(--degrade-radial-vert-inverse);
+  }
+  
+  .submit-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(94, 92, 244, 0.3);
+  }
+  
+
+  .grades-section {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .grades-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem; /* Add spacing between header and list */
+  }
+  
+  .grades-header label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--white);
+  }
+  
+  .add-grade-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem;
+    background: var(--degrade-linear-bleu);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    cursor: pointer;
+  }
+  
+  .add-grade-btn:hover {
+    background: var(--degrade-linear-bleu-inverse);
+  }
+  
+  .grades-list {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid var(--white-30);
+    border-radius: 4px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .grade-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: #333333;
+    border-radius: 4px;
+  }
+  
+  .grade-name {
+    font-size: 0.9rem;
+    color: var(--white-70);
+  }
+  
+  .grade-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .edit-btn,
+  .delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .edit-btn {
+    color: var(--blue);
+  }
+  
+  .edit-btn:hover {
+    color: #4946c1;
+  }
+  
+  .delete-btn {
+    color: var(--red);
+  }
+  
+  .delete-btn:hover {
+    color: #c0263c;
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #161616;
+  border-radius: px;
+  padding: 2rem;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: var(--white);
+}
+
+.modal-input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.save-modal-btn {
+  padding: 0.5rem 1rem;
+  background: var(--degrade-linear-vert);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-modal-btn:hover {
+  background: var(--degrade-linear-vert-inverse);
+}
+
+.cancel-modal-btn {
+  padding: 0.5rem 1rem;
+  background: var(--degrade-linear-rouge);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-modal-btn:hover {
+  background: var(--degrade-linear-rouge-inverse);
+}
+
+  @media (max-width: 480px) {
+    .menu {
+      padding: 1rem;
+    }
+  
+    .form-group input[type="text"],
+    .form-group input[type="file"],
+    .form-group input[type="color"] {
+      font-size: 0.85rem;
+    }
+  
+    .submit-button {
+      font-size: 0.9rem;
+    }
+  }
+  
+
