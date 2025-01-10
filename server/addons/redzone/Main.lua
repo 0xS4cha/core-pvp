@@ -50,7 +50,6 @@ function _REDZONE.CreateZone()
 end
 
 RegisterServerEvent("core:redzone:Identifier", function()
-    print(json.encode(_REDZONE.Zones))
     TriggerClientEvent("core:redzone:UpdateZones", source, _REDZONE.Zones)
     TriggerClientEvent("core:redzone:CreateZone", source)
 end)
