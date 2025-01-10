@@ -395,3 +395,33 @@ for k,v in pairs(_SECURITY.Protection.BlacklistedObjects) do
     if not _ANTICHEAT.ProtectionCount["Core.Protection.BlacklistedObjects"] then _ANTICHEAT.ProtectionCount["Core.Protection.BlacklistedObjects"] = 0 end
     _ANTICHEAT.ProtectionCount["Core.Protection.BlacklistedObjects"] = _ANTICHEAT.ProtectionCount["Core.Protection.BlacklistedObjects"] + 1
 end
+
+
+initialize_protections_damage = _ANTICHEAT.MODULE.LPH_JIT_MAX(function ()
+    AddEventHandler("weaponDamageEvent", function(source, data)
+        if true and data.weaponType == 3452007600 and data.weaponDamage == 512 then
+            TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (3452007600, 512)', source)
+            CancelEvent()
+        elseif true and data.weaponType == 133987706 and data.damageTime > 200000 and data.weaponDamage > 200 then
+            TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (133987706)', source)
+            CancelEvent()
+        end
+    
+        if true then
+            if data.silenced and data.weaponDamage == 0 and data.weaponType == 2725352035 then
+                TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (2725352035)', source)
+            elseif data.silenced and data.weaponDamage == 0 and data.weaponType == 3452007600 then
+                TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (3452007600)', source)
+
+            end
+        end
+    end)
+end)
+
+initialize_protections_entity_lockdown = function()
+    Citizen.CreateThread(function ()
+        SetConvar("sv_filterRequestControl", "4")
+        SetConvar("sv_entityLockdown", _SECURITY.EntityLockdownMode)
+        SetConvar("onesync_distanceCullVehicles", "true")
+    end)
+end

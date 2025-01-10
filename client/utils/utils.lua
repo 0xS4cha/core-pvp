@@ -211,7 +211,7 @@ function Utils.isJson(data)
 end
 
 function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
-	-- ShowNotification("Appuyer sur ~g~E~s~ pour valider\nAppuyer sur ~b~L~s~ pour changer de cible\nAppuyer sur ~r~X~s~ pour annuler")
+	Utils.ShowNotification("Appuyer sur ~g~E~s~ pour valider\nAppuyer sur ~b~L~s~ pour changer de cible\nAppuyer sur ~r~X~s~ pour annuler")
 
 	if choiceSelfPlayer == nil then
 		choiceSelfPlayer = true
@@ -230,33 +230,14 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 	end
 	if #players == 0 then
 		-- New notif
-		exports['vNotif']:createNotification({
-			type = 'ROUGE',
-			-- duration = 5, -- In seconds, default:  4
-        	content = "~c Aucun joueur ~s dans la zone"
-		})
+		Utils.ShowNotification("~r~Aucun joueur dans la zone")
 
 		inChoice = false
 		return nil
 	else
 		-- New notif
-		exports['vNotif']:createNotification({
-			type = 'VERT',
-			duration = 10, -- In seconds, default:  4
-			content = "Appuyer sur ~K E pour ~s valider"
-		})
-	
-		exports['vNotif']:createNotification({
-			type = 'JAUNE',
-			duration = 10, -- In seconds, default:  4
-			content = "Appuyer sur ~K L pour ~s changer de cible"
-		})
-			
-		exports['vNotif']:createNotification({
-			type = 'ROUGE',
-			duration = 10, -- In seconds, default:  4
-			content = "Appuyez sur ~K X pour ~s annuler"
-		})
+		Utils.ShowNotification("Appuyer sur ~g~E~s~ pour valider\nAppuyer sur ~b~L~s~ pour changer de cible\nAppuyer sur ~r~X~s~ pour annuler")
+		
 	end
 
 	while inChoice do
@@ -269,14 +250,8 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 			end
 		end
 		if #players == 0 then
-			-- ShowNotification("~r~Aucun joueur dans la zone")
+			Utils.ShowNotification("~r~Aucun joueur dans la zone")
 
-			-- New notif
-			exports['vNotif']:createNotification({
-				type = 'ROUGE',
-				-- duration = 5, -- In seconds, default:  4
-        		content = "~c Aucun joueur ~s dans la zone"
-			})
 
 			inChoice = false
 			return nil
@@ -284,14 +259,9 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 		local mCoors = GetEntityCoords(GetPlayerPed(players[selectedPlayer]))
 		DrawMarker(20, mCoors.x, mCoors.y, mCoors.z + 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255 , 120, 0, 1, 2, 0, nil, nil, 0)
 		if GetGameTimer() > timer then
-			-- ShowNotification("~r~Le délai est dépassé")
+			Utils.ShowNotification("~r~Le délai est dépassé")
 
-			-- New notif
-			exports['vNotif']:createNotification({
-				type = 'ROUGE',
-				-- duration = 5, -- In seconds, default:  4
-				content = "Le délai est dépassé"
-			})
+
 			inChoice = false
 			return nil
 		elseif IsControlJustPressed(0, 51) then -- E
@@ -302,14 +272,9 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 			selectedPlayer = selectedPlayer + 1
 		elseif IsControlJustPressed(0, 73) then -- X
 
-			-- ShowNotification("~r~Vous avez annulé")
+			Utils.ShowNotification("~r~Vous avez annulé")
 			
-			-- New notif
-			exports['vNotif']:createNotification({
-				type = 'JAUNE',
-				-- duration = 5, -- In seconds, default:  4
-				content = "Vous avez ~s annulé"
-			})
+
 
 			inChoice = false
 			return nil

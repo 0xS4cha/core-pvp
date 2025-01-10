@@ -24,16 +24,6 @@ function Keys.Register(Controls, ControlName, Description, Action)
         if (Action ~= nil) then
             if Keys.keysAllow then 
                Action();
-            else 
-               -- ShowNotification("~r~Action impossible ...~s~")
-
-                -- New notif
-                exports['vNotif']:createNotification({
-                    type = 'ROUGE',
-                    -- duration = 5, -- In seconds, default:  4
-                    content = "~s Action impossible ..."
-                })
-
 
             end 
         end
@@ -251,42 +241,6 @@ function disableSeatShuffle(flag)
     disableShuffle = flag
 end
 
-local melee = true
-function disableMelee()
-    -- if melee is enabled, start a loop that disables melee
-    if melee then
-        melee = false
-        -- ShowNotification("~r~Combat désactivé")
-
-        -- New notif
-        exports['vNotif']:createNotification({
-            type = 'JAUNE',
-            -- duration = 5, -- In seconds, default:  4
-            content = "Combat ~s désactivé"
-        })
-
-        while not melee do
-            Wait(0)
-            DisableControlAction(0, 140, true)
-            DisableControlAction(0, 141, true)
-            DisableControlAction(0, 142, true)
-            DisableControlAction(0, 257, true)
-            DisableControlAction(0, 263, true)
-            DisableControlAction(0, 264, true)
-        end
-    else
-        -- ShowNotification("~g~Combat activé")
-
-        -- New notif
-        exports['vNotif']:createNotification({
-            type = 'JAUNE',
-            -- duration = 5, -- In seconds, default:  4
-            content = "Combat ~s activé"
-        })
-
-        melee = true
-    end
-end
 
 local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
     return coroutine.wrap(function()
