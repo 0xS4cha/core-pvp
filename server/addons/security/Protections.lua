@@ -425,3 +425,150 @@ initialize_protections_entity_lockdown = function()
         SetConvar("onesync_distanceCullVehicles", "true")
     end)
 end
+
+
+RegisterNetEvent('core:admin:clearall', function()
+    for i, obj in pairs(GetAllObjects()) do
+        DeleteEntity(obj)
+    end
+    for i, ped in pairs(GetAllPeds()) do
+        DeleteEntity(ped)
+    end
+    for i, veh in pairs(GetAllVehicles()) do
+        DeleteEntity(veh)
+    end
+end)
+
+local function clear()
+    for i, obj in pairs(GetAllObjects()) do
+        DeleteEntity(obj)
+    end
+    for i, ped in pairs(GetAllPeds()) do
+        DeleteEntity(ped)
+    end
+    for i, veh in pairs(GetAllVehicles()) do
+        DeleteEntity(veh)
+    end
+end
+
+initialize_protections_entity_spam = _ANTICHEAT.MODULE.LPH_JIT_MAX(function()
+    local SV_VEHICLES = {}
+    local SV_PEDS = {}
+    local SV_OBJECT = {}
+    local SV_Userver = {}
+
+
+    AddEventHandler('entityCreated', function (entity)
+        if DoesEntityExist(entity) then
+            local POPULATION = GetEntityPopulationType(entity)
+            if POPULATION == 7 or POPULATION == 0 then
+                TriggerClientEvent('checkMe', -1)
+            end
+        end
+    end)
+
+    AddEventHandler("entityCreated", function(ENTITY)
+        if DoesEntityExist(ENTITY) then
+            local TYPE       = GetEntityType(ENTITY)
+            local OWNER      = NetworkGetFirstEntityOwner(ENTITY)
+            local POPULATION = GetEntityPopulationType(ENTITY)
+            local MODEL      = GetEntityModel(ENTITY)
+            local HWID       = GetPlayerToken(OWNER, 0)
+            if TYPE == 2 and POPULATION == 7 then
+                if SV_VEHICLES[HWID] ~= nil then
+                    SV_VEHICLES[HWID].COUNT = SV_VEHICLES[HWID].COUNT + 1
+                    if os.time() - SV_VEHICLES[HWID].TIME >= 10 then
+                        SV_VEHICLES[HWID] = nil
+                    else
+                        if SV_VEHICLES[HWID].COUNT >= _SECURITY.maxVehicle then
+                            for _, vehilce in ipairs(GetAllVehicles()) do
+                                local ENO = NetworkGetFirstEntityOwner(vehilce)
+                                if ENO == OWNER then
+                                    if DoesEntityExist(vehilce) then
+                                        DeleteEntity(vehilce)
+                                    end
+                                end
+                            end
+                            if not SV_Userver[HWID] then
+                            SV_Userver[HWID] = true
+                                clear()
+                                TriggerEvent('core:admin:anticheat', 'Try To Spam Vehicles: '.. SV_VEHICLES[HWID].COUNT, OWNER)
+                                CancelEvent()
+                            end
+                        end
+                    end
+                else
+                    SV_VEHICLES[HWID] = {
+                        COUNT = 1,
+                        TIME  = os.time()
+                    }
+                end
+            elseif TYPE == 1 and POPULATION == 7 then
+                if SV_PEDS[HWID] ~= nil then
+                    SV_PEDS[HWID].COUNT = SV_PEDS[HWID].COUNT + 1
+                    if os.time() - SV_PEDS[HWID].TIME >= 10 then
+                        SV_PEDS[HWID] = nil
+                    else
+                        for _, peds in ipairs(GetAllPeds()) do
+                            local ENO = NetworkGetFirstEntityOwner(peds)
+                            if ENO == OWNER then
+                                if DoesEntityExist(peds) then
+                                    DeleteEntity(peds)
+                                end
+                            end
+                        end
+                        if SV_PEDS[HWID].COUNT >= _SECURITY.maxPed then
+                            if not SV_Userver[HWID] then
+                            clear()
+                            TriggerEvent('core:admin:anticheat', 'Try To Spam Peds: '.. SV_PEDS[HWID].COUNT, OWNER)
+
+                            CancelEvent()
+                            SV_Userver[HWID] = true
+                            end
+                        end
+                    end
+                else
+                    SV_PEDS[HWID] = {
+                        COUNT = 1,
+                        TIME  = os.time()
+                    }
+                    
+                end
+            elseif TYPE == 3 and POPULATION == 7 then
+                HandleAntiSpamObjects(HWID, OWNER)
+            end
+        end
+    end)
+
+    local COOLDOWN_TIME = 10
+    function HandleAntiSpamObjects(HWID, OWNER)
+    
+        if SV_OBJECT[HWID] ~= nil then
+            SV_OBJECT[HWID].COUNT = SV_OBJECT[HWID].COUNT + 1
+            if os.time() - SV_OBJECT[HWID].TIME >= COOLDOWN_TIME then
+                SV_OBJECT[HWID] = nil
+            else
+                if SV_OBJECT[HWID].COUNT >= _SECURITY.maxObject then
+                    for _, objects in ipairs(GetAllObjects()) do
+                        local ENO = NetworkGetFirstEntityOwner(objects)
+                        if ENO == OWNER and DoesEntityExist(objects) then
+                            DeleteEntity(objects)
+                        end
+                    end
+                    if not SV_Userver[HWID] then
+                        SV_Userver[HWID] = true
+                        clear()
+                        TriggerEvent('core:admin:anticheat', 'Try To Spam Objects: '.. SV_OBJECT[HWID].COUNT, OWNER)
+                        CancelEvent()
+                    end
+                end
+            end
+        else
+            SV_OBJECT[HWID] = {
+                COUNT = 1,
+                TIME = os.time()
+            }
+        end
+    end
+    ECount = {}
+end)
