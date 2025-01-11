@@ -19,9 +19,9 @@ end
 
 function _REDZONE.GetKillLeader(t)
     local sortedTable = {}
-    for k, v in spairs(t, function(t,a,b) return t[b].k < t[a].k end) do
-        if v.s ~= nil then
-            if v.k > 0 then
+    for k, v in spairs(t, function(t,a,b) return t[b].kill < t[a].kill end) do
+        if v.source ~= nil then
+            if v.kill > 0 then
                 table.insert(sortedTable, k)
             end
         end
@@ -113,7 +113,8 @@ RegisterServerEvent("core:redzone:playerKilled", function(token, zoneId, killerI
         if _REDZONE.Zones[zoneId].players[killer:getLicense()] then
             if _REDZONE.Zones[zoneId].players[killer:getLicense()].into then
                 _REDZONE.Zones[zoneId].players[killer:getLicense()].kill += 1
-                _REDZONE.Zones[zoneId] += 1
+                _REDZONE.Zones[zoneId].totalKills +=  1
+
                 TriggerClientEvent("core:redzone:UpdateZones", -1, nil, zoneId, "players", nil, killer:getLicense(), nil, "kill", _REDZONE.Zones[zoneId].players[killer:getLicense()].kill)
                 TriggerClientEvent("core:redzone:UpdateZones", -1, nil, zoneId, "totalKills", _REDZONE.Zones[zoneId].totalKills)
             end

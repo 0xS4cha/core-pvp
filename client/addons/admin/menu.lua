@@ -134,7 +134,6 @@ function Admin:getPlayerList()
     for k, v in pairs(PlayerList.players) do
 
         if v ~= nil then
-            print(json.encode(v))
             table.insert(plyList, {name = '['..v.id..'] ~b~['.._PERMISSION_ROLE[v.permission].prefix..']~s~ '..v.name, playerName = v.name, source = v.id, data = v, askX = true})
         end
     end

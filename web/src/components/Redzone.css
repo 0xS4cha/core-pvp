@@ -8,19 +8,16 @@
 
 .redzone-container {
     position: absolute;
-    left: 149vh;
-    bottom: 6em; /* Déplace l'hud vers le haut */
-    background: linear-gradient(0deg, rgba(40,40,46,1) 12%, rgba(57,106,116,0) 100%);
+    left: 145.5vh;
+    bottom: 10.0488474204171241vh; 
+    background-color: rgba(20, 36, 51, 0.55);
     display: flex;
     align-items: center;
     justify-content: center; /* Optionnel, pour centrer horizontalement */
-
-
-
     flex-direction: column;
-    width: 281px;
+    width: 320px;
     border-radius: 4px;
-    height: 270px;
+    height: 170px;
 }
 
 
@@ -81,6 +78,64 @@
     background: rgba(255, 255, 255, 0.25);
 }
 
+.redzonepersonnalinformation {
+    
+    font-family: 'Exo', sans-serif;
+    position: absolute;
+    left: 143vh;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    bottom: 7.5488474204171241vh;
+    gap: 15px;
+}
+
+.redzonepersonnalinformation .Kills {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+
+.redzonepersonnalinformation .Position {
+    
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+
+}
+.redzonepersonnalinformation .Information {
+    width: 140px;
+    height: 20px;
+    margin-left: 0.5vh;
+    background: rgba(20, 36, 51, 0.55);
+    border-radius: 4px;
+
+}
+.redzonepersonnalinformation .IconImage {
+    font-family: 'Exo', sans-serif;
+
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+
+    display: flex; /* Nécessaire pour align-items */
+    align-items: center;
+    justify-content: center; /* Optionnel, pour centrer horizontalement */
+    background: rgba(20, 36, 51, 0.55);
+    color: rgb(7, 7, 7);
+    
+}
+
+.redzonepersonnalinformation .IconImage img {
+
+        height: 15px;
+
+
+
+        color: white;
+        position: absolute;
+
+}
 .player p {
     font-family: 'Kanit', sans-serif;
     font-style: normal;

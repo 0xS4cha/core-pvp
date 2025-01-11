@@ -50,10 +50,7 @@ _SAFEZONE.SafeZones = {
 _REDZONE = _REDZONE or {}
 _REDZONE.ZoneLocations = {
     { coords = vector3(-239.1249, -327.5558, 30.0188), radius = 100.0 },
-    { coords = vector3(-271.2544, -615.5464, 33.4774), radius = 100.0 },
-    { coords = vector3(4472.5586, -4477.0278, 4.2151), radius = 100.0 },
-    { coords = vector3(747.4862, -1723.4449, 28.9309), radius = 100.0 },
-    { coords = vector3(393.3860, -1524.5248, 29.1247), radius = 100.0 },
+
 }
 _REDZONE.ChangeZonesInterval = 20
 _REDZONE.Reward = {

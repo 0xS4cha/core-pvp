@@ -78,6 +78,12 @@ _SECURITY.EntitySecurity = { -- Resources that are causing false bans add to her
 	{ resource = "bob74_ipl",  whitelist = true},
 }
 
+_SECURITY.ExplosionsWhitelist = {
+    -- Add resource names here to whitelist them for explosion events
+    ["resource_name_1"] = true,
+    ["resource_name_2"] = true,
+    -- Example: ["my_custom_resource"] = true,
+}
 _SECURITY.EventWhitelist = {
 	"TestEvent",
 	"test",

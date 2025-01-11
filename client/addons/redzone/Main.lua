@@ -2,7 +2,11 @@ Zones = {}
 local zoneBlips, killeaderBlips = {}, {}
 local isPlayerInZone, zoneIndex = false, false
 local identifier, thread
+local Token = nil
 
+TriggerEvent("core:RequestTokenAcces", "core", function(t)
+    Token = t
+end)
 Citizen.CreateThread(function()
     TriggerServerEvent("core:redzone:Identifier")
 end)
@@ -76,8 +80,8 @@ function enteredZone(zoneId)
         Zones[zoneId].leader = Zones[zoneId].players[leaderIdentifier]
         if not Zones[zoneId].leader then
             Zones[zoneId].leader = {
-                n = "None",
-                k = 0
+                name = "None",
+                kill = 0
             }
         end
     end
@@ -85,7 +89,7 @@ function enteredZone(zoneId)
         show = true,
         scoreboard = {
             zone = Zones[zoneId],
-            identifier = identifier,
+            identifier = p:getLicense(),
             myRank = GetMyRank(Zones[zoneId].players)
         }
     })
@@ -98,7 +102,7 @@ function exitedZone(zoneId)
         show = false,
         scoreboard = {
             zone = Zones[zoneId],
-            identifier = identifier,
+            identifier = p:getLicense(),
             myRank = GetMyRank(Zones[zoneId].players)
         }
     })
@@ -120,7 +124,7 @@ function UpdateZoneUI()
             show = true,
             scoreboard = {
                 zone = Zones[zoneIndex],
-                identifier = identifier,
+                identifier = p:getLicense(),
                 myRank = GetMyRank(Zones[zoneIndex].players)
             }
         })
@@ -169,12 +173,12 @@ Citizen.CreateThread(function()
             enteredEventSend = true
             exitedEventSend = false
             enteredZone(zoneId)
-            TriggerServerEvent("core:redzone:enteredZone", zoneId)
+            TriggerServerEvent("core:redzone:enteredZone", Token, zoneId)
         elseif not inZone and not exitedEventSend then
             enteredEventSend = false
             exitedEventSend = true
             exitedZone(zoneId)
-            TriggerServerEvent("core:redzone:exitedZone", zoneId)
+            TriggerServerEvent("core:redzone:exitedZone", Token, zoneId)
         end
         Citizen.Wait(sleep)
     end
@@ -197,7 +201,7 @@ Citizen.CreateThread(function()
             Zones[i].leader = Zones[i].players[leaderIdentifier]
             local leader = Zones[i].players[leaderIdentifier]
             if leader then
-                local playerIdx = GetPlayerFromServerId(leader.s)
+                local playerIdx = GetPlayerFromServerId(leader.source)
                 if playerIdx ~= - 1 then
                     local ped = GetPlayerPed(playerIdx)
                     if ped ~= -1 then
@@ -218,7 +222,7 @@ function SetBlipInfo(leader, blip, total)
     SetBlipInfoTitle(blip, "Redzone Kill Leader", false)
     SetBlipInfoImage(blip, "gfx_logo", "gfx_logo")
     AddBlipInfoText(blip, "Leader", leader.n)
-    AddBlipInfoText(blip, "Killed Player By Leader", tostring(leader.k))
+    AddBlipInfoText(blip, "Killed Player By Leader", tostring(leader.kill))
     AddBlipInfoText(blip, "Total Kills", tostring(total))
     AddBlipInfoHeader(blip, "")
     AddBlipInfoText(blip, "This Blip Show The Kill Leader Of The Redzone")
@@ -247,9 +251,9 @@ end
 
 function GetKillLeader(t)
     local sortedTable = {}
-    for k, v in spairs(t, function(t,a,b) return t[b].k < t[a].k end) do
-        if v.s ~= nil then
-            if v.i and v.k > 0 then
+    for k, v in spairs(t, function(t,a,b) return t[b].kill < t[a].kill end) do
+        if v.source ~= nil then
+            if v.into and v.kill > 0 then
                 table.insert(sortedTable, k)
             end
         end
@@ -259,16 +263,16 @@ end
 
 function GetMyRank(t)
     local sortedTable = {}
-    for k, v in spairs(t, function(t,a,b) return t[b].k < t[a].k end) do
-        if v.s ~= nil then
-            if v.i and v.k > 0 then
+    for k, v in spairs(t, function(t,a,b) return t[b].kill < t[a].kill end) do
+        if v.source ~= nil then
+            if v.into and v.kill > 0 then
                 table.insert(sortedTable, k)
             end
         end
     end
     local myRank = "None"
     for i = 1, #sortedTable do
-        if sortedTable[i] == identifier then
+        if sortedTable[i] == p:getLicense() then
             myRank = i
             break
         end
@@ -297,13 +301,18 @@ end
 
 
 AddEventHandler('gameEventTriggered', function(name, eventData)
-    if name == "CEventNetworkEntityDamage" then
+
+    if name == "CEventNetworkEntityDamage"  then
+
         local ped, victim, killer, isFatal = PlayerPedId(), eventData[1], eventData[2], eventData[6] == 1
         local killerId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(killer))
         local victimId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(victim)) or tostring(victim==-1 and " " or victim)
+        
         if ped == victim and isFatal then
+
             if isPlayerInZone and zoneIndex then
-                TriggerServerEvent("core:redzone:playerKilled", zoneIndex, killerId, victimId)
+
+                TriggerServerEvent("core:redzone:playerKilled", Token, zoneIndex, killerId, victimId)
             end
         end
     end

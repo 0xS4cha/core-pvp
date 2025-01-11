@@ -16,7 +16,7 @@ const clotheTypeIndex: { [key: string]: number } = {
   arms: 3,
 };
 
-debugData([
+/*debugData([
   {
     action: "Clothing:SendData",
     data: {
@@ -77,7 +77,7 @@ debugData([
       },
     },
   },
-]);
+]);*/
 const ClothingStore = () => {
   const [opened, setOpened] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("torso");

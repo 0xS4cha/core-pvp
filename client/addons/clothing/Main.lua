@@ -284,6 +284,7 @@ RegisterNUICallback('clothingStoreZoom', function(data, cb)
     cb('ok')
 end)
 RegisterNUICallback('clothingStoreChangeVariation', function(data, cb)
+    print('ok')
     if data == 1 then
         if ClothSelected.variation - 1 < 0 then
             SkinChangeFake(ClothSelected.type .. '_2', ClothSelected.maxvariation)

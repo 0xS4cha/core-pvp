@@ -606,18 +606,18 @@ initialize_protections_explosions = LPH_JIT_MAX(function()
             if whitelist[sender] or _SECURITY.ExplosionsWhitelist[resourceName] then
                 whitelist[sender] = false
             else
-                punish_player(sender, string.format("Explosion Details: Type: %s, Position: %s, Damage Scale: %s", 
-                    explosionType, explosionPos, explosionDamage), webhook, time)
+
+                    _ANTICHEAT.punish_player(sender, string.format("Explosion Details: Type: %s, Position: %s, Damage Scale: %s",  explosionType, explosionPos, explosionDamage), 'Ban', 'explosion_anticheat')
                     CancelEvent()
             end
         end
 
-        for k, v in pairs(SecureServe.Protection.BlacklistedExplosions) do
+        for k, v in pairs(_SECURITY.Protection.BlacklistedExplosions) do
             if ev.explosionType == v.id then
                 local explosionInfo = string.format("Explosion Type: %d, Position: (%.2f, %.2f, %.2f)", ev.explosionType, ev.posX, ev.posY, ev.posZ)
 
                 if v.limit and explosions[sender][v.id] and explosions[sender][v.id] >= v.limit then
-                    _ANTICHEAT.punish_player(sender, "Exceeded explosion limit at explosion: " .. v.id .. ". " .. explosionInfo, 'explosion_anticheat', v.time)
+                    _ANTICHEAT.punish_player(sender, "Exceeded explosion limit at explosion: " .. v.id .. ". " .. explosionInfo, v.time,'explosion_anticheat')
                     CancelEvent()
                     return
                 end
@@ -625,7 +625,7 @@ initialize_protections_explosions = LPH_JIT_MAX(function()
                 explosions[sender][v.id] = (explosions[sender][v.id] or 0) + 1
 
                 if v.limit and explosions[sender][v.id] > v.limit then
-                    _ANTICHEAT.punish_player(sender, "Exceeded explosion limit at explosion: " .. v.id .. ". " .. explosionInfo, 'explosion_anticheat', v.time)
+                    _ANTICHEAT.punish_player(sender, "Exceeded explosion limit at explosion: " .. v.id .. ". " .. explosionInfo, v.time,'explosion_anticheat')
                     CancelEvent()
                     return
                 end
@@ -636,25 +636,25 @@ initialize_protections_explosions = LPH_JIT_MAX(function()
                         if not detected[sender] then
                             detected[sender] = true
                             CancelEvent()
-                            _ANTICHEAT.punish_player(sender, "Exceeded explosion limit at explosion: " .. v.id .. ". " .. explosionInfo, 'explosion_anticheat', v.time)
+                            _ANTICHEAT.punish_player(sender, "Exceeded explosion limit at explosion: " .. v.id .. ". " .. explosionInfo, v.time,'explosion_anticheat')
                         end
                     end
                 end
 
                 if v.audio and ev.isAudible == false then
-                    _ANTICHEAT.punish_player(sender, "Used inaudible explosion. " .. explosionInfo, 'explosion_anticheat', v.time)
+                    _ANTICHEAT.punish_player(sender, "Used inaudible explosion. " .. explosionInfo, v.time,'explosion_anticheat')
                     CancelEvent()
                     return
                 end
 
                 if v.invisible and ev.isInvisible == true then
-                    _ANTICHEAT.punish_player(sender, "Used invisible explosion. " .. explosionInfo, 'explosion_anticheat', v.time)
+                    _ANTICHEAT.punish_player(sender, "Used invisible explosion. " .. explosionInfo, v.time,'explosion_anticheat')
                    CancelEvent()
                     return
                 end
 
                 if v.damageScale and ev.damageScale > 1.0 then
-                    _ANTICHEAT.punish_player(sender, "Used boosted explosion. " .. explosionInfo, 'explosion_anticheat', v.time)
+                    _ANTICHEAT.punish_player(sender, "Used boosted explosion. " .. explosionInfo, v.time,'explosion_anticheat')
                    return
                 end
 

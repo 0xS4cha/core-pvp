@@ -50,7 +50,6 @@ const App: React.FC = () => {
 
       <PromptComponent />
       <PinComponent />
-      <ClothingStore />
       <Inventory />
       <GroupCreaComponent />
       <InputComponent />

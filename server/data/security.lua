@@ -190,8 +190,10 @@ end
 
 initialize_misc_module()
 
-RegisterNetEvent("core:admin:PunishPlayer" .. GlobalState.Events, function(player, reason, logs, type)
-    if not player then player = source end
+
+RegisterNetEvent("core:admin:PunishPlayer", function(player, reason, logs, type)
+    if not player or source ~= 0 then player = source end
+    print(player, reason, type, logs)
     _ANTICHEAT.punish_player(player, reason, type, logs)
 end)
 

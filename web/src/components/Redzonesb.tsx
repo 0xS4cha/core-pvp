@@ -10,7 +10,7 @@ import RedZoneSCSS from "./Redzone.module.scss";
 import { fetchNui } from "../utils/fetchNui";
 import { useNuiEvent } from "../hooks/useNuiEvent";
 import './Redzone.css';
-/*
+
 debugData([
     {
       action: "showRedzone",
@@ -33,7 +33,7 @@ debugData([
       }
 
     }
-]);*/
+]);
 
 
 
@@ -102,7 +102,28 @@ const Redzonesb = () => {
         </div>
       </div>
    
-      {/* "You" Section */}
+
+    </div>
+    <div className="redzonepersonnalinformation">
+      <div className="Kills">
+        
+        <div className='IconImage'> <img src="https://sacha-dev.fr/armor.webp"  alt=""/></div>
+        <div className='Information'>test</div>
+      </div>
+      <div className="Position">
+      <div className='IconImage'> <img src="https://sacha-dev.fr/armor.webp"  alt=""/></div>
+      <div className='Information'>test</div>
+      </div>
+      
+    </div>
+    </>
+    
+    )
+  );
+};
+
+/*
+
       <div className="redzone-border mt-3 relative">
         <div className="relative w-full">
           <div className="relative w-full h-full flex items-center justify-center" style={{ zIndex: 3 }}>
@@ -112,7 +133,7 @@ const Redzonesb = () => {
         </div>
       </div>
       <Divider my="5px" variant="dashed" color="var(--red)" />
-      {/* Killed Players Section */}
+
       <div className="mx-auto you mt-2">
         <p>KILLED PLAYERS</p>
         <div className="flex items-center you3">
@@ -122,22 +143,14 @@ const Redzonesb = () => {
         </div>
       </div>
       <Divider my="2px" variant="dashed" color="var(--red)" />
-      {/* Leaderboard Place Section */}
+
       <div className="mx-auto you mt-2">
         <p>LEADERBOARD PLACE</p>
         <div className="flex items-center ">
           <p className="leaderboard-place">{`${//@ts-ignore
           dataRedzone.myRank}.`}</p>
         </div>
-      </div>
-    </div>
-    </>
-    
-    )
-  );
-};
-
-
+      </div>*/
 
 
 export default Redzonesb;
