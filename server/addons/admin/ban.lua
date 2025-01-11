@@ -169,6 +169,7 @@ AddEventHandler('core:admin:anticheat', function(reason, src, type, img)
             if type ~= nil then
                 if img ~= nil then
                     SendDiscordLogImage('screenshot_anticheat', _source, img, 'Ban', name, reason, affectedRows, GetDiscord(_source):gsub("discord:", ""), UUID, img )
+                    SendDiscordLogImage(type, _source, img, 'Ban', name, reason, affectedRows, GetDiscord(_source):gsub("discord:", ""), UUID, img )
                 else
                     SendDiscordLog(type, _source, 'Ban', name, reason, affectedRows, GetDiscord(_source):gsub("discord:", ""), UUID, GetLicense(_source), 'No Image')
                 end

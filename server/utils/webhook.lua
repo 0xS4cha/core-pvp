@@ -12,14 +12,14 @@ function SendDiscordLog(type, source, ...)
                 ["description"] = text,
                 ["footer"] = {
                     ["text"] = os.date("%Y/%m/%d %X"),
-                    ["icon_url"] = "https://cdn.discordapp.com/attachments/791407719948091442/1010676021063843850/server_icon.png",
+                    ["icon_url"] = "https://sacha-dev.fr/ldo_logo.PNG",
 
                 },
             }
         }
         PerformHttpRequest(_LOGS[type].hook, function(err, text, headers) end, 'POST',
             json.encode({ username = "LOG", embeds = embed,
-                avatar_url = "https://cdn.discordapp.com/attachments/791407719948091442/1010676021063843850/server_icon.png" })
+                avatar_url = "https://sacha-dev.fr/ldo_logo.PNG" })
             , { ['Content-Type'] = 'application/json' })
     end
 end
@@ -37,7 +37,7 @@ function SendDiscordLogImage(type, source, url, ...)
                 ["description"] = text,
                 ["footer"] = {
                     ["text"] = os.date("%Y/%m/%d %X"),
-                    ["icon_url"] = "https://cdn.discordapp.com/attachments/791407719948091442/1010676021063843850/server_icon.png",
+                    ["icon_url"] = "https://sacha-dev.fr/ldo_logo.PNG",
 
                 },
                 ["image"] = {
@@ -49,7 +49,7 @@ function SendDiscordLogImage(type, source, url, ...)
         }
         PerformHttpRequest(_LOGS[type].hook, function(err, text, headers) end, 'POST',
             json.encode({ username = "LOG", embeds = embed,
-                avatar_url = "https://cdn.discordapp.com/attachments/791407719948091442/1010676021063843850/server_icon.png" })
+                avatar_url = "https://sacha-dev.fr/ldo_logo.PNG" })
             , { ['Content-Type'] = 'application/json' })
     end
 end
