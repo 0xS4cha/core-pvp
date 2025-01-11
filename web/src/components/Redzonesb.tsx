@@ -35,6 +35,15 @@ debugData([
     }
 ]);
 
+debugData([
+  {
+    action: "showBigMenu",
+    data: true,
+
+  }
+]);
+
+
 
 
 
@@ -42,6 +51,7 @@ debugData([
 const Redzonesb = () => {
   const [openedRedzone, setOpenedRedzone] = useState(false);
   const [dataRedzone, setDataRedzone] = useState<any>({});
+  const [bigMenu, setBigMenu] = useState(true);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -57,13 +67,14 @@ const Redzonesb = () => {
     };
   }, []);
 
-
+  useNuiEvent<any>("RedZone:AllInformation", (data2) => {
+    setBigMenu(data2);
+  });
   return (
     openedRedzone && Object.keys(dataRedzone).length > 0 && (
 <>
-
+    {bigMenu && (
       <div className="redzone-container pb-3">
-      {/* Redzone Leader Section */}
       <div className="redzone-border relative">
         <div className="relative w-full">
           <div className="relative w-full h-full flex items-center justify-center" style={{ zIndex: 3 }}>
@@ -101,18 +112,19 @@ const Redzonesb = () => {
           dataRedzone.zone.totalKills}</p>
         </div>
       </div>
-   
-
     </div>
+    )}
     <div className="redzonepersonnalinformation">
       <div className="Kills">
         
-        <div className='IconImage'> <img src="https://sacha-dev.fr/armor.webp"  alt=""/></div>
-        <div className='Information'>test</div>
+        <div className='IconImage'> <img src="../assets/images/redzone/kills2.png"  alt=""/></div>
+        <div className='Information'><img className="mr-2" src="../assets/images/redzone/kills.png" alt="Kills icon" /><p className="PersonalText">{//@ts-ignore
+          dataRedzone.zone.players[dataRedzone.identifier] ? dataRedzone.zone.players[dataRedzone.identifier].kill : 0}</p></div>
       </div>
       <div className="Position">
-      <div className='IconImage'> <img src="https://sacha-dev.fr/armor.webp"  alt=""/></div>
-      <div className='Information'>test</div>
+      <div className='IconImage'> <img src="../assets/images/redzone/leader.png"  alt=""/></div>
+      <div className='Information'><p className="PersonalText">{`${//@ts-ignore
+          dataRedzone.myRank}.`}</p></div>
       </div>
       
     </div>

@@ -102,15 +102,34 @@
     align-items: center;
     justify-content: center; 
 
+
+
 }
 .redzonepersonnalinformation .Information {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+
+    gap: 5px;
     width: 140px;
     height: 20px;
+    line-height: 20px; /* Alignement vertical */
     margin-left: 0.5vh;
     background: rgba(20, 36, 51, 0.55);
     border-radius: 4px;
+    text-align: center; /* Pour centrer horizontalement */
+}
+
+.redzonepersonnalinformation .Information p {
+    font-family: 'Kanit', sans-serif;
+    font-style: normal;
+ 
+    vertical-align: middle;
+    font-size: 15px;
 
 }
+
+
 .redzonepersonnalinformation .IconImage {
     font-family: 'Exo', sans-serif;
 
@@ -128,9 +147,7 @@
 
 .redzonepersonnalinformation .IconImage img {
 
-        height: 15px;
-
-
+        height: 18px;
 
         color: white;
         position: absolute;

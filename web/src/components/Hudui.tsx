@@ -52,10 +52,10 @@ return ( openedHUD && dataHUD.pausemenu && (
         </div>
         <div className={HudCSS["ui2"]}>
             <div className={HudCSS["carre-armour"]}>
-                <img src="https://sacha-dev.fr/armor.webp"  alt=""/>
+                <img src="../assets/images/redzone/armor.png"  alt=""/>
             </div>
             <div className={HudCSS["carre-health"]}>
-            <img src="https://sacha-dev.fr/health.png" alt=""/>
+            <img src="../assets/images/redzone/health.png" alt=""/>
             </div>
         </div>
  
