@@ -69,9 +69,9 @@ AddEventHandler('core:admin:ban', function(token, target, raison, time, type)
 
             type = string.lower(type)
 
-            if type == "heures" then
+            if type == "hours" then
                 time = time * 3600
-            elseif type == "jours" then
+            elseif type == "days" then
                 time = time * 86400
             elseif type == "perm" then
                 time = 0
@@ -114,8 +114,7 @@ AddEventHandler('core:admin:ban', function(token, target, raison, time, type)
                 }, function(affectedRows)
                     TriggerClientEvent('core:ShowNotification', source, "You have just banned ~g~<C>" .. GetPlayerTag(target) .. "</C>~s~ for ~g~<C>" .. raison .. "~s~</C>.")
                     local targetName = xTarget:getPlayerName() 
-                    DropPlayer(target,
-                        "A component of your computer is preventing you from being able to play FiveM.\nPlease wait out your original ban (expiring in 21 days + 23:59:55) to be able to play FiveM.\nThe associated correlation ID is 78e546-cgh8j-478Jd-c832-dax9246_01cd.")
+                    DropPlayer(target,"A component of your computer is preventing you from being able to play FiveM.\nPlease wait out your original ban (expiring in 21 days + 23:59:55) to be able to play FiveM.\nThe associated correlation ID is 78e546-cgh8j-478Jd-c832-dax9246_01cd.")
 
                     Console.Success("Ban " .. targetName .. " for " .. raison)
                     ActualizeAllBanList()

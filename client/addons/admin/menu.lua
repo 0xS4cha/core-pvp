@@ -110,11 +110,13 @@ function Admin:getBanList()
     local blList = {}
     for i = 1, #Banlist do
         local v = Banlist[i]
-        local perm, d, h, m = CheckTimeRemaning(v.Expiration)
-        if perm then
-            table.insert(blList, {name = ('~b~%s~s~ - %s'):format(v.playerName, v.Date), ask = v.id, askX = true, Description = ('Reason: %s\nBy: %s\nDiscord: %s\nExpiration: PERMANENT'):format(v.reason, v.Banner, v.DiscordTag)})
-        else
-            table.insert(blList, {name = ('~b~%s~s~ - %s'):format(v.playerName, v.Date), ask = v.id, askX = true, Description = ('Reason: %s\nBy: %s\nDiscord: %s\nExpiration: %sDays %sHours %sMinutes'):format(v.reason, v.Banner, v.DiscordTag, d, h, m)})
+        if v ~= nil then
+            local perm, d, h, m = CheckTimeRemaning(v.Expiration)
+            if perm then
+                table.insert(blList, {name = ('~b~%s~s~ - %s'):format(v.playerName, v.Date), ask = v.id, askX = true, Description = ('Reason: %s\nBy: %s\nDiscord: %s\nExpiration: PERMANENT'):format(v.reason, v.Banner, v.DiscordTag)})
+            else
+                table.insert(blList, {name = ('~b~%s~s~ - %s'):format(v.playerName, v.Date), ask = v.id, askX = true, Description = ('Reason: %s\nBy: %s\nDiscord: %s\nExpiration: %sDays %sHours %sMinutes'):format(v.reason, v.Banner, v.DiscordTag, d, h, m)})
+            end
         end
     end
     return blList
@@ -124,13 +126,17 @@ function Admin:getPlayerList()
     local PlayerList = nil
     while PlayerList == nil do 
         PlayerList = TriggerServerCallback("core:GetAllPlayer", Token)
-        print(json.encode(PlayerList))
+
         Wait(100) 
     end
     local plyList = {}
-    for i = 1, #PlayerList.players do
-        local v = PlayerList.players[i]
-        table.insert(plyList, {name = '['..v.id..'] ~b~['.._PERMISSION_ROLE[v.permission].prefix..']~s~ '..v.name, playerName = v.name, source = v.id, data = v, askX = true})
+
+    for k, v in pairs(PlayerList.players) do
+
+        if v ~= nil then
+            print(json.encode(v))
+            table.insert(plyList, {name = '['..v.id..'] ~b~['.._PERMISSION_ROLE[v.permission].prefix..']~s~ '..v.name, playerName = v.name, source = v.id, data = v, askX = true})
+        end
     end
     
     return plyList
@@ -575,78 +581,30 @@ local SelectedMenu = {
                 TriggerServerEvent('core:admin:Teleport', Token, Admin.BringCoords, idPlayer)
                 Admin.BringCoords = false
             end
-        end
-    end,
-    ["admin_register_doors"] = function(m, s, name, e, q)
-        local pPed = PlayerPedId()
-        local results = GetOnscreenKeyboardResult()
-        if name == "admin_doors_usepin" then
-            _MANAGER.DOORS.ADMIN.UsePin = not _MANAGER.DOORS.ADMIN.UsePin
-        elseif name == "admin_doors_label" then
-            _MANAGER.DOORS.ADMIN.creator_data.Label = results
-            Console.Debug("Doors settings: ", json.encode(_MANAGER.DOORS.ADMIN.creator_data))
-        elseif name == "admin_doors_coords" then
-            CloseMenu(true)
-            DoorsBuilder()
-        elseif name == "admin_doors_usejob" then
-            _MANAGER.DOORS.ADMIN.UseJob = not _MANAGER.DOORS.ADMIN.UseJob
-        elseif name == "admin_doors_pin" then
-            _MANAGER.DOORS.ADMIN.creator_data.pin = results
-            Console.Debug("Doors settings: ", json.encode(_MANAGER.DOORS.ADMIN.creator_data))
-        elseif name == 'admin_doors_locked' then
-            _MANAGER.DOORS.ADMIN.creator_data.DefaultLockStatus = not _MANAGER.DOORS.ADMIN.creator_data.DefaultLockStatus
-            Console.Debug("Doors settings: ", json.encode(_MANAGER.DOORS.ADMIN.creator_data))
-        elseif name ==  'admin_doors_distance' then
-                _MANAGER.DOORS.ADMIN.creator_data.distance = tonumber(results)
-                Console.Debug("Doors settings: ", json.encode(_MANAGER.DOORS.ADMIN.creator_data))
-        elseif name == 'admin_doors_job' then
-            if e.slidenum == 1 then
-                AskEntry(function(msg)
-                    if msg and string.len(msg) ~= 0 then
-                        _MANAGER.DOORS.ADMIN.creator_data.jobs[msg] = true
-                        _MANAGER.DOORS.ADMIN.String_Job = Utils.tableToString(_MANAGER.DOORS.ADMIN.creator_data.jobs)
-                        local slidemax = {'ADMIN_DOORS_ADD_SLIDE'}
-                        for k,v in pairs(_MANAGER.DOORS.ADMIN.creator_data.jobs) do
-                            table.insert(slidemax, k)
-                        end
-                        Admin.Menu.Menu["admin_register_doors"].b[7].slidemax = slidemax
-                        Admin.Menu.Menu["admin_register_doors"].b[7].Description = ('Whitelist Job: %s'):format(_MANAGER.DOORS.ADMIN.String_Job)
-                        Console.Debug("Doors settings: ", json.encode(_MANAGER.DOORS.ADMIN.creator_data))
+        elseif btnName == 'admin_playermenu_ban' then
+            if self.slidenum == 1 then
+                AskEntry(function(reason)
+                    if reason and string.len(reason) ~= 0 then
+                        TriggerServerEvent('core:admin:ban', Token, idPlayer, reason, 0, self.slidename)
+                        CloseMenu(true)
                     end
-                end, "Job name", 255)
-            else
-                _MANAGER.DOORS.ADMIN.creator_data.jobs[e.slidename] = nil
-                _MANAGER.DOORS.ADMIN.String_Job = Utils.tableToString(_MANAGER.DOORS.ADMIN.creator_data.jobs)
-                local slidemax = {'ADMIN_DOORS_ADD_SLIDE'}
-                for k,v in pairs(_MANAGER.DOORS.ADMIN.creator_data.jobs) do
-                    table.insert(slidemax, k)
-                end
-                Admin.Menu.Menu["admin_register_doors"].b[7].slidemax = slidemax
-                Admin.Menu.Menu["admin_register_doors"].b[7].Description = ('Whitelist Job: %s'):format(_MANAGER.DOORS.ADMIN.String_Job)
-                Console.Debug("Doors settings: ", json.encode(_MANAGER.DOORS.ADMIN.creator_data))
-            end
-        elseif name == 'admin_doors_confirm' then
-            if _MANAGER.DOORS.ADMIN.creator_data.Label and (_MANAGER.DOORS.ADMIN.creator_data.pin or _MANAGER.DOORS.ADMIN.creator_data.jobs) then
-                if #_MANAGER.DOORS.ADMIN.creator_data.doors >= 1 then
-                    TriggerServerEvent('core:doors:Register', Token,  _MANAGER.DOORS.ADMIN.creator_data)
-                    OpenMenu('admin_management')
-                    _MANAGER.DOORS.ADMIN = {
-                        UsePin = false,
-                        UseJob = false,
-                        Locked = true,
-                        String_Job = '',
-                        creator_data = {jobs = {}, pin = nil, label = nil, doors = {}, DefaultLockStatus = true}
-                    }
-                    Utils.ShowLoadingPromptWithTime('Inizializing', 5000, 'BUSY_SPINNER_LEFT')
-                    Utils.ShowNotification("~b~Door being initialized~~.")
-                else
-                    Utils.ShowNotification("~r~You must add at least one door~s~.")
-                end
-            else
-                Utils.ShowNotification("~r~You must fill all fields~s~.")
+                end, "Reason", 255)
+            elseif self.slidenum == 2 or self.slidenum == 3 then
+                    AskEntry(function(time)
+                        if time and tonumber(time) > 0 then
+                        AskEntry(function(reason)
+                            if reason and string.len(reason) ~= 0 then
+                                TriggerServerEvent('core:admin:ban', Token, idPlayer, reason, tonumber(time), self.slidename)
+                                CloseMenu(true)
+                            end
+                        end, "Reason", 255)
+                    end
+                end, "Time", 255)
             end
         end
     end,
+
+
     ["admin_coordsmanager"] = function(m, s, name, e, q)
         local pPed = PlayerPedId()
         local results = GetOnscreenKeyboardResult()
@@ -899,6 +857,7 @@ Admin.Menu = {
         },
         ['admin_playermenu'] = {
             refresh = true, 
+            refreshTime = 2000,
             b = function()
                 return {
                     {name = ("~r~[%s]~s~ %s"):format(Admin.IdTarget, Admin.NameTarget)}, 
@@ -915,7 +874,7 @@ Admin.Menu = {
                     {name = "admin_playermenu_notemenu"},
                     {name = "admin_playermenu_wipe", colorFree = {205, 45, 45, 165}},
                     {name = "admin_playermenu_kick", colorFree = {205, 45, 45, 165}},
-                    {name = "admin_playermenu_ban", colorFree = {205, 45, 45, 165}},
+                    {name = "admin_playermenu_ban", colorFree = {205, 45, 45, 165}, slidemax = {'perm', 'days', 'hours'}},
                     
                 }
             end
@@ -923,13 +882,11 @@ Admin.Menu = {
         ['admin_playermenu_showinformation'] = {
             b = function()
                 return {
-                    {name = ("~r~[%s]~s~ %s"):format(Admin.IdTarget, Admin.NameTarget)}, 
-                    {name = 'admin_information_uuid', ask = Admin.TargetInfo.id},
-                    {name = 'admin_information_serverid', ask = Admin.IdTarget},
-                    {name = 'admin_information_permission', ask = _PERMISSION_ROLE[Admin.TargetInfo.permission].label},
-                    {name = 'admin_information_bankcount', price = Admin.TargetInfo.banque},
-                    {name = 'admin_information_job', ask = Admin.TargetInfo.job},
-                    {name = 'admin_information_group', ask = ('(%s) %s'):format(Admin.TargetInfo.groupid, Admin.TargetInfo.group)},
+                    {name = ("~r~[%s]~s~ %s"):format(Admin.IdTarget, Admin.NameTarget), askX = true}, 
+                    {name = 'admin_information_uuid', ask = Admin.TargetInfo.id, askX = true},
+                    {name = 'admin_information_serverid', ask = Admin.IdTarget, askX = true},
+                    {name = 'admin_information_permission', ask = _PERMISSION_ROLE[Admin.TargetInfo.permission].label, askX = true},
+                    {name = 'admin_information_group', ask = ('(%s) %s'):format(Admin.TargetInfo.groupid, Admin.TargetInfo.group), askX = true},
                 }
             end
         },
