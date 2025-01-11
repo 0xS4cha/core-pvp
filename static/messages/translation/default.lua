@@ -18,6 +18,7 @@ local defaultPhrases = {
     admin_playerlist = 'Player list',
     ADMIN_Stafflist = 'Staff list',
     ADMIN_MyPlayer = 'My player',
+    RedZoneBigMenu = 'Show RedZone Menu',
     ADMIN_ManageReport = 'Manage reports',
     admin_vehiclemanager = 'Vehicle manager',
     ADMIN_NearbyManage = 'Nearby',

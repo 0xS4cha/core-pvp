@@ -13,7 +13,7 @@ function OpenInventory()
     weapons = TriggerServerCallback('core:GetWeaponSave', Token)
 
     if not _INVENTORY.open then
-        _INVENTORY.open = true
+
         local inv = p:getInventaire()
 
         CreateThread(function()
@@ -72,6 +72,7 @@ function OpenInventory()
                     weapons = Weapons
                 }
             })
+            _INVENTORY.open = true
         end)
 
         return

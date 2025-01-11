@@ -32,7 +32,7 @@ files {
     'web/build/index.html',
 	'web/build/**/*',
     'client/loadscreen/*',
-    'client/sprites/modules/*.lua',
+    'client/loadscreen/*.mp3',
     'assets/*.png'
 }
 ui_page 'web/build/index.html'

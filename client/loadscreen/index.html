@@ -1,0 +1,73 @@
+<head>
+    <link href="keks.css" rel="stylesheet" type="text/css" />
+  </head>
+  <style>
+    #bg-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+    }
+  </style>
+  
+  <body>
+    <img autoplay  id="bg-video" src="./background.JPG"></img>
+    <!-- <audio autoplay loop id="audio_loading" src="./music.mp3"></audio> -->
+    <audio autoplay loop id="audio_loading"></audio>
+    <script>
+      // const play = localStorage.getItem("vision_loadscreen_nomusic") != "1";
+      const musics = ["Rivoli.mp3", 'Inception.mp3']
+  
+      const myAudio = document.getElementById("audio_loading");
+  
+      function playAudio(){
+        let music = musics[Math.floor(Math.random()*musics.length)]
+        myAudio.src = music
+        console.log("music", music, musics.length)
+      }
+      playAudio()
+      myAudio.volume = 1.0;
+      var play = true;
+      function onKeyDown(event) {
+        switch (event.keyCode) {
+          case 32: //SpaceBar                    
+            if (play) {
+              myAudio.pause();
+              play = false;
+            } else {
+              myAudio.play();
+              play = true;
+            }
+            break;
+        }
+        return false;
+      }
+  
+      window.addEventListener("keydown", onKeyDown, false);
+      // if(play) myAudio.play();
+  
+      // document.addEventListener("keyup", (event) => {
+      //   if (event.keyCode == "32") {
+      //     if (play) {
+      //       myAudio.pause();
+      //       play = false;
+      //       localStorage.setItem("vision_loadscreen_nomusic", "1");
+      //     } else {
+      //       myAudio.play();
+      //       play = true;
+      //       localStorage.setItem("vision_loadscreen_nomusic", "0");
+      //     }
+      //   }
+      // });
+    </script>
+    <div class="backdrop">
+      <div class="letni">
+        <h2 title="Chargement...">Chargement...</h2>
+        <h3></h3>
+        <div class="loadbar">
+          <div class="thingy"></div>
+        </div>
+        <p>Appuyez sur la touche <strong>espace</strong> pour activer/désactiver la musique</p>
+      </div>
+  </body>

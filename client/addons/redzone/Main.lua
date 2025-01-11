@@ -75,6 +75,7 @@ end)
 function enteredZone(zoneId)
     isPlayerInZone = true
     zoneIndex = zoneId
+
     if not Zones[zoneId].leader then
         local leaderIdentifier = GetKillLeader(Zones[zoneId].players)
         Zones[zoneId].leader = Zones[zoneId].players[leaderIdentifier]
@@ -172,11 +173,14 @@ Citizen.CreateThread(function()
         if inZone and not enteredEventSend then
             enteredEventSend = true
             exitedEventSend = false
+            PlaySoundFrontend(-1, '10_SEC_WARNING', 'HUD_MINI_GAME_SOUNDSET', 1);
             enteredZone(zoneId)
             TriggerServerEvent("core:redzone:enteredZone", Token, zoneId)
         elseif not inZone and not exitedEventSend then
             enteredEventSend = false
             exitedEventSend = true
+
+            PlaySoundFrontend(-1, 'HACKING_FAILURE', 0, false)
             exitedZone(zoneId)
             TriggerServerEvent("core:redzone:exitedZone", Token, zoneId)
         end

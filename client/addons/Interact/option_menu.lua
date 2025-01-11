@@ -15,7 +15,7 @@ end)
 
 local Weather = {"EXTRASUNNY", "CLEAR", "NEUTRAL", "SMOG", "FOGGY", "Overcast", "CLOUDS", "CLEARING", "RAIN", "THUNDER", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS", "HALLOWEEN"}
 local Time = {00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23}
-
+local RedZoneMenu = true
 
 Preference = {
     Base = { Header = {"commonmenu", "interaction_bgd"}, Color = {color_black}, HeaderColor = {255, 255, 255, 255}, Title = 'OPTION'},
@@ -67,8 +67,10 @@ Preference = {
         elseif btn.name == "Time" then
             local time  = btn.slidename
             NetworkOverrideClockTime(tonumber(time), 00, 0)
+        elseif btn.name == 'RedZoneBigMenu' then
+            RedZoneMenu = not RedZoneMenu
 
-
+            _NUI.SendNUIMessage('RedZone:AllInformation', RedZoneMenu)
         end
 
 
@@ -99,11 +101,15 @@ Preference = {
   
   
         ["settings"] = {
-            b = {
+            refresh = true,
+            b = function()
+                return {
+                {name = "RedZoneBigMenu", checkbox = RedZoneMenu},
                 {name = "Rockstar Editor", slidemax = {'Lancer', 'Stopper', 'Abandonné'}},
                 {name = "RadioSquad", checkbox = true},
   
             }
+        end
         },
 
 
