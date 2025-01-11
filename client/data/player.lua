@@ -186,15 +186,15 @@ RegisterNetEvent("core:RemoveMetadatasInventory")
 AddEventHandler("core:RemoveMetadatasInventory", function(name, quantity, metadatas)
     local inv = p:getInventaire()
     if inv ~= nil then
-        print('1')
+
         for i = 1, #inv do
             if inv[i] ~= nil then
-                print('2', quantity, inv[i].count, inv[i].count - quantity)
+
                 if inv[i].name ~= nil and inv[i].metadatas ~= nil and CompareMetadatas(inv[i].metadatas, metadatas) and inv[i].name == name then
-                    print(json.encode(inv[i]))
+
                     if inv[i].count - quantity <= 0 then table.remove(inv, i)
                     else inv[i].count = inv[i].count - quantity end
-                    print(json.encode(inv[i]))
+
                     p:setInventaire(inv)
                     break
                 end

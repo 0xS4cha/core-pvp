@@ -21,31 +21,6 @@ local encryptEventName = LPH_NO_VIRTUALIZE(function(event_name, key)
     return result
 end)
 
-local xor_decrypt = LPH_NO_VIRTUALIZE(function(encrypted_text, key)
-    local res = {}
-    local key_len = #key
-    for i = 1, #encrypted_text do
-        local xor_byte = string.byte(encrypted_text, i) ~ string.byte(key, (i - 1) % key_len + 1)
-        res[i] = string.char(xor_byte)
-    end
-    return table.concat(res)
-end)
-
-local decryptEventName = LPH_NO_VIRTUALIZE(function(encrypted_name, key)
-    local encrypted = {}
-    for i = 1, #encrypted_name, 3 do
-        local byte_str = encrypted_name:sub(i, i + 2)
-        local byte = tonumber(byte_str)
-   
-        if byte and byte >= 0 and byte <= 255 then
-            table.insert(encrypted, string.char(byte))
-        else
-            return nil
-        end
-    end
-    return xor_decrypt(table.concat(encrypted), key)
-end)
-
 
 
 
@@ -77,34 +52,6 @@ function _ANTICHEAT.isWhitelisted(event_name)
 
     return false
 end
-
-exports('CheckTime', function(event ,time, source)
-    Wait(1000)
-    if event == nil then
-        TriggerEvent('core:admin:anticheat', 'Trigger Event with an excutor '.. event, source, 'events_anticheat')
-    end
-
-    local playerState = _ANTICHEAT.playerState[source]
-    if playerState and playerState.loaded then
-        if _ANTICHEAT.Events[event] == nil and _ANTICHEAT.isWhitelisted(event) == false then
-            Wait(500)
-            if _ANTICHEAT.Events[event] == nil then
-                Wait(500)
-                if _ANTICHEAT.Events[event] == nil and _ANTICHEAT.Events[encryptEventName(event, encryption_key)] == nil then
-                    TriggerEvent('core:admin:anticheat', 'Trigger Event with an excutor '.. event, source, 'events_anticheat')
-                end
-            end
-        else
-            local eventTime = _ANTICHEAT.Events[event]
-            local currentTime = time
-            if not (math.abs(currentTime - eventTime) < 10) then
-                if source and GetPlayerPing(source) > 0 then
-                    TriggerEvent('core:admin:anticheat', 'Exceeded time stamp at trigger: '.. event .. " time: ".. currentTime - eventTime, source, 'events_anticheat')
-                end
-            end
-        end
-    end
-end)
 
 
 exports('IsEventWhitelisted', LPH_NO_VIRTUALIZE(function(event_name)

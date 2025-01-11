@@ -85,6 +85,13 @@ function Utils.EnumeratePickups()
 	return EnumerateEntities(FindFirstPickup, FindNextPickup, EndFindPickup)
 end
 
+
+
+function Utils.GetAllEnumerators()
+    return { vehicles = EnumerateVehicles, objects = EnumerateObjects, peds = EnumeratePeds, pickups = EnumeratePickups }
+end
+
+
 function Utils.GetVehicles()
 	local vehicles = {}
 

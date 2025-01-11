@@ -33,7 +33,6 @@ end
 
 
 function _INITIALIZE.SpawnSelector(v)
-    Console.debugPrint(v)
     Utils.CreateBlips(v.Pos, v.Blip.display, v.Blip.colour, GetPhrase(v.Blip.name), false, v.Blip.size)
     local ped = entity:CreatePedLocal("s_m_m_movspace_01", v.Pos, v.Heading)
     ped:setFreeze(true)

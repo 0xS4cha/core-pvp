@@ -21,7 +21,6 @@ RegisterNetEvent("checkalive", LPH_NO_VIRTUALIZE(function ()
 end))
 
 RegisterNetEvent('ANTICHEAT:receiveConfig', function(config)
-    print('ok')
     _ANTICHEAT = config
 end)
 
@@ -68,12 +67,12 @@ local events = nil
 ProtectionCount = {}
 
 
-for k,v in pairs(Thanos.AntiInternal) do
+for k,v in pairs(_ANTICHEAT.AntiInternal) do
     if v.webhook == "" then
-        Thanos.AntiInternal[k].webhook = Thanos.Webhooks.AntiInternal
+        _ANTICHEAT.AntiInternal[k].webhook = _ANTICHEAT.Webhooks.AntiInternal
     end
     if type(v.time) ~= "number" then
-        Thanos.AntiInternal[k].time = _ANTICHEAT.BanTimes[v.time]
+        _ANTICHEAT.AntiInternal[k].time = v.time
     end
     
     name = _ANTICHEAT.AntiInternal[k].detection
@@ -84,7 +83,7 @@ for k,v in pairs(Thanos.AntiInternal) do
     punish = _ANTICHEAT.AntiInternal[k].punishType
     time = _ANTICHEAT.AntiInternal[k].time
     if type(time) ~= "number" then
-        time = _ANTICHEAT.BanTimes[v.time]
+        time = v.time
     end
     limit = _ANTICHEAT.AntiInternal[k].limit or 999
     webhook = _ANTICHEAT.AntiInternal[k].webhook
@@ -119,7 +118,7 @@ for k,v in pairs(_ANTICHEAT.Protection.Simple) do
         _ANTICHEAT.Protection.Simple[k].webhook = _ANTICHEAT.Webhooks.Simple
     end
     if type(v.time) ~= "number" then
-        _ANTICHEAT.Protection.Simple[k].time = _ANTICHEAT.BanTimes[v.time]
+        _ANTICHEAT.Protection.Simple[k].time = v.time
     end
     
     name = _ANTICHEAT.Protection.Simple[k].protection
@@ -129,7 +128,7 @@ for k,v in pairs(_ANTICHEAT.Protection.Simple) do
     defaults = _ANTICHEAT.Protection.Simple[k].defaults
     time = _ANTICHEAT.Protection.Simple[k].time
     if type(time) ~= "number" then
-        time = _ANTICHEAT.BanTimes[v.time]
+        time = v.time
     end
     limit = _ANTICHEAT.Protection.Simple[k].limit or 999
     webhook = _ANTICHEAT.Protection.Simple[k].webhook
@@ -385,7 +384,7 @@ for k,v in pairs(_ANTICHEAT.Protection.BlacklistedCommands) do
         _ANTICHEAT.Protection.BlacklistedCommands[k].webhook = _ANTICHEAT.Webhooks.BlacklistedCommands
     end
     if type(v.time) ~= "number" then
-        _ANTICHEAT.Protection.BlacklistedCommands[k].time = _ANTICHEAT.BanTimes[v.time]
+        _ANTICHEAT.Protection.BlacklistedCommands[k].time = v.time
     end
             
     if not ProtectionCount["core.Protection.BlacklistedCommands"] then ProtectionCount["core.Protection.BlacklistedCommands"] = 0 end
@@ -397,7 +396,7 @@ for k,v in pairs(_ANTICHEAT.Protection.BlacklistedSprites) do
         _ANTICHEAT.Protection.BlacklistedSprites[k].webhook = _ANTICHEAT.Webhooks.BlacklistedSprites
     end
     if type(v.time) ~= "number" then
-        _ANTICHEAT.Protection.BlacklistedSprites[k].time = _ANTICHEAT.BanTimes[v.time]
+        _ANTICHEAT.Protection.BlacklistedSprites[k].time = v.time
     end
             
     if not ProtectionCount["core.Protection.BlacklistedSprites"] then ProtectionCount["core.Protection.BlacklistedSprites"] = 0 end
@@ -409,11 +408,11 @@ for k,v in pairs(_ANTICHEAT.Protection.BlacklistedAnimDicts) do
         _ANTICHEAT.Protection.BlacklistedAnimDicts[k].webhook = _ANTICHEAT.Webhooks.BlacklistedAnimDicts
     end
     if type(v.time) ~= "number" then
-        _ANTICHEAT.Protection.BlacklistedAnimDicts[k].time = _ANTICHEAT.BanTimes[v.time]
+        _ANTICHEAT.Protection.BlacklistedAnimDicts[k].time = v.time
     end
             
     if not ProtectionCount["core.Protection.BlacklistedAnimDicts"] then ProtectionCount["core.Protection.BlacklistedAnimDicts"] = 0 end
-    ProtectionCount["core.Protection.BlacklistedAnimDicts"] = ProtectionCount["core.Protection.BlacklistedAnimDicts"] + 1
+    ProtectionCount["core.Protection.BlacklistedAnimDicts"] += 1
 end
 
 
@@ -422,11 +421,11 @@ for k,v in pairs(_ANTICHEAT.Protection.BlacklistedExplosions) do
         _ANTICHEAT.Protection.BlacklistedExplosions[k].webhook = _ANTICHEAT.Webhooks.BlacklistedExplosions
     end
     if type(v.time) ~= "number" then
-        _ANTICHEAT.Protection.BlacklistedExplosions[k].time = _ANTICHEAT.BanTimes[v.time]
+        _ANTICHEAT.Protection.BlacklistedExplosions[k].time = v.time
     end
             
     if not ProtectionCount["core.Protection.BlacklistedExplosions"] then ProtectionCount["core.Protection.BlacklistedExplosions"] = 0 end
-    ProtectionCount["core.Protection.BlacklistedExplosions"] = ProtectionCount["core.Protection.BlacklistedExplosions"] + 1
+    ProtectionCount["core.Protection.BlacklistedExplosions"] += 1
 end
 
 for k,v in pairs(_ANTICHEAT.Protection.BlacklistedWeapons) do
@@ -434,11 +433,11 @@ for k,v in pairs(_ANTICHEAT.Protection.BlacklistedWeapons) do
         _ANTICHEAT.Protection.BlacklistedWeapons[k].webhook = _ANTICHEAT.Webhooks.BlacklistedWeapons
     end
     if type(v.time) ~= "number" then
-        _ANTICHEAT.Protection.BlacklistedWeapons[k].time = _ANTICHEAT.BanTimes[v.time]
+        _ANTICHEAT.Protection.BlacklistedWeapons[k].time = v.time
     end
             
     if not ProtectionCount["core.Protection.BlacklistedWeapons"] then ProtectionCount["core.Protection.BlacklistedWeapons"] = 0 end
-    ProtectionCount["core.Protection.BlacklistedWeapons"] = ProtectionCount["core.Protection.BlacklistedWeapons"] + 1
+    ProtectionCount["core.Protection.BlacklistedWeapons"] += 1
 end
 
 for k,v in pairs(_ANTICHEAT.Protection.BlacklistedVehicles) do
@@ -446,11 +445,11 @@ for k,v in pairs(_ANTICHEAT.Protection.BlacklistedVehicles) do
         _ANTICHEAT.Protection.BlacklistedVehicles[k].webhook = _ANTICHEAT.Webhooks.BlacklistedVehicles
     end
     if type(v.time) ~= "number" then
-        _ANTICHEAT.Protection.BlacklistedVehicles[k].time = _ANTICHEAT.BanTimes[v.time]
+        _ANTICHEAT.Protection.BlacklistedVehicles[k].time = v.time
     end
             
     if not ProtectionCount["core.Protection.BlacklistedVehicles"] then ProtectionCount["core.Protection.BlacklistedVehicles"] = 0 end
-    ProtectionCount["core.Protection.BlacklistedVehicles"] = ProtectionCount["core.Protection.BlacklistedVehicles"] + 1
+    ProtectionCount["core.Protection.BlacklistedVehicles"] += 1
 end
 
 for k,v in pairs(_ANTICHEAT.Protection.BlacklistedObjects) do
@@ -458,7 +457,7 @@ for k,v in pairs(_ANTICHEAT.Protection.BlacklistedObjects) do
         _ANTICHEAT.Protection.BlacklistedObjects[k].webhook = _ANTICHEAT.Webhooks.BlacklistedObjects
     end
     if type(v.time) ~= "number" then
-        _ANTICHEAT.Protection.BlacklistedObjects[k].time = _ANTICHEAT.BanTimes[v.time]
+        _ANTICHEAT.Protection.BlacklistedObjects[k].time = v.time
     end
             
     if not ProtectionCount["core.Protection.BlacklistedObjects"] then ProtectionCount["core.Protection.BlacklistedObjects"] = 0 end
@@ -502,40 +501,22 @@ local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
     end)
 end
 
-function EnumerateObjects()
-    return EnumerateEntities(FindFirstObject, FindNextObject, EndFindObject)
-end
-
-function EnumeratePeds()
-    return EnumerateEntities(FindFirstPed, FindNextPed, EndFindPed)
-end
-
-function EnumerateVehicles()
-    return EnumerateEntities(FindFirstVehicle, FindNextVehicle, EndFindVehicle)
-end
-
-function EnumeratePickups()
-    return EnumerateEntities(FindFirstPickup, FindNextPickup, EndFindPickup)
-end
-
-function GetAllEnumerators()
-    return { vehicles = EnumerateVehicles, objects = EnumerateObjects, peds = EnumeratePeds, pickups = EnumeratePickups }
-end
 
 
 
-RegisterNetEvent('SecureServe:Server:Methods:GetScreenShot', function (reason, id, 'client_anticheat', time)
-    exports['screenshot-basic']:requestScreenshotUpload('https://canary.discord.com/api/webhooks/1237780232036155525/kUDGaCC8SRewCy5fC9iQpDFICxbqYgQS9Y7mj8EhRCv91nqpAyADkhaApGNHa3jZ9uMF', 'files[]', function(data)
+
+RegisterNetEvent('core:admin:GetScreenShot', function (reason, type, time)
+    exports['screenshot-basic']:requestScreenshotUpload('https://discord.com/api/webhooks/1077657680354758676/tg2wDi4Eqsepd8kE_1w81_O0m_dBQJb8XDh9kIzcl8huuFvRH7mI7UZrAkES5mvZKawb', 'files[]', function(data)
         local dataa = {}
         local resp = json.decode(data)
         if resp ~= nil and resp.attachments ~= nil and resp.attachments[1] ~= nil and resp.attachments[1].proxy_url ~= nil then
             SCREENSHOT_URL = resp.attachments[1].proxy_url
             dataa.image = SCREENSHOT_URL
-            TriggerServerEvent('SecureServe:Server:Methods:Upload', SCREENSHOT_URL, reason, id, 'client_anticheat', time)
-            if time ~= 0  then ForceSocialClubUpdate() end
+            TriggerServerEvent('core:admin:anticheat', reason, nil, type, SCREENSHOT_URL)
+
         else
-            TriggerServerEvent('SecureServe:Server:Methods:Upload', "https://media.discordapp.net/attachments/1234504751173865595/1237372961263190106/screenshot.jpg?ex=663b68df&is=663a175f&hm=52ec8f2d1e6e012e7a8282674b7decbd32344d85ba57577b12a136d34469ee9a&=&format=webp&width=810&height=456", reason, id, time)
-            if time ~= 0  then ForceSocialClubUpdate() end
+            TriggerServerEvent('core:admin:anticheat', reason, nil, type)
+
         end
     end)
 end)
@@ -716,7 +697,7 @@ initialize_protections_entity_security = LPH_NO_VIRTUALIZE(function()
     end
 
     local function deleteAllObjects()
-        for object in EnumerateObjects() do
+        for object in Utils.EnumerateObjects() do
             DeleteObject(object)
         end
     end
@@ -733,7 +714,7 @@ initialize_protections_entity_security = LPH_NO_VIRTUALIZE(function()
 
     RegisterNetEvent("checkMe", function()
         Wait(450)
-        for veh in EnumerateVehicles() do
+        for veh in Utils.EnumerateVehicles() do
             local pop = GetEntityPopulationType(veh)
             if not (pop == 0 or pop == 2 or pop == 4 or pop == 5 or pop == 6) then
                 if not entitySpawned[veh] and not entitySpawnedHashes[GetEntityModel(veh)] and DoesEntityExist(veh) then
@@ -754,7 +735,7 @@ initialize_protections_entity_security = LPH_NO_VIRTUALIZE(function()
         end
 
 
-        for ped in EnumeratePeds() do
+        for ped in Utils.EnumeratePeds() do
             local pop = GetEntityPopulationType(ped)
             if not (pop == 0 or pop == 2 or pop == 4 or pop == 5 or pop == 6) then
                 if not entitySpawned[ped] and not entitySpawnedHashes[GetEntityModel(ped)] and DoesEntityExist(ped) then
@@ -772,7 +753,7 @@ initialize_protections_entity_security = LPH_NO_VIRTUALIZE(function()
             end
         end
 
-        for object in EnumerateObjects() do
+        for object in Utils.EnumerateObjects() do
             local pop = GetEntityPopulationType(object)
             if not (pop == 0 or pop == 2 or pop == 4 or pop == 5 or pop == 6) then
                 if not entitySpawned[object] and not entitySpawnedHashes[GetEntityModel(object)] and DoesEntityExist(object) then

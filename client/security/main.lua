@@ -33,7 +33,7 @@ end
 
 
 
-local function GeneratePlayerToken(source)
+local function GeneratePlayerToken()
     local token = math.random(100001,9000009).."-"..math.random(100001,9000009).."-"..math.random(100001,9000009).."-"..math.random(100001,9000009)
     return token
 end

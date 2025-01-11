@@ -2,13 +2,19 @@ StaffInStaffMode = {}
 
 Citizen.CreateThread(function()
     while RegisterServerCallback == nil do Wait(100) end
+    RegisterServerCallback("core:admin:GetAllBan", function(source, token)
 
+        if CheckPlayerToken(source, token) then
+            local banlisted = MySQL.query.await('SELECT * FROM blacklist', {})
+
+            return banlisted
+        end
+    end)
     RegisterServerCallback("core:GetAllPlayer", function(source, token)
         if CheckPlayerToken(source, token) then
             local players = { count = 0, players = {} }
             local player = GetAllplayer()
             for k, v in pairs(player) do
-                print(k,v)
                 players.players[k] = { 
                     id = tonumber(v["source"]), 
                     name = GetPlayerName(v["source"]),
@@ -16,7 +22,7 @@ Citizen.CreateThread(function()
                     group = v["group"],
                     groupid = v["groupID"],
                 }
-                players.count = players.count + 1
+                players.count += 1
             end
             return players
         end

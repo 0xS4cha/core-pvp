@@ -23,8 +23,8 @@ _LOGS = {
     ["screenshot_anticheat"] = {
         hook = "https://discord.com/api/webhooks/1203114300286439424/BEXkC3BePt0IkIlbH852E7gjUa274ABwz-cDHxcHMhLINZ6s2WglEYM1zUtBsTkmILPW",--
         color = 0x03fc20,
-        title = "Screen Anticheat",
-        text = "Punishment Method: %s\nReason: %s\nBan ID: %s\nDiscord: <@%s>\nUUID: %d\nLicense: %s\nImage: \n%s\n",
+        title = "Screen Anticheat | New player banned",
+        text = "**TempID**: `%s`\n**Punishment Method**: `%s`\n**Name**: `%s`\n**Reason**: `%s`\n**Ban ID**: `%s`\n**Discord**: <@%s>\n**UUID**: `%d`\n**Image**: \n%s",
     },
 }
 

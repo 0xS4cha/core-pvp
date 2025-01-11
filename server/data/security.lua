@@ -1,14 +1,55 @@
-
 _ANTICHEAT = _ANTICHEAT or {}
-_ANTICHEAT.failureCount = {} -- Table to store the amount of failures for each player
-_ANTICHEAT.playerState = {} -- Table to store the player state
+_ANTICHEAT.failureCount = {}     -- Table to store the amount of failures for each player
+_ANTICHEAT.playerState = {}      -- Table to store the player state
 _ANTICHEAT.playerHeartbeats = {} -- Table to store the player heartbeats
-_ANTICHEAT.ProtectionCount = {} -- Amount of protections
+_ANTICHEAT.ProtectionCount = {}  -- Amount of protections
 _ANTICHEAT.Events = {}
 GlobalState.Events = math.random(1, 99999)
 _ANTICHEAT.CheckInterval = 5000 -- Time between each check cycle
-_ANTICHEAT.maxFailures = 40 -- Maximum amount of failures before the player is kicked
+_ANTICHEAT.maxFailures = 40     -- Maximum amount of failures before the player is kicked
+local encryption_key = "c4a2ec5dc103a3f730460948f2e3c01df39ea4212bc2c82f"
+local xor_encrypt = LPH_NO_VIRTUALIZE(function(text, key)
+    local res = {}
+    local key_len = #key
+    for i = 1, #text do
+        local xor_byte = string.byte(text, i) ~ string.byte(key, (i - 1) % key_len + 1)
+        res[i] = string.char(xor_byte)
+    end
+    return table.concat(res)
+end)
 
+local encryptEventName = LPH_NO_VIRTUALIZE(function(event_name, key)
+    local encrypted = xor_encrypt(event_name, key)
+    local result = ""
+    for i = 1, #encrypted do
+        result = result .. string.format("%03d", string.byte(encrypted, i))
+    end
+    return result
+end)
+
+local xor_decrypt = LPH_NO_VIRTUALIZE(function(encrypted_text, key)
+    local res = {}
+    local key_len = #key
+    for i = 1, #encrypted_text do
+        local xor_byte = string.byte(encrypted_text, i) ~ string.byte(key, (i - 1) % key_len + 1)
+        res[i] = string.char(xor_byte)
+    end
+    return table.concat(res)
+end)
+
+local decryptEventName = LPH_NO_VIRTUALIZE(function(encrypted_name, key)
+    local encrypted = {}
+    for i = 1, #encrypted_name, 3 do
+        local byte_str = encrypted_name:sub(i, i + 2)
+        local byte = tonumber(byte_str)
+        if byte and byte >= 0 and byte <= 255 then
+            table.insert(encrypted, string.char(byte))
+        else
+            return nil
+        end
+    end
+    return xor_decrypt(table.concat(encrypted), key)
+end)
 
 RegisterNetEvent('ANTICHEAT:requestConfig', function()
     local src = source
@@ -31,6 +72,33 @@ RegisterNetEvent('ANTICHEAT:playerLoaded', function()
     _ANTICHEAT.playerState[src] = { loaded = true, loadTime = GetGameTimer() }
 end)
 
+exports('CheckTime', function(event, time, source)
+    Wait(1000)
+    if event == nil then
+        _ANTICHEAT.punish_player(source, "Trigger Event with an excutor " .. event, 'events_anticheat', time)
+    end
+
+    local playerState = _ANTICHEAT.playerState[source]
+    if playerState and playerState.loaded then
+        if _ANTICHEAT.Events[event] == nil and _ANTICHEAT.isWhitelisted(event) == false then
+            Wait(500)
+            if _ANTICHEAT.Events[event] == nil then
+                Wait(500)
+                if _ANTICHEAT.Events[event] == nil and _ANTICHEAT.Events[encryptEventName(event, encryption_key)] == nil then
+                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor " .. event, 'events_anticheat', time)
+                end
+            end
+        else
+            local eventTime = _ANTICHEAT.Events[event]
+            local currentTime = time
+            if not (math.abs(currentTime - eventTime) < 10) then
+                if source and GetPlayerPing(source) > 0 then
+                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor " .. event, 'events_anticheat', time)
+                end
+            end
+        end
+    end
+end)
 
 _ANTICHEAT.Screenshot = function(data, reason, punishment, banId)
     local discord = data.discord
@@ -45,7 +113,8 @@ initialize_misc_module = function()
     local ac_name = GetCurrentResourceName()
 
     local function has_script_keywords(manifest_code)
-        local keywords = {"client_script", "client_scripts", "server_script", "server_scripts", "shared_script", "shared_scripts"}
+        local keywords = { "client_script", "client_scripts", "server_script", "server_scripts", "shared_script",
+            "shared_scripts" }
         for _, keyword in ipairs(keywords) do
             if string.find(manifest_code, keyword) then
                 return true
@@ -57,19 +126,18 @@ initialize_misc_module = function()
     local function install_module()
         local num_resources = GetNumResources()
         local changes = 0
-    
+
         for i = 0, num_resources - 1 do
             local resource = GetResourceByFindIndex(i)
-    
+
             if (resource ~= "_cfx_internal" and resource ~= "monitor") and (resource ~= ac_name) then
                 local fxmanifest = LoadResourceFile(resource, "fxmanifest.lua")
                 local resource_lua = LoadResourceFile(resource, "__resource.lua")
                 local manifest_file = (fxmanifest and "fxmanifest.lua") or (resource_lua and "__resource.lua")
                 local manifest_code = LoadResourceFile(resource, manifest_file)
-    
+
                 if manifest_code and not string.find(manifest_code, string.format([[shared_script "@%s/module.lua"]], ac_name)) then
                     if has_script_keywords(manifest_code) then
-
                         local str = string.format([[shared_script "@%s/module.lua"%s]], ac_name, manifest_code)
                         SaveResourceFile(resource, manifest_file, str, -1)
                         changes = changes + 1
@@ -77,7 +145,7 @@ initialize_misc_module = function()
                 end
             end
         end
-    
+
         if changes > 0 then
             Console.Error("Exiting in 5 seconds...")
             Console.Error("Please Restart your server so the module will work! make sure core is ensured first!")
@@ -86,14 +154,14 @@ initialize_misc_module = function()
             Console.Error("No applicable resources need the module, or all already have it installed.")
         end
     end
-    
+
     RegisterCommand("ssinstall", function(source, args, rawCommand)
         install_module()
     end, true)
-    
+
     RegisterCommand("ssuninstall", function(_, args)
         local num_resources = GetNumResources()
-        
+
         for i = 0, num_resources - 1 do
             local resource_name = GetResourceByFindIndex(i)
             if (resource_name ~= "_cfx_internal" and resource_name ~= "monitor") and (resource_name ~= ac_name) then
@@ -101,11 +169,12 @@ initialize_misc_module = function()
                 local resource = LoadResourceFile(resource_name, "__resource.lua")
                 local manifest_file = (fxmanifest and "fxmanifest.lua") or (resource and "__resource.lua")
                 local manifest_code = LoadResourceFile(resource_name, manifest_file)
-    
-                SaveResourceFile(resource_name, manifest_file, manifest_code:gsub(string.format([[shared_script "@%s/module.lua"]], args[1] or ac_name), ""), -1)
+
+                SaveResourceFile(resource_name, manifest_file,
+                    manifest_code:gsub(string.format([[shared_script "@%s/module.lua"]], args[1] or ac_name), ""), -1)
             end
         end
-    
+
         Console.Success("Module has been uninstalled from all resources!")
         Console.Success("Exiting in 5 seconds...")
         Citizen.Wait(5000)
@@ -121,7 +190,7 @@ end
 
 initialize_misc_module()
 
-RegisterNetEvent("core:admin:PunishPlayer" .. _ANTICHEAT.EventsTime, function(player, reason, logs, type)
+RegisterNetEvent("core:admin:PunishPlayer" .. GlobalState.Events, function(player, reason, logs, type)
     if not player then player = source end
     _ANTICHEAT.punish_player(player, reason, type, logs)
 end)
@@ -129,7 +198,8 @@ end)
 
 _ANTICHEAT.punish_player = function(source, reason, type, logs)
     if type == nil or type == 'Ban' then
-        TriggerEvent('core:admin:anticheat', reason, source, logs)
+        TriggerClientEvent('core:admin:GetScreenShot', source, reason, type, logs)
+
         return
     end
     if type == 'Kick' then
@@ -140,6 +210,8 @@ _ANTICHEAT.punish_player = function(source, reason, type, logs)
     TriggerEvent('core:admin:anticheat', reason, source, logs)
 end
 
+RegisterNetEvent("core:admin:PunishPlayerScreen", function(img, player, reason, logs, type)
+end)
 
 
 Citizen.CreateThread(function()
@@ -175,7 +247,8 @@ local function replaceEventRegistrations(filePath)
     local netEventPattern = "RegisterNetEvent%s*%('([^']+)'%s*%)%s*AddEventHandler%s*%('%1'%s*,%s*function%(([^)]*)%)"
     content = content:gsub(netEventPattern, "RegisterNetEvent('%1', function(%2)")
 
-    local serverEventPattern = "RegisterServerEvent%s*%('([^']+)'%s*%)%s*AddEventHandler%s*%('%1'%s*,%s*function%(([^)]*)%)"
+    local serverEventPattern =
+    "RegisterServerEvent%s*%('([^']+)'%s*%)%s*AddEventHandler%s*%('%1'%s*,%s*function%(([^)]*)%)"
     content = content:gsub(serverEventPattern, "RegisterNetEvent('%1', function(%2)")
 
     local outputFile = io.open(filePath, "w")
@@ -221,7 +294,7 @@ local function searchInDirectory(directory, resourceName)
     end
 
 
-    
+
     for file in p:lines() do
         replaceEventRegistrations(file)
 
@@ -263,7 +336,4 @@ function SearchForAssetPackDependency()
     end
 end
 
-
 SearchForAssetPackDependency()
-
-

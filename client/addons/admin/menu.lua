@@ -66,11 +66,65 @@ Admin.DetailsInSpec = {
         label = "Ouvrir le menu"
     },
 }
+function CheckTimeRemaning(time)
+    local d = 0
+    local h = 0
+    local m = 0
+    local perm = false
+    if tonumber(time) ~= 0 then
+        if (tonumber(time)) > os.time() then
+            local tempsrestant = (((tonumber(time)) - os.time()) / 60)
+            if tempsrestant >= 1440 then
+                local day = (tempsrestant / 60) / 24
+                local hrs = (day - math.floor(day)) * 24
+                local minutes = (hrs - math.floor(hrs)) * 60
+                d = math.floor(day)
+                h = math.floor(hrs)
+                m = math.ceil(minutes)
+            elseif tempsrestant >= 60 and tempsrestant < 1440 then
+                local day = (tempsrestant / 60) / 24
+                local hrs = tempsrestant / 60
+                local minutes = (hrs - math.floor(hrs)) * 60
+                d = math.floor(day)
+                h = math.floor(hrs)
+                m = math.ceil(minutes)
+            elseif tempsrestant < 60 then
+                d = 0
+                h = 0
+                m = math.ceil(tempsrestant)
+            end
+
+        end
+    else
+        perm = true
+    end
+    return perm, d, h, m
+end
+function Admin:getBanList()
+    local Banlist = nil
+
+    while Banlist == nil do
+        Banlist = TriggerServerCallback("core:admin:GetAllBan", Token)
+        Wait(100)
+    end
+    local blList = {}
+    for i = 1, #Banlist do
+        local v = Banlist[i]
+        local perm, d, h, m = CheckTimeRemaning(v.Expiration)
+        if perm then
+            table.insert(blList, {name = ('~b~%s~s~ - %s'):format(v.playerName, v.Date), ask = v.id, askX = true, Description = ('Reason: %s\nBy: %s\nDiscord: %s\nExpiration: PERMANENT'):format(v.reason, v.Banner, v.DiscordTag)})
+        else
+            table.insert(blList, {name = ('~b~%s~s~ - %s'):format(v.playerName, v.Date), ask = v.id, askX = true, Description = ('Reason: %s\nBy: %s\nDiscord: %s\nExpiration: %sDays %sHours %sMinutes'):format(v.reason, v.Banner, v.DiscordTag, d, h, m)})
+        end
+    end
+    return blList
+end
 
 function Admin:getPlayerList()
     local PlayerList = nil
     while PlayerList == nil do 
         PlayerList = TriggerServerCallback("core:GetAllPlayer", Token)
+        print(json.encode(PlayerList))
         Wait(100) 
     end
     local plyList = {}
@@ -379,7 +433,14 @@ function Admin:Spectate(pPos)
 end
 
 Admin.HasGamerTag = false;
+Admin.HasHitbox = false;
+Admin.HasSkeleton = false;
+Admin.HasPlayerLine = false;
 Admin.HasBlips = false;
+
+Admin.HasPropsName = false;
+Admin.HasBonesName = false;
+Admin.HasGroundName = false;
 Admin.AllTags = { GAMER_NAME = 0, CREW_TAG = 1, healthArmour = 2, BIG_TEXT = 3, AUDIO_ICON = 4, MP_USING_MENU = 5, MP_PASSIVE_MODE = 6, WANTED_STARS = 7, MP_DRIVER = 8, MP_CO_DRIVER = 9, MP_TAGGED = 10, GAMER_NAME_NEARBY = 11, ARROW = 12, MP_PACKAGES = 13, INV_IF_PED_FOLLOWING = 14, RANK_TEXT = 15, MP_TYPING = 16 }
 
 
@@ -579,7 +640,6 @@ local SelectedMenu = {
                     Utils.ShowLoadingPromptWithTime('Inizializing', 5000, 'BUSY_SPINNER_LEFT')
                     Utils.ShowNotification("~b~Door being initialized~~.")
                 else
-                    Console.debugPrint(_MANAGER.DOORS.ADMIN.creator_data)
                     Utils.ShowNotification("~r~You must add at least one door~s~.")
                 end
             else
@@ -655,7 +715,48 @@ local SelectedMenu = {
                 Admin.HasGamerTag = false
                 DestroyGamerTag()
             end
-
+        elseif name == "admin_hitbox" then
+            if not Admin.HasHitbox then
+                Admin.HasHitbox = true
+                ToogleHitbox()
+            else
+                Admin.HasHitbox = false
+            end
+        elseif name == 'admin_playerline' then
+            if not Admin.HasPlayerLine then
+                Admin.HasPlayerLine = true
+                ToggleLine()
+            else
+                Admin.HasPlayerLine = false
+            end
+        elseif name == 'admin_skeleton' then
+            if not Admin.HasSkeleton then
+                Admin.HasSkeleton = true
+                ToogleSkeleton()
+            else
+                Admin.HasSkeleton = false
+            end
+        elseif name == 'admin_propsname' then
+            if not Admin.HasPropsName then
+                Admin.HasPropsName = true
+                TooglePropsName()
+            else
+                Admin.HasPropsName = false
+            end
+        elseif name == 'admin_groundname' then
+            if not Admin.HasGroundName then
+                Admin.HasGroundName = true
+                ToggleGroundName()
+            else
+                Admin.HasGroundName = false
+            end
+        elseif name == 'admin_bonesname' then
+            if not Admin.HasBonesName then
+                Admin.HasBonesName = true
+                ToggleBonesName()
+            else
+                Admin.HasBonesName = false
+            end
         elseif name == "admin_showblips" then
             Admin:CreateBlips()
             Admin.HasBlips = e.checkbox
@@ -826,11 +927,16 @@ Admin.Menu = {
                     {name = 'admin_information_uuid', ask = Admin.TargetInfo.id},
                     {name = 'admin_information_serverid', ask = Admin.IdTarget},
                     {name = 'admin_information_permission', ask = _PERMISSION_ROLE[Admin.TargetInfo.permission].label},
-                    {name = 'admin_information_playerrpname', ask = ('%s %s'):format(Admin.TargetInfo.firstname, Admin.TargetInfo.lastname)},
                     {name = 'admin_information_bankcount', price = Admin.TargetInfo.banque},
                     {name = 'admin_information_job', ask = Admin.TargetInfo.job},
                     {name = 'admin_information_group', ask = ('(%s) %s'):format(Admin.TargetInfo.groupid, Admin.TargetInfo.group)},
                 }
+            end
+        },
+        ['admin_unbanmanager'] = {
+            useFilter = true,
+            b = function()
+                return Admin:getBanList()
             end
         },
         ['admin_anticheatalert'] = {
@@ -842,6 +948,13 @@ Admin.Menu = {
         ['admin_management'] = {
             b = function()
                 return {
+                    {name = "admin_unbanmanager", canSee = function()
+                        if p:getPermission() >= _PERMISSION['unban'] then
+                            return true
+                        else
+                            return false
+                        end
+                    end},
                     {name = "admin_anticheatalert", canSee = function()
                         return true
                     end},
@@ -864,12 +977,21 @@ Admin.Menu = {
             }
         },
         ["admin_tools"] = {
-            b = {
+            refresh = true,
+            b = function()
+                return {
                 {name = "admin_teleportpoint"},
                 {name = "admin_showgamertag", checkbox = Admin.HasGamerTag},
+                {name = "admin_hitbox", checkbox = Admin.HasHitbox},
+                {name = "admin_playerline", checkbox = Admin.HasPlayerLine},
+                {name = "admin_skeleton", checkbox = Admin.HasSkeleton},
+                {name = 'admin_propsname', checkbox = Admin.HasPropsName},
+                {name = 'admin_bonesname', checkbox = Admin.HasBonesName},
+                {name = 'admin_groundname', checkbox = Admin.HasGroundName},
                 {name = "admin_showblips", checkbox = Admin.HasBlips},
-
-            }
+                }
+            end
+            
         },
 
         ["admin_register_doors"] = {

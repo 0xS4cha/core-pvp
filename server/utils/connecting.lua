@@ -1,5 +1,3 @@
-
-
 function CheckTimeRemaning(time, key)
     local d = 0
     local h = 0
@@ -36,7 +34,6 @@ function CheckTimeRemaning(time, key)
     return unban, d, h, m
 end
 
-
 BanList = {}
 BannedTokens = {}
 AddEventHandler('playerConnecting', function(name, skr, data)
@@ -50,14 +47,18 @@ AddEventHandler('playerConnecting', function(name, skr, data)
     PlayerTokens = {}
     banned = {}
     data.defer()
-        if #BanList <= 0 then
-        data.presentCard([==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"Serveur en cours d'initialisation.","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==], function(data, rawData)
-        end)
+    if #BanList <= 0 then
+        data.presentCard(
+        [==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"Serveur en cours d'initialisation.","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==],
+            function(data, rawData)
+            end)
         CancelEvent()
         return
     end
-    data.presentCard([==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"Initialisation de la connexion au proxy..","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==], function(data, rawData)
-    end)
+    data.presentCard(
+    [==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"Initialisation de la connexion au proxy..","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==],
+        function(data, rawData)
+        end)
     for i = 0, GetNumPlayerIdentifiers(_source) - 1 do
         local id = GetPlayerIdentifier(_source, i)
         if string.find(id, "steam") then
@@ -76,8 +77,10 @@ AddEventHandler('playerConnecting', function(name, skr, data)
     end
     Wait(1000)
     if not license or license == "" or license == nil or not ip then
-        data.presentCard([==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"License invalide.","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==], function(data, rawData)
-        end)
+        data.presentCard(
+        [==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"License invalide.","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==],
+            function(data, rawData)
+            end)
         CancelEvent()
         return
     end
@@ -90,11 +93,11 @@ AddEventHandler('playerConnecting', function(name, skr, data)
     local nameBan = ""
     local nameBanner = ""
     local BanId = 0
+    local ProofBan = ''
     local timeRimaing = ""
     Wait(500)
     for i = 1, #BanList, 1 do
-		if ((tostring(BanList[i].license)) == tostring(license) or (tostring(BanList[i].discord)) == tostring(discord) or (tostring(BanList[i].playerip)) == tostring(ip)) then
-
+        if ((tostring(BanList[i].license)) == tostring(license) or (tostring(BanList[i].discord)) == tostring(discord) or (tostring(BanList[i].playerip)) == tostring(ip)) then
             local unban, d, h, m = CheckTimeRemaning(BanList[i].Expiration, BanList[i].ID)
             if unban then
                 banned[ip] = false
@@ -104,6 +107,7 @@ AddEventHandler('playerConnecting', function(name, skr, data)
             reason = BanList[i].reason
             nameBan = BanList[i].playerName
             nameBanner = BanList[i].bannerName
+            ProofBan = BanList[i].image
             BanId = BanList[i].ID
             timeRimaing = ('%s Days %s Hours %s Minutes'):format(d, h, m)
             MySQL.Async.execute(
@@ -117,17 +121,16 @@ AddEventHandler('playerConnecting', function(name, skr, data)
             break
         else
             banned[ip] = false
-		end
-	end
-    if not banned[ip] then 
-        if json.encode(BannedTokens) ~= "[]" then 
+        end
+    end
+    if not banned[ip] then
+        if json.encode(BannedTokens) ~= "[]" then
             for i = 1, #BanList, 1 do
                 for z = 1, #BannedTokens, 1 do
                     for c = 1, #PlayerTokens[ip], 1 do
-                        if BannedTokens and PlayerTokens then 
-                            if BannedTokens[z] ~= nil and PlayerTokens[ip][c] ~= nil then 
+                        if BannedTokens and PlayerTokens then
+                            if BannedTokens[z] ~= nil and PlayerTokens[ip][c] ~= nil then
                                 if BannedTokens[z] == PlayerTokens[ip][c] then
-
                                     local unban, d, h, m = CheckTimeRemaning(BanList[i].Expiration, BanList[i].ID)
                                     if unban then
                                         banned[ip] = false
@@ -138,9 +141,12 @@ AddEventHandler('playerConnecting', function(name, skr, data)
                                     nameBan = BanList[i].playerName
                                     nameBanner = BanList[i].bannerName
                                     BanId = BanList[i].ID
+                                    ProofBan = BanList[i].image
+
                                     timeRimaing = ('%s Days %s Hours %s Minutes'):format(d, h, m)
                                     MySQL.Async.execute(
-                                        'UPDATE blacklist SET Token = @Token, GameLicense = @license, DiscordUID = @discord WHERE id = @id', {
+                                        'UPDATE blacklist SET Token = @Token, GameLicense = @license, DiscordUID = @discord WHERE id = @id',
+                                        {
                                             ["@Token"] = json.encode(PlayerTokens[ip]),
                                             ["@license"] = license,
                                             ["@discord"] = discord,
@@ -160,15 +166,16 @@ AddEventHandler('playerConnecting', function(name, skr, data)
     end
     if banned[ip] then
         if reason and nameBan and nameBanner and timeRimaing then
+
             local card = {
                 type = "AdaptiveCard",
                 version = "1.2",
                 body = {
-                    { type = "TextBlock", text = "You are blacklisted from our server !",                                                                                                                                                                                                              wrap = true,                                                                                                                                                                  horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large",  weight = "Bolder", color = "Orange" },
-                    { type = "TextBlock", text = "Ban Information :\nReason: " .. reason .. "\nBan ID: #" .. BanId .. "\nBy: "..nameBanner.."\nTime remaining: "..timeRimaing..".",                                                                                                                                           wrap = true,                                                                                                                                                                  horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Medium", weight = "Bolder", color = "Light" },
-                    { type = "ActionSet", horizontalAlignment = "Center",                                                                                                                                                                                                                         actions = { { type = "Action.OpenUrl", title = "Join Discord", url = "https://discord.gg/qU7Hug7F2y", iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
-                    { type = "Container", items = { { type = "ActionSet", horizontalAlignment = "Center", actions = { { type = "Action.OpenUrl", title = "Visit our website", url = "discord", iconUrl = "https://icons.getbootstrap.com/assets/icons/globe.svg" } } } } },
-                    { type = "TextBlock", text = "This server protected by SxProtection®",                                                                                                                                                                                                              wrap = true,                                                                                                                                                                  horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small",  weight = "Bolder", color = "Light" },
+                    { type = "TextBlock", text = "You are blacklisted from our server !", wrap = true, horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large",  weight = "Bolder", color = "Orange" },
+                    { type = "TextBlock", text = "Ban Information :\nReason: " .. reason .. "\nBan ID: #" .. BanId .. "\nBy: " .. nameBanner .. "\nTime remaining: " .. timeRimaing .. ".", wrap = true, horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Medium", weight = "Bolder", color = "Light" },
+                    { type = 'Image', url = ProofBan },
+                    { type = "ActionSet", horizontalAlignment = "Center", actions = { { type = "Action.OpenUrl", title = "Join Discord", url = "https://discord.gg/", iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
+                    { type = "TextBlock", text = "This server protected by SxProtection®", wrap = true, horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small",  weight = "Bolder", color = "Light" },
                 }
             }
             while true do
@@ -184,5 +191,3 @@ AddEventHandler('playerConnecting', function(name, skr, data)
         data.done()
     end
 end)
-
-

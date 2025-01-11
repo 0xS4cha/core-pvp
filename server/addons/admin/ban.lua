@@ -35,6 +35,7 @@ function ActualizeAllBanList()
                     playerip = result[i].ip,
                     Expiration = result[i].Expiration,
                     reason = result[i].reason,
+                    image = result[i].image
                 })
                 local TokenBan = json.decode(result[i].Token)
                 if TokenBan ~= nil then
@@ -123,30 +124,34 @@ AddEventHandler('core:admin:ban', function(token, target, raison, time, type)
     end
 end)
 RegisterNetEvent("core:admin:anticheat")
-AddEventHandler('core:admin:anticheat', function(reason, src, type)
+AddEventHandler('core:admin:anticheat', function(reason, src, type, img)
     local _source = source
+    local UUID = 0
     if _source == nil or _source == 0 or _source == '' then
         _source = src
     end
     local xTarget = GetPlayer(_source)
-    if _PERMISSION['anticheat'] < xTarget:getPermission() then
-        return
+    if xTarget ~= nil then
+        UUID = xTarget:getId()
+        if _PERMISSION['anticheat'] < xTarget:getPermission() then
+            return
+        end
     end
     local time = os.date()
     local token = {}
-    token[xTarget:getDiscord()] = {}
-
+    token[GetDiscord(_source)] = {}
+ 
     for i = 0, GetNumPlayerTokens(_source) do
-        table.insert(token[xTarget:getDiscord()], GetPlayerToken(_source, i))
+        table.insert(token[GetDiscord(_source)], GetPlayerToken(_source, i))
     end
 
     MySQL.Async.insert(
-        'INSERT INTO blacklist (Steam, playerName, DiscordUID, DiscordTag, GameLicense, ip, xbl, live,  reason, Date, Banner, Expiration, Token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO blacklist (Steam, playerName, DiscordUID, DiscordTag, GameLicense, ip, xbl, live,  reason, Date, Banner, Expiration, Token, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         {
             GetSteam(_source),
             GetPlayerTag(_source),
             GetDiscord(_source),
-            '<@' .. GetDiscord(_source) .. '>',
+            '<@' .. GetDiscord(_source):gsub("discord:", "") .. '>',
             GetLicense(_source),
             GetIp(_source),
             GetXbl(_source),
@@ -155,16 +160,20 @@ AddEventHandler('core:admin:anticheat', function(reason, src, type)
             time,
             'Anticheat',
             0,
-            json.encode(token)
+            json.encode(token),
+            img or ''
         }, function(affectedRows)
-            local name = (xTarget:getSource() or GetPlayerName(_source)) or 'unknow'
-            local data = {
-                discord = GetDiscord(_source),
-                license = GetLicense(_source)
-            }
-            TriggerClientEvent('core:admin:GetScreenShot', _source, data, reason, 'ban', affectedRows, type)
+            local name = GetPlayerName(_source) or 'unknow'
+   
             Console.Success("Ban " .. name .. " for Anticheat")
-            DropPlayer(xTarget:getSource(),
+            if type ~= nil then
+                if img ~= nil then
+                    SendDiscordLogImage('screenshot_anticheat', _source, img, 'Ban', name, reason, affectedRows, GetDiscord(_source):gsub("discord:", ""), UUID, img )
+                else
+                    SendDiscordLog(type, _source, 'Ban', name, reason, affectedRows, GetDiscord(_source):gsub("discord:", ""), UUID, GetLicense(_source), 'No Image')
+                end
+            end
+            DropPlayer(_source,
                 "A component of your computer is preventing you from being able to play FiveM.\nPlease wait out your original ban (expiring in 21 days + 23:59:55) to be able to play FiveM.\nThe associated correlation ID is 78e546-cgh8j-478Jd-c832-dax9246_01cd.")
 
             ActualizeAllBanList()

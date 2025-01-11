@@ -10,7 +10,7 @@ _CONFIG.RGBA = {
     WAYPOINT = {RED = 0, GREEN = 249, BLUE = 185, ALPHA = 255}  -- Waypoint color on the map (default nopixel-green)
 }
 
-_CONFIG.RefreshBanList = 60
+_CONFIG.RefreshBanList = 30
 _CONFIG.SLOTMAX = 255
 _CONFIG.DISCORD = {
     LINK = 'gsfdgsfdgfds'

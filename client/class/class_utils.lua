@@ -73,21 +73,7 @@ local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
 	end)
 end
 
-function Utils.EnumerateObjects()
-	return EnumerateEntities(FindFirstObject, FindNextObject, EndFindObject)
-end
 
-function Utils.EnumeratePeds()
-  	return EnumerateEntities(FindFirstPed, FindNextPed, EndFindPed)
-end
-
-function Utils.EnumerateVehicles()
-  	return EnumerateEntities(FindFirstVehicle, FindNextVehicle, EndFindVehicle)
-end
-
-function Utils.EnumeratePickups()
-  	return EnumerateEntities(FindFirstPickup, FindNextPickup, EndFindPickup)
-end
 
 function Utils.LoadAnimDict(animDict)
     RequestAnimDict(animDict)
