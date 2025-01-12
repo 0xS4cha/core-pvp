@@ -1,31 +1,22 @@
 player = {
     id = 0, ---@private
+    source = 0,
     license = "", ---@private
-    firstname = "", ---@private
-    lastname = "", ---@private
-    age = "02/01/2000", ---@private
-    sex = "", ---@private
-    birthplaces = "", ---@private
-    size = 180, ---@private
+    identifier = "", ---@private
+    liveid = "", ---@private
+    xblid = "", ---@private
+    discord = "", ---@private
+    playerip = "", ---@private
+    playerName = "", ---@private
     inventaire = {}, ---@private
     weapons = {}, ---@private
     cloths = { skin = {}, cloths = {} }, ---@private
-    tattoos = {}, ---@private
-    degrader = {},
-    banque = 0, ---@private
-    position = vector3(456651.0, 464.0, 64685.0), ---@private
     permission = 0, ---@private
-    job = "aucun", ---@private
-    job_grade = 1, ---@private
     group = "None", ---@private
-    status = { hunger = 99, thirst = 99, health = 200 }, ---@private
-    balance = 0, ---@private
-    subscription = 0, ---@private
+    groupID = 0, ---@private
+    vip = 0,
     needSave = false, ---@private
-    inAction = false,
     active = 1,
-    idPerso = {},
-    lastProperty = {},
 }
 
 p = nil ---@type player
@@ -40,33 +31,28 @@ function player:new(data)
     setmetatable(obj, self)
     self.__index = self
     obj.id = data.id
+
     obj.license = data.license ---@private
-    obj.firstname = data.firstname ---@private
-    obj.lastname = data.lastname ---@private
-    obj.age = data.age ---@private
-    obj.sex = data.sex ---@private
-    obj.age = data.age ---@private
-    obj.birthplaces = data.birthplaces ---@private
+    obj.identifier = data.identifier ---@private
+    obj.liveid = data.liveid ---@private
+    obj.xblid = data.xblid ---@private
+    obj.discord =   data.discord ---@private
+    obj.playerip = data.playerip ---@private
+    obj.playerName = data.playerName ---@private
     obj.inventaire = data.inventaire ---@private
-    obj.weapons = data.weapons ---@private
-    obj.banque = data.banque ---@private
     obj.cloths = data.cloths ---@private
-    obj.degrader = data.degrader
-    obj.tattoos = data.tattoos ---@private
-    obj.position = data.pos ---@private
     obj.permission = data.permission ---@private
-    obj.status = data.status ---@private
+
+
+    obj.group = data.group
     obj.vip = data.vip ---@private
-    obj.job = data.job ---@private
-    obj.job_grade = data.job_grade ---@private
-    obj.group = data.group ---@private
     obj.active = data.active
-    obj.idPerso = data.idPerso
-    obj.balance = data.balance ---@private
-    obj.subscription = data.subscription ---@private
+
     if obj.weapons == nil then
         obj.weapons = {}
     end
+
+
 
     p = obj
 end
@@ -487,7 +473,6 @@ end
 function player:haveEnoughMoney(number)
     for k, v in pairs(p:getInventaire()) do
         if v.name == "money" then
-            print("moula")
             if v.count >= number then
                 return true
             else
@@ -609,7 +594,6 @@ end
 -- exports
 
 exports("haveitem", function(item)
-    print("item")
     return p:haveItem(item)
 end)
 
