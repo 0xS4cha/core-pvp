@@ -3,7 +3,7 @@ import { fetchNui } from "../utils/fetchNui";
 import { useNuiEvent } from "../hooks/useNuiEvent";
 import { debugData } from "../utils/debugData";
 import DeathSCSS from "./Death.module.scss";
-
+/*
 debugData([
   {
     action: "showDeath",
@@ -27,7 +27,7 @@ debugData([
       hpDamage: 1
     }
   },
-])
+])*/
 const Death = () => {
   const [openedDeath, setOpenedDeath] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300); // Initialisation à 5 minutes (300 secondes)

@@ -10,7 +10,7 @@ import RedZoneSCSS from "./Redzone.module.scss";
 import { fetchNui } from "../utils/fetchNui";
 import { useNuiEvent } from "../hooks/useNuiEvent";
 import './Redzone.css';
-
+/*
 debugData([
     {
       action: "showRedzone",
@@ -41,7 +41,7 @@ debugData([
     data: true,
 
   }
-]);
+]);*/
 
 
 

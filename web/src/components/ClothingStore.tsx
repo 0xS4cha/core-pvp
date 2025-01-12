@@ -16,7 +16,7 @@ const clotheTypeIndex: { [key: string]: number } = {
   arms: 3,
 };
 
-/*debugData([
+debugData([
   {
     action: "Clothing:SendData",
     data: {
@@ -77,7 +77,7 @@ const clotheTypeIndex: { [key: string]: number } = {
       },
     },
   },
-]);*/
+]);
 const ClothingStore = () => {
   const [opened, setOpened] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("torso");
@@ -136,20 +136,45 @@ const ClothingStore = () => {
 
     useEffect(() => {
         const handleKeyPress = (event: any) => {
-
+          console.log(event)
           if (event.key === "ArrowLeft" && opened) {
             fetchNui("clothingStoreChangeVariation", 1);
           } else if (event.key === "ArrowRight" && opened) {
             fetchNui("clothingStoreChangeVariation", 2);
           }
         };
-        window.addEventListener("keypress", handleKeyPress);
+        window.addEventListener("keydown", handleKeyPress);
   
         return () => {
-          window.removeEventListener("keypress", handleKeyPress);
+          window.removeEventListener("keydown", handleKeyPress);
         };
       
     });
+
+
+    useEffect(() => {
+      const handleKeyDown = (event: WheelEvent) => {
+        // Vérifiez si l'utilisateur survole un élément avec la classe "no-scroll"
+        if (
+          (event.target as HTMLElement)?.className.includes("storeleftmenu") ||
+          (event.target as HTMLElement)?.closest(".storeleftmenu_testbaba") || 
+          ((event.target as HTMLElement)?.offsetParent as HTMLElement)?.classList.contains("storeleftmenu")
+        ) {
+
+          return;
+        }
+        if (event.deltaY > 0) {
+          fetchNui("clothingStoreZoom", 1);
+        } else if (event.deltaY < 0) {
+          fetchNui("clothingStoreZoom", 2);
+        }
+      };
+    
+      window.addEventListener("wheel", handleKeyDown, { capture: true });
+      return () => {
+        window.removeEventListener("wheel", handleKeyDown, { capture: true });
+      };
+    }, []);
   
 
   useEffect(() => {
@@ -203,10 +228,12 @@ const ClothingStore = () => {
     opened &&
     Object.keys(data).length > 0 && Object.keys(translation).length > 0 && (
       <div>
+       <div className={clothingStore["storeleftmenu_testbaba"]}></div>
         <div
           className={clothingStore["global"]}
           style={{ margin: 0, padding: 0, height: "100%", overflow: "hidden" }}
         >
+
           <div className={clothingStore["title"]}>
             <h1>{translation.title}</h1>
             <Divider my="10px" variant="dashed" color="var(--white-30)" />
@@ -214,6 +241,7 @@ const ClothingStore = () => {
           </div>
           <div className={clothingStore["storeall"]}>
             <div className={clothingStore["storeleftmenu"]}>
+
               {/* Menu de gauche */}
               {Object.entries(data).map(([key, value]) => (
                 <div>

@@ -6,7 +6,6 @@ AddEventHandler('core:onPlayerDeath', function(data)
     local src = GetPlayer(source)
     local weapon = data.deathCause
     local posVictime = vector3(data.victimCoords.x, data.victimCoords.y, data.victimCoords.z)
-    print(json.encode(data))
     if data.killedByPlayer then 
         local target = GetPlayer(data.killerServerId)
         local causeDeath = data.causeDeath

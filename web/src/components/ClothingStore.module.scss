@@ -22,7 +22,12 @@
   background-position: center, center; /* Position des deux layers */
   background-repeat: no-repeat, no-repeat; /* Pas de répétition */
 }
+.storeleftmenu_testbaba {
+  position: absolute;
 
+  width: 28%;
+  height: 100%;
+}
 .storeall {
   height: 100%;
   background: linear-gradient(90deg, #d9dae1b1 0%, rgba(2, 4, 12, 0.199) 100%);
