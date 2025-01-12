@@ -906,6 +906,8 @@ initialize_protections_god_mode = LPH_JIT_MAX(function()
                     end
                 end
 
+
+
                 if GetEntityModel(curPed) == `mp_m_freemode_01` then
                     if GetEntityHealth(curPed) > 200 then
                         TriggerServerEvent("core:admin:PunishPlayer" , nil, "Triggered Protection Godmode [Health]", 'client_anticheat', time)
@@ -918,7 +920,7 @@ initialize_protections_god_mode = LPH_JIT_MAX(function()
                     end
                 end
 
-                if GetPedArmour(curPed) > 100 then
+                if GetPedArmour(curPed) >= 100 then
                     TriggerServerEvent("core:admin:PunishPlayer" , nil, "Triggered Protection Godmode [Armour]", 'client_anticheat', time)
                 end
 
@@ -1010,7 +1012,6 @@ end)
 
 initialize_protections_invisible = LPH_JIT_MAX(function()
     if Anti_Invisible_enabled then
-        print('ok')
         local warns = 0
         Citizen.CreateThread(function()
             while (true) do
