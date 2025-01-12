@@ -16,5 +16,6 @@ _CONFIG.DISCORD = {
     LINK = 'gsfdgsfdgfds'
 }
 _CONFIG.ISINWAITING = true
-
+_CONFIG.RESPAWNTIME = 10 -- SECONDS
+_CONFIG.LOGO_LINK = 'https://sacha-dev.fr/ldo_logo.PNG'
 
