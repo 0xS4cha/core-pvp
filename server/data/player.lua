@@ -6,12 +6,14 @@ function CreatePlayerData(src, perm)
         local obj = player:new({}, true, src, perm) ---@return player
         players[src] = obj
 
-        MySQL.Async.insert("INSERT INTO players (cloths = @1, license = @key,  inventaire = @2, permission = @3,   active = @4, playerName = @5, identifier = @6, liveid = @7, xblid = @8, discord = @9, playerip = @10) VALUES (@1, @key, @2, @3, @4, @5, @6, @7, @8, @9, @10)"
-            , {
+        MySQL.Async.insert(
+            "INSERT INTO players (cloths, license, inventaire, permission, active, playerName, identifier, liveid, xblid, discord, playerip) " ..
+            "VALUES (@1, @key, @2, @3, @4, @5, @6, @7, @8, @9, @10)",
+            {
                 ["key"] = obj:getLicense(),
                 ["1"] = json.encode(obj:getCloths()),
                 ["2"] = json.encode(obj:getInventaire()),
-                ["3"] =  obj:getPermission(),
+                ["3"] = obj:getPermission(),
                 ["4"] = obj:getActive(),
                 ["5"] = obj:getPlayerName(),
                 ["6"] = obj:getIdentifier(),
@@ -19,22 +21,14 @@ function CreatePlayerData(src, perm)
                 ["8"] = obj:getXblid(),
                 ["9"] = obj:getDiscord(),
                 ["10"] = obj:getPlayerIp(),
- 
-
-
-
-            }, function(result)
-            GetPlayer(src):setId(result)
-            Console.Success("Player " .. src .. " saved.")
-           --REMETRE GiveItemToPlayer(src, "bread", 5, {})
-           --REMETRE GiveItemToPlayer(src, "money", 3000, {})
-           --REMETRE GiveItemToPlayer(src, "water", 5, {})
-           --REMETRE GiveItemToPlayer(src, "gps", 1, {})
-            --REMETRE GiveItemToPlayer(src, "phone", 1, {})
-            RefreshPlayerData(src)
-            TriggerClientEvent("core:InitPlayer", src, GetImportantInfo())
-            --REMETREBank.CreatePlayerCommonAccount(result)
-        end)
+            },
+            function(result)
+                GetPlayer(src):setId(result)
+                Console.Success("Player " .. src .. " saved.")
+                RefreshPlayerData(src)
+                TriggerClientEvent("core:InitPlayer", src, GetImportantInfo())
+            end
+        )
     end
 end
 

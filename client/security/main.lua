@@ -1,7 +1,7 @@
 local token = nil
 AlertANTICHEAT = {}
 local tokenAcces = {
-    ["core"] = 200,
+    ["core"] = 500,
 }
 local AntiStop = {
     ['core'] = true

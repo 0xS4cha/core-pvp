@@ -30,7 +30,20 @@ Cam = {
         local c = CreateCam("DEFAULT_SCRIPTED_CAMERA", 1)
         Cam.cams[name] = c
     end,
-
+    setDof = function(name) 
+        if Cam.cams[name] ~= nil then
+            SetCamUseShallowDofMode(cam, true)
+            SetCamNearDof(Cam.cams[name], 0.2)
+            SetCamFarDof(Cam.cams[name], 5.0)
+            SetCamDofStrength(Cam.cams[name], 1.0)
+            SetCamActive(Cam.cams[name], true)
+            RenderScriptCams(true, false, 1, true, true)
+            while Cam.cams[name] ~= nil do
+                SetUseHiDof()
+                Wait(0)
+            end
+        end
+    end,
     HandleSmartDof = function(name, entity, dofValue) 
         if Cam.cams[name] ~= nil then
             local camPos = GetCamCoord(Cam.cams[name])

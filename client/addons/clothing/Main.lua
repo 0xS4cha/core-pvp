@@ -284,7 +284,6 @@ RegisterNUICallback('clothingStoreZoom', function(data, cb)
     cb('ok')
 end)
 RegisterNUICallback('clothingStoreChangeVariation', function(data, cb)
-    print('ok')
     if data == 1 then
         if ClothSelected.variation - 1 < 0 then
             SkinChangeFake(ClothSelected.type .. '_2', ClothSelected.maxvariation)
@@ -316,10 +315,10 @@ RegisterNUICallback('showcaseClothing', function(data, cb)
         ClearPedTasks(p:ped())
     end)
 
-    if type ~= 'arms' then
+    if data.type ~= 'arms' then
         SkinChangeFake(data.type .. '_1', data.id)
     else
-        SkinChangeFake(data.type, data.id)
+        SkinChangeFake('arms', data.id)
     end
     SkinChangeFake(data.type .. '_2', 0)
     cb('ok')

@@ -1,3 +1,9 @@
+local Token = nil
+
+TriggerEvent("core:RequestTokenAcces", "core", function(t)
+    Token = t
+end)
+
 player = {
     id = 0, ---@private
     source = 0,
@@ -20,11 +26,7 @@ player = {
 }
 
 p = nil ---@type player
-local token = nil
 
-TriggerEvent("core:RequestTokenAcces", "core", function(t)
-    token = t
-end)
 
 function player:new(data)
     local obj = {}
@@ -331,7 +333,7 @@ end
 
 function player:saveSkin()
     local skin = p:skin()
-    TriggerServerEvent("core:SetPlayerActiveSkin", token, skin, true)
+    TriggerServerEvent("core:SetPlayerActiveSkin", Token, skin, true)
 end
 
 function player:isMale()
@@ -484,12 +486,12 @@ function player:haveEnoughMoney(number)
 end
 
 function player:pay(number)
-    local pay = TriggerServerCallback("core:pay", token, tonumber(number))
+    local pay = TriggerServerCallback("core:pay", Token, tonumber(number))
     return pay
 end
 
 function player:payLiquide(number)
-    local pay = TriggerServerCallback("core:payLiquide", token, tonumber(number))
+    local pay = TriggerServerCallback("core:payLiquide", Token, tonumber(number))
     return pay
 end
 
@@ -531,7 +533,7 @@ function player:getItemCount(item)
 end
 
 function player:AddItem(item, count, metadatas)
-    TriggerSecurGiveEvent("core:addItemToInventory", token, item, count, metadatas)
+    TriggerSecurGiveEvent("core:addItemToInventory", Token, item, count, metadatas)
 end
 
 -- others fct

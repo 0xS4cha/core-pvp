@@ -148,7 +148,7 @@ local Components = {
 local LastSex       = -1
 local LoadSkin      = nil
 local LoadClothes   = nil
-local Character     = {}
+Character     = {}
 local fakeCharacter = {}
 
 for i = 1, #Components, 1 do
@@ -194,10 +194,21 @@ function LoadDefaultModel(malePed, cb)
 		TriggerEvent('skinchanger:modelLoaded')
 	end)
 end
+function getMaxValues()
+    local components = json.decode(json.encode(Components))
+	for k,v in pairs(Character) do
+		for i=1, #components, 1 do
+			if k == components[i].name then
+				components[i].value = v
+			end
+		end
+	end
+	return components, GetMaxVals()
+end
 
 function GetMaxVals()
 	local playerPed = PlayerPedId()
-	local degrade = getDegrader()
+
 
 	local data = {
 		sex          = #PedsCharCreator + 3,

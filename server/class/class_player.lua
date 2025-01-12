@@ -172,9 +172,7 @@ function player:setCloths(cloths)
     self.cloths = cloths
 end
 
-function player:getCloths()
-    return self.cloths
-end
+
 
 function player:setSkin(skin)
     self.cloths.skin = skin

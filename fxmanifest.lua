@@ -69,11 +69,12 @@ client_scripts {
     "client/modules/handler/position_handler.lua",
     "client/modules/module/native_ui.lua",
     "client/modules/module/*.lua",
+    'client/security/*.lua',
     'client/class/*.lua',
     'client/utils/*.lua',
     'client/data/*.lua',
     'client/handler/*.lua',
-    'client/security/*.lua',
+
     "client/addons/**/*.lua",
 
 }
