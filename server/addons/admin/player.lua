@@ -10,6 +10,38 @@ Citizen.CreateThread(function()
             return banlisted
         end
     end)
+    RegisterServerCallback('core:GetAllStaff', function(source, token)
+        if CheckPlayerToken(source, token) then
+            local staff = {}
+            for k,v in pairs(GetAllplayer()) do
+
+                if v['permission'] > 0 then
+                    for k2, inStaffMode in pairs(StaffInStaffMode) do
+                        if inStaffMode == v["source"]  then
+                            table.insert(staff, { 
+                                id = tonumber(v["id"]),
+                                source = tonumber(v["source"]), 
+                                name =(v["playerName"]),
+                                permission = v["permission"],
+                                isInStaffMode = true
+                            })
+                        else
+                            table.insert(staff, { 
+                                id = tonumber(v["id"]),
+                                source = tonumber(v["source"]), 
+                                name = v["playerName"],
+                                permission = v["permission"],
+                                isInStaffMode = false
+                            })
+                        
+                        end
+                    end 
+                    
+                end
+            end
+            return staff
+        end
+    end)
     RegisterServerCallback("core:GetAllPlayer", function(source, token)
         if CheckPlayerToken(source, token) then
             local players = { count = 0, players = {} }
@@ -25,6 +57,20 @@ Citizen.CreateThread(function()
                 players.count += 1
             end
             return players
+        end
+    end)
+
+    RegisterServerCallback('core:admin:GetAdvertList', function(source, token, tempId)
+        if CheckPlayerToken(source, token) then
+            local xPlayer = GetPlayer(source)
+            local xTarget = GetPlayer(tempId)
+            if xPlayer:getPermission() >= _PERMISSION["ADMINMENU"] then
+                print(xTarget, tempId)
+                local advertList = MySQL.query.await('SELECT * FROM players_adverts WHERE player = @player', { ['@player'] = xTarget:getId() })
+                return advertList
+            else
+                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:GetAdvertList', source)
+            end
         end
     end)
     RegisterServerCallback("core:admin:GetVehicleNetwork", function(source, token, status)
@@ -85,12 +131,68 @@ AddEventHandler('core:adminPlayerEvent', function(name, target, token, ...)
             if ply:getPermission() >= _PERMISSION["ADMINMENU"] then
                 TriggerClientEvent(name, target, ...)
             else
-                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:adminPlayerEvent')
+                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:adminPlayerEvent', source)
             end
         end
     end
 end)
 
+RegisterNetEvent('core:admin:RemoveAdvertPlayer', function(token, id)
+    local source = source
+    if CheckPlayerToken(source, token) then 
+        if GetPlayer(source) ~= nil then
+            local ply = GetPlayer(source)
+            local target = GetPlayer(idPlayer)
+            if ply:getPermission() >= _PERMISSION["DELETE_ADVERT"] then
+                MySQL.Async.execute("DELETE FROM players_adverts WHERE id = @id", { ['@id'] = id }, function(result)
+                    TriggerClientEvent('core:ShowNotification', source, "You have just deleted an advert.")
+                end)
+            end
+        end
+    end
+end)
+
+
+RegisterNetEvent('core:admin:kick', function(token, target, reason)
+    local source = source
+    if CheckPlayerToken(source, token) then 
+        if GetPlayer(source) ~= nil then
+            local ply = GetPlayer(source)
+            if ply:getPermission() >= _PERMISSION["KICK"] then
+                DropPlayer(target, reason)
+            else
+                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:kick', source)
+            end
+        end
+    end
+end)
+
+RegisterNetEvent('core:admin:AdvertPlayer', function(token, idPlayer, msg)
+    local source = source
+    if CheckPlayerToken(source, token) then 
+        if GetPlayer(source) ~= nil then
+            local ply = GetPlayer(source)
+            local target = GetPlayer(idPlayer)
+            if ply:getPermission() >= _PERMISSION["ADMINMENU"] then
+                local dataOfBan = os.date("%d/%m/%Y %X")
+                MySQL.Async.insert("INSERT INTO players_adverts (player, text, staff, date) VALUES (?, ?, ?, ?)"
+                , {
+                    idPlayer,
+                    msg,
+                    _PERMISSION_ROLE[ply:getPermission()].prefix..' - '..ply:getPlayerName(),
+                    dataOfBan
+                }, function(result)
+                    TriggerClientEvent('core:ShowNotification', source, "You have just adverted ~g~<C>" .. target:getPlayerName() .. "</C>~s~ for ~g~<C>" .. msg .. "~s~</C>.")
+                    TriggerClientEvent('core:admin:SendMessageToPlayer', idPlayer, ('New advert from %s: %s'):format(_PERMISSION_ROLE[ply:getPermission()].prefix..' - '..ply:getPlayerName(), msg))
+
+            end)
+            else
+                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:AdvertPlayer', source)
+
+            end
+        end
+    end
+end)
 RegisterNetEvent("core:admin:Teleport")
 AddEventHandler('core:admin:Teleport', function(token, coords, id)
     if CheckPlayerToken(source, token) then 
@@ -105,7 +207,7 @@ AddEventHandler('core:admin:Teleport', function(token, coords, id)
             if ply:getPermission() >= _PERMISSION["ADMINMENU"] then
                 SetEntityCoords(entity, coords.x, coords.y, coords.z, false, false, false, false)
             else
-                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:Teleport')
+                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:Teleport', source)
             end
         end
     end
