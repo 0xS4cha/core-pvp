@@ -198,7 +198,7 @@ const ClothingStore = () => {
   }
 
 
-  console.log("State before render: ", { opened, data, translation });
+
   return (
     opened &&
     Object.keys(data).length > 0 && Object.keys(translation).length > 0 && (

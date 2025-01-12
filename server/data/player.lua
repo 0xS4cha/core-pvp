@@ -6,16 +6,22 @@ function CreatePlayerData(src, perm)
         local obj = player:new({}, true, src, perm) ---@return player
         players[src] = obj
 
-        MySQL.Async.insert("INSERT INTO players (cloths = @1, license = @key,  inventaire = @3, permission = @6, status = @10  active = @11) VALUES (@1, @key, @12, @13, @14, @15, @16, @17, @3, @4, @5, @6, @7, @8, @9, @11)"
+        MySQL.Async.insert("INSERT INTO players (cloths = @1, license = @key,  inventaire = @2, permission = @3,   active = @4, playerName = @5, identifier = @6, liveid = @7, xblid = @8, discord = @9, playerip = @10) VALUES (@1, @key, @2, @3, @4, @5, @6, @7, @8, @9, @10)"
             , {
-                ["1"] = json.encode(obj:getCloths()),
-                ["3"] = json.encode(obj:getInventaire()),
-
-
-                ["6"] =  obj:getPermission(),
-                ["10"] = json.encode(obj:getStatus()),
-                ["11"] = obj:getActive(),
                 ["key"] = obj:getLicense(),
+                ["1"] = json.encode(obj:getCloths()),
+                ["2"] = json.encode(obj:getInventaire()),
+                ["3"] =  obj:getPermission(),
+                ["4"] = obj:getActive(),
+                ["5"] = obj:getPlayerName(),
+                ["6"] = obj:getIdentifier(),
+                ["7"] = obj:getLiveid(),
+                ["8"] = obj:getXblid(),
+                ["9"] = obj:getDiscord(),
+                ["10"] = obj:getPlayerIp(),
+ 
+
+
 
             }, function(result)
             GetPlayer(src):setId(result)
@@ -37,7 +43,6 @@ function LoadPlayerData(source, data, id)
         local data = data
         local obj = player:new(data, false, source) ---@return player
         players[source] = obj
-        obj:setIdPerso(id)
         local pGroup, pGroupId = Group.getPlayerGroup(obj:getId())
         if pGroup then
             obj:setGroup(pGroup)
@@ -52,8 +57,9 @@ function LoadPlayerData(source, data, id)
         TriggerClientEvent("core:InitPlayer", source, GetImportantInfo())
         obj:setActive(1)
         Wait(8000)
+
         Console.Success("Player " .. source .. " loaded.")
-        SavePlayerData(source)
+        SavePlayerData(source, false)
     end
 end
 
@@ -69,13 +75,7 @@ function GetPlayerData(source)
         if result[1] == nil then
             CreatePlayerData(source, 0)
             FinalSend = 1
-        elseif result[1].lastname == "" then
-            MySQL.Async.execute("DELETE FROM players WHERE id = @id", {
-                ["@id"] = result[1].id
-            }, function(result)
-            end)
-            CreatePlayerData(source, 0)
-            FinalSend = 1
+
         else
             FinalSend = result[1]
         end
@@ -90,36 +90,48 @@ function SavePlayerData(source, isnewpersonnage)
     if GetPlayer(source) ~= nil then
         local obj = GetPlayer(source)
         if isnewpersonnage then
-            MySQL.Async.execute("UPDATE players SET cloths = @1, inventaire = @5 , permission = @7,  active = @13, weapons = @14 WHERE license = @license AND id = @id"
+   
+            MySQL.Async.execute("UPDATE players SET cloths = @1, inventaire = @2 , permission = @3,  active = @4, weapons = @5, playerName = @6, identifier = @7, liveid = @8, xblid = @9, discord = @10, playerip = @11 WHERE license = @license AND id = @id"
                 ,{
                     ["@1"] = json.encode(obj:getCloths()),
-                    ["@5"] = json.encode(obj:getInventaire()),
-
-                    ["@7"] = obj:getPermission(),
-
-
-                    ["@13"] = json.encode(obj:getActive()),
-                    ["@14"] = json.encode(obj:getWeapons()),
+                    ["@2"] = json.encode(obj:getInventaire()),
+                    ["@3"] = obj:getPermission(),
+                    ["@4"] = json.encode(obj:getActive()),
+                    ["@5"] = json.encode(obj:getWeapons()),
                     ["@license"] = obj:getLicense(),
                     ["@id"] = obj:getId(),
+                    ["6"] = obj:getPlayerName(),
+                    ["7"] = obj:getIdentifier(),
+                    ["8"] = obj:getLiveid(),
+                    ["9"] = obj:getXblid(),
+                    ["10"] = obj:getDiscord(),
+                    ["11"] = obj:getPlayerIp(),
+
 
                 },
             function(affectedRows)
                 obj:setNeedSave(false)
             end)
         else
-            MySQL.Async.execute("UPDATE players SET cloths = @1, inventaire = @5 , permission = @7, active = @13, weapons = @14 WHERE license = @license AND id = @id"
-            ,{
-                ["@1"] = json.encode(obj:getCloths()),
-                ["@5"] = json.encode(obj:getInventaire()),
-                ["@7"] = obj:getPermission(),
+            MySQL.Async.execute("UPDATE players SET cloths = @1, inventaire = @2 , permission = @3,  active = @4, weapons = @5, playerName = @6, identifier = @7, liveid = @8, xblid = @9, discord = @10, playerip = @11 WHERE license = @license AND id = @id"
+                ,{
+      
+                    ["@1"] = json.encode(obj:getCloths()),
+                    ["@2"] = json.encode(obj:getInventaire()),
+                    ["@3"] = obj:getPermission(),
+                    ["@4"] = json.encode(obj:getActive()),
+                    ["@5"] = json.encode(obj:getWeapons()),
+                    ["@license"] = obj:getLicense(),
+                    ["@id"] = obj:getId(),
+                    ["6"] = obj:getPlayerName(),
+                    ["7"] = obj:getIdentifier(),
+                    ["8"] = obj:getLiveid(),
+                    ["9"] = obj:getXblid(),
+                    ["10"] = obj:getDiscord(),
+                    ["11"] = obj:getPlayerIp(),
 
-                ["@13"] = json.encode(obj:getActive()),
-                ["@14"] = json.encode(obj:getWeapons()),
-   
-                ["@license"] = obj:getLicense(),
-                ["@id"] = obj:getId(),
-            },
+
+                },
             function(affectedRows)
                 obj:setNeedSave(false)
             end)
@@ -394,7 +406,7 @@ function switchPlayer(source)
     --     , string.sub(identifiers, 1, string.find(identifiers, "ip:") - 1))
 end
 
-function GetPlayerFromId(id)
+function GetPlayerBddFromId(id)
     for k, v in pairs(players) do
         if v:getId() == id then
             return v

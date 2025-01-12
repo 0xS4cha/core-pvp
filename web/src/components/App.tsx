@@ -9,9 +9,10 @@ import HudComponent from "./Hudui";
 import SpawnSelector from "./SpawnSelector";
 import InputComponent from "./Input";
 import Redzoneui  from "./Redzonesb";
-import Inventory from "./Inventory";
+import Inventory from "./Inventory/Inventory";
 import PinComponent from "./Pin";
 import PromptComponent from "./Prompt";
+import Death from "./Death";
 
 import Copy from "./Copy";
 
@@ -47,10 +48,11 @@ const App: React.FC = () => {
       <ClothingStore />
       <SpawnSelector/>
       <Redzoneui />
-
+      <Inventory />
+      <Death/>
       <PromptComponent />
       <PinComponent />
-      <Inventory />
+
       <GroupCreaComponent />
       <InputComponent />
 

@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { TouchBackend } from "react-dnd-touch-backend";
-import InventorySCSS from "./../Inventory.module.scss";
+import React from "react";
+import { useDrop } from "react-dnd";
+import InventorySCSS from "./Inventory.module.scss";
 
 const DroppableSlotFast: React.FC<{
   slotKey: string;
@@ -25,16 +23,20 @@ const DroppableSlotFast: React.FC<{
         background: isOver ? "var(--degrade-linear-vert2)" : "",
       }}
     >
-      <div
-        className={InventorySCSS["item"]}
-        style={{
-          backgroundImage: `url(https://sacha-dev.fr/${item.name}.png)`,
-        }}
-      >
-        <div className={InventorySCSS["keybind"]}>{slotKey}</div>
-        <div className={InventorySCSS["item-count"]}>{item.count}</div>
-        <div className={InventorySCSS["item-name"]}>{item.label}</div>
-      </div>
+      {item.name ? (
+        <div
+          className={InventorySCSS["item"]}
+          style={{
+            backgroundImage: `url(https://sacha-dev.fr/${item.name}.png)`,
+          }}
+        >
+          <div className={InventorySCSS["keybind"]}>{slotKey}</div>
+          <div className={InventorySCSS["item-count"]}>{item.count}</div>
+          <div className={InventorySCSS["item-name"]}>{item.label}</div>
+        </div>
+      ) : (
+        <div className={InventorySCSS["placeholder"]}>Slot {slotKey}</div>
+      )}
     </div>
   );
 };

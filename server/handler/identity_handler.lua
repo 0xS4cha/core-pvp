@@ -16,26 +16,6 @@ AddEventHandler("core:SetPlayerIdentity", function(token, nom, prenom, age, sexe
 end)
 
 
--- Changement du nom et prénom en BDD
-
-RegisterCommand("identitycorrection", function(token, source)
-
-    local nom = GetPlayer(token):getLastname()
-
-    local prenom = GetPlayer(token):getFirstname()
-
-    print('Nom : '..nom .. ' | Prénom : '.. prenom )
-
-    GetPlayer(token):setLastname(prenom)
-    GetPlayer(token):setFirstname(nom)
-
-    local newnom = GetPlayer(token):getLastname()
-
-    local newprenom = GetPlayer(token):getFirstname()
-
-    print('New Nom : '..newnom .. ' | New Prénom : '.. newprenom )
-
-end)
 
 RegisterNetEvent("core:InstancePlayer")
 AddEventHandler("core:InstancePlayer", function(token, instance, reason)
@@ -79,7 +59,6 @@ RegisterCommand("leaveinstance", function(source, args, rawCommand)
     SetPlayerRoutingBucket(source, 0)
     ChangePlayerBucket(source, 0)
 end, false)
-
 
 
 exports("playerIdentity", function(playerid)

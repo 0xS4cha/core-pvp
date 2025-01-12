@@ -58,13 +58,74 @@ CreateThread(function()
     end
 end)
 
+RegisterNetEvent('core:admin:banoffline', function(token, uuid, raison, time, type)
+    local source = source
+    if CheckPlayerToken(source, token) then
+        if GetPlayer(source) ~= nil then
+            local xPlayer = GetPlayer(source)
+            if xPlayer:getPermission() < _PERMISSION['BAN'] then
+                return
+            end
 
+            if GetPlayerFromId(uuid) ~= nil then
+                TriggerClientEvent('core:ShowNotification', source, "You can't ban this player, he is online, go on playerlist.")
+                return
+            end
+            local TargetInformation = GetPlayerBddFromId(uuid)
+            type = string.lower(type)
+
+            if type == "hours" then
+                time = time * 3600
+            elseif type == "days" then
+                time = time * 86400
+            elseif type == "perm" then
+                time = 0
+            end
+            local expiration = time
+            if expiration < os.time() and type ~= "perm" then
+                expiration = os.time() + expiration
+            end
+            if not raison then
+                raison = 'Aucune raison'
+            end
+            local dataOfBan = os.date("%d/%m/%Y %X")
+
+            MySQL.Async.insert(
+                'INSERT INTO blacklist (Steam, playerName, DiscordUID, DiscordTag, GameLicense, ip, xbl, live,  reason, Date, Expiration, Banner, Token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                {
+                    TargetInformation.identifier,
+                    TargetInformation.playerName,
+                    TargetInformation.discord,
+                    '<@' .. TargetInformation.discord .. '>',
+                    TargetInformation.license,
+                    TargetInformation.playerip,
+                    TargetInformation.xblid,
+                    TargetInformation.liveid,
+                    raison,
+                    dataOfBan,
+                    expiration,
+                    GetPlayerTag(source),
+                    json.encode({})
+                }, function(affectedRows)
+                    
+                    TriggerClientEvent('core:ShowNotification', source, "You have just banned ~g~<C>" .. TargetInformation.playerName .. "</C>~s~ for ~g~<C>" .. raison .. "~s~</C>.")
+
+                    Console.Success("Ban " .. TargetInformation.playerName .. " for " .. raison)
+                    ActualizeAllBanList()
+                end)
+        end
+    end
+end)
 RegisterNetEvent("core:admin:ban")
 AddEventHandler('core:admin:ban', function(token, target, raison, time, type)
     local source = source
     if CheckPlayerToken(source, token) then
         if GetPlayer(source) ~= nil then
             local xPlayer = GetPlayer(source)
+            if xPlayer:getPermission() < _PERMISSION['BAN'] then
+                return
+            end
+
             local xTarget = GetPlayer(target)
 
             type = string.lower(type)
@@ -109,7 +170,7 @@ AddEventHandler('core:admin:ban', function(token, target, raison, time, type)
                     raison,
                     dataOfBan,
                     expiration,
-                    GetPlayerTag(source),
+                    _PERMISSION_ROLE[xPlayer:getPermission()].prefix..' - '..xPlayer:getPlayerName(),
                     json.encode(token)
                 }, function(affectedRows)
                     TriggerClientEvent('core:ShowNotification', source, "You have just banned ~g~<C>" .. GetPlayerTag(target) .. "</C>~s~ for ~g~<C>" .. raison .. "~s~</C>.")
@@ -132,7 +193,7 @@ AddEventHandler('core:admin:anticheat', function(reason, src, type, img)
     local xTarget = GetPlayer(_source)
     if xTarget ~= nil then
         UUID = xTarget:getId()
-        if _PERMISSION['anticheat'] < xTarget:getPermission() then
+        if _PERMISSION['ANTICHEAT'] < xTarget:getPermission() then
             return
         end
     end
