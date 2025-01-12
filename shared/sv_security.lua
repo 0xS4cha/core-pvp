@@ -1,6 +1,11 @@
 _SECURITY = _SECURITY or {}
 _SECURITY.Protection = {}
 _SECURITY.Webhooks = {}
+
+_DISCORD = {
+	Token = 'NzkzNTQzOTQ3MjEyNDIzMTk5.GA4wGD.V4eipOE-CBjSwRMUOoIuyMrbbyoLYlOd03RfaE',
+	Guild = '1054758981614178344'
+}
 -- _SECURITY Logs they are
 _SECURITY.OtherLogs = {
     JoinWebhook = "YOUR_WEBHOOK_URL", -- Logs when a player connects to the server, including their identifiers such as Steam ID, Discord ID, license, and IP address.

@@ -3,8 +3,3 @@ function all_trim(s)
    return s:match( "^%s*(.-)%s*$" )
 end
 
-AddEventHandler('onClientMapStart', function()
-   exports.spawnmanager:setAutoSpawn(true)
-   exports.spawnmanager:forceRespawn()
- end)
- 

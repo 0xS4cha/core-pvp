@@ -1,4 +1,6 @@
 Death = {}
+
+local damages = {}
 Death.GetAllDamagePed = {}
 Death.GetBonesType = {
     ["Dos"] = { 0, 23553, 56604, 57597 },
@@ -33,17 +35,33 @@ Death.GetValueWithTable = function(value, table, number)
     end
 end
 
+Citizen.CreateThread(function()
+    while true do
+        Wait(15000)
+        if damages.hit then
+            damages = {}
+        end
+    end
+end)
 
-local function CEventNetworkEntityDamage(victim, victimDied)
+local function CEventNetworkEntityDamage(victim, victimDied, damage)
 	if not IsPedAPlayer(victim) then return end
 	local player = PlayerId()
     local killer, killerWeapon = NetworkGetEntityKillerOfPlayer(player)
 	local playerPed = PlayerPedId()
+    damage=string.pack("i4",damage)
+    damage=string.unpack("f",damage)
+    damages.hit = damages.hit and (damages.hit + 1) or 1
+    if GetPedArmour(victim) > 0 then
+        damages.apdamage = damages.apdamage and (damages.apdamage + damage) or damage
+    else
+        damages.hpdamage = damages.hpdamage and (damages.hpdamage + damage) or damage
+    end
 	if victimDied and NetworkGetPlayerIndexFromPed(victim) == player and (IsPedDeadOrDying(victim, true) or IsPedFatallyInjured(victim)) then
         local killerEntity = GetPedSourceOfDeath(playerPed)
         local killerServerId = NetworkGetPlayerIndexFromPed(killerEntity)
         if killerEntity ~= playerPed and killerServerId and NetworkIsPlayerActive(killerServerId) then
-            PlayerKilledByPlayer(GetPlayerServerId(killerServerId), killerServerId, killerWeapon)
+            PlayerKilledByPlayer(GetPlayerServerId(killerServerId), killerServerId, killerWeapon, damages)
         else
             PlayerKilled()
         end
@@ -53,16 +71,16 @@ end
 AddEventHandler('gameEventTriggered', function(event, data)
 	if event ~= 'CEventNetworkEntityDamage' then return end
 
-    CEventNetworkEntityDamage(data[1], data[4])
+    CEventNetworkEntityDamage(data[1], data[4], data[3])
 end)
 
-function PlayerKilledByPlayer(killerServerId, killerClientId, killerWeapon)
+function PlayerKilledByPlayer(killerServerId, killerClientId, killerWeapon, damage)
   
 
     local victimCoords = GetEntityCoords(PlayerPedId())
     local killerCoords = GetEntityCoords(GetPlayerPed(killerClientId))
     local distance = GetDistanceBetweenCoords(victimCoords, killerCoords, true)
-    local killerPlayer = GetPlayer(killerServerId)
+
     local data = {
         victimCoords = {
             x = math.round(victimCoords.x, 1),
@@ -74,6 +92,9 @@ function PlayerKilledByPlayer(killerServerId, killerClientId, killerWeapon)
             y = math.round(killerCoords.y, 1),
             z = math.round(killerCoords.z, 1)
         },
+        hpDamage = damage.hpdamage or 0,
+        apDamage = damage.apdamage or 0,
+        hit = damage.hit or 0,
         causeDeath = table.pack(p:GetAllCauseOfDeath()),
         killedByPlayer = true,
         deathCause = GetEntityModel(killerWeapon),
@@ -81,9 +102,9 @@ function PlayerKilledByPlayer(killerServerId, killerClientId, killerWeapon)
 
         killerServerId = killerServerId,
         killerClientId = killerClientId,
-        killerName = GetPlayerName(killerClientId),
-        killerVip = killerPlayer:getVip(),
-        killerImage = imgURL
+
+
+
     }
 
 

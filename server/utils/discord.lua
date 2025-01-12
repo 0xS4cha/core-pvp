@@ -11,7 +11,7 @@ local function request(url)
     end, "GET", "",
     {
         ["Content-Type"] = "application/json",
-        ["Authorization"] = "Bot ".._CONFIG.Discord.Token
+        ["Authorization"] = "Bot ".._DISCORD.Token
     })
 
     -- Wait for the request to complete
@@ -25,7 +25,7 @@ end
 function GetUserRoles(discord)
     if not discord then return false end
 
-    local url = "guilds/".._CONFIG.Discord.Guild.."/members/"..discord
+    local url = "guilds/".._DISCORD.Guild.."/members/"..discord
     local result = request(url)
     if result.code ~= 200 then return false end
 
@@ -35,7 +35,6 @@ end
 
 function GetUserData(discord)
     if not discord then return false end
-
     local url = "v9/users/"..discord
     local result = request(url)
     if result.code ~= 200 then return false end
@@ -49,9 +48,9 @@ function IsPlayerInDiscordVoiceChannel(discord, voice, callback)
 
     if not discord then return callback(false) end
 
-    local endpoint = string.format("https://discord.com/api/v9/guilds/%s/voice-states/%s", _CONFIG.Discord.Guild, discord)
+    local endpoint = string.format("https://discord.com/api/v9/guilds/%s/voice-states/%s",_DISCORD.Guild, discord)
     local headers = {
-        ["Authorization"] = "Bot " .. _CONFIG.Discord.Token,
+        ["Authorization"] = "Bot " .. _DISCORD.Token,
         ["Content-Type"] = "application/json"
     }
 

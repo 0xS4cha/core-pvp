@@ -10,32 +10,46 @@ debugData([
     data: {
       show: true,
       timeleft: 4,
-      killer: {
-        killerName: "Amine",
-        killerImage: "https://cdn.discordapp.com/attachments/1276573907192774656/1323782003190923284/image.jpg?ex=6782f290&is=6781a110&hm=38e00232245c8dcf8bcdc598008c20e935e7c52c2b36c3870a281eff97bc9a84&",
-        killerVip: true,
-      }
+      killedByPlayer: true,
     },
   },
 ]);
 
+debugData([
+  {
+    action: "killerInformation",
+    data: {
+      killerName: "Amine",
+      killerImage: "https://cdn.discordapp.com/attachments/1276573907192774656/1323782003190923284/image.jpg?ex=6782f290&is=6781a110&hm=38e00232245c8dcf8bcdc598008c20e935e7c52c2b36c3870a281eff97bc9a84&",
+      killerVip: false,
+      hit: 1,
+      apDamage: 3,
+      hpDamage: 1
+    }
+  },
+])
 const Death = () => {
   const [openedDeath, setOpenedDeath] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300); // Initialisation à 5 minutes (300 secondes)
+  const [killedByPlayer, setKilledByPlayer] = useState(false);
   const [killer, setKiller] = useState<any>({ killerName: "Sacha", killerImage: "", killerVip: false, hit: 1, apDamage: 3, hpDamage: 1 });
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       const data2 = event.data;
       if (data2.action === "showDeath") {
-        setOpenedDeath(data2.data.show);
-        setKiller(data2.data.killer);
 
+        setOpenedDeath(data2.data.show);
+        setKilledByPlayer(data2.data.killedByPlayer);
         // Redémarrer le timer si la mort est affichée
         if (data2.data.show) {
           setTimeLeft(data2.data.timeleft); // Réinitialiser à 5 minutes
         }
+      } else if (data2.action === "killerInformation") {
+        setKiller(data2.data);
       }
     };
     window.addEventListener("message", handleMessage);
@@ -75,11 +89,15 @@ const Death = () => {
     const seconds = (time % 60).toString().padStart(2, "0");
     return `${minutes}:${seconds}`;
   };
-
+  const handleRespawn = () => {
+    if (timeLeft === 0) {
+      fetchNui("death:respawn");
+    }
+  }
   return (
     openedDeath && (
       <div>
-        <div className={DeathSCSS["v14_250"]}>
+        <div className={`${DeathSCSS["v14_250"]} ${killedByPlayer ? DeathSCSS["v14_KilledByPlayer"] : ""}`}>
           <span className={DeathSCSS["v14_216"]}>
             Vous êtes <span className={DeathSCSS["incon"]}>inconscient</span>...
           </span>
@@ -93,8 +111,9 @@ const Death = () => {
                     ? DeathSCSS["v14_225"] // Classe appliquée si le temps est 0
                     : DeathSCSS["v14_244"] // Classe par défaut
                 }
+                onClick={handleRespawn}
               >
-                <span className={DeathSCSS["v14_223"]}>RÉAPPARAÎTRE</span>
+                <span className={DeathSCSS["v14_223"]}>RESPAWN</span>
               </div>
 
             </div>
@@ -114,6 +133,7 @@ const Death = () => {
             </div>
           </div>
         </div>
+        {killedByPlayer ? (
         <div className={DeathSCSS["killerInformation"]}>
           <div className={DeathSCSS["top"]}>
           <div
@@ -121,6 +141,7 @@ const Death = () => {
               >
               <img src={killer.killerImage} alt=""/>
             </div>
+
             <div className={DeathSCSS["info"]}>
                     <div className={DeathSCSS["description"]}>
                         <div className={DeathSCSS["killer"]}>
@@ -138,7 +159,9 @@ const Death = () => {
                     </div>
 
           </div>
+        
         </div>
+        ) : ''}
       </div>
     )
   );

@@ -6,13 +6,17 @@ version '0.2.1'
 description 'Sacha | Development - Full core'
 author 'sacha-development'
 lua54 'yes'
+resource_type2 'gametype' { name = 'sxGroup' }
+resource_type 'map' { gameTypes = { ['LDO:PVP'] = true } }
 
+map 'cfx/map.lua'
 escrow_ignore { 
     'shared/*.lua',
 
  }
 shared_scripts {
     '@ox_lib/init.lua',
+    "cfx/sh_mapmanager.lua",
     'lib/*.lua',
     'static/messages/orcus.lua',
     'static/messages/main.lua',
@@ -40,6 +44,9 @@ loadscreen 'client/loadscreen/index.html'
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
+    "cfx/s_gamemode.lua",
+    "cfx/s_mapmanager.lua",
+    "cfx/s_sessionmanager.lua",
     'shared/sv_*.lua',
     'server/utils/utils.lua',
     'server/utils/**/*.lua',
@@ -50,6 +57,11 @@ server_scripts {
 }
 
 client_scripts {
+    "cfx/c_gamemode.lua",
+    "cfx/c_mapmanager.lua",
+    "cfx/c_sessionmanager.lua",
+    "cfx/c_spawnmanager.lua",
+    "cfx/c_mapmanager.lua",
     'client/pmenu.lua',
     'client/commands.lua',
     'client/sprites/init.lua',
