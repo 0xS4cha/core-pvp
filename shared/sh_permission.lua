@@ -5,10 +5,8 @@ _PERMISSION = {
     ['UNBAN'] = 5,
     ['BAN'] = 2,
     ['KICK'] = 2,
-    ['manageWeather'] = 5,
-    ['manageDoors'] = 5,
-    ['unban'] = 5,
-    ['anticheat'] = 5
+    ['DELETE_ADVERT'] = 6,
+    ['ANTICHEAT'] = 5
 }
 
 
