@@ -110,16 +110,59 @@ function Admin:getBanList()
     local blList = {}
     for i = 1, #Banlist do
         local v = Banlist[i]
-        if v ~= nil then
+        if v ~= nil and i ~= 1 then
             local perm, d, h, m = CheckTimeRemaning(v.Expiration)
             if perm then
-                table.insert(blList, {name = ('~b~%s~s~ - %s'):format(v.playerName, v.Date), ask = v.id, askX = true, Description = ('Reason: %s\nBy: %s\nDiscord: %s\nExpiration: PERMANENT'):format(v.reason, v.Banner, v.DiscordTag)})
+                table.insert(blList, {name = ('%s - ~b~%s~s~ - %s'):format(v.id, v.playerName, v.Date), ask = v.Banner, idBan = v, askX = true,  Description = ('Reason: %s\nBy: %s\nExpiration: PERMANENT'):format(v.reason, v.Banner)})
             else
-                table.insert(blList, {name = ('~b~%s~s~ - %s'):format(v.playerName, v.Date), ask = v.id, askX = true, Description = ('Reason: %s\nBy: %s\nDiscord: %s\nExpiration: %sDays %sHours %sMinutes'):format(v.reason, v.Banner, v.DiscordTag, d, h, m)})
+                table.insert(blList, {name = ('%s - ~b~%s~s~ - %s'):format(v.id, v.playerName, v.Date), ask = v.Banner, idBan = v, askX = true, Description = ('Reason: %s\nBy: %s\nExpiration: %sDays %sHours %sMinutes'):format(v.reason, v.Banner, d, h, m)})
             end
         end
     end
     return blList
+end
+
+
+function Admin:getStaffList() 
+    local StaffList = nil
+    while StaffList == nil do 
+        StaffList = TriggerServerCallback("core:GetAllStaff", Token)
+        Wait(100)
+    end
+    local stfList = {}
+    for i = 1, #StaffList do
+        local v = StaffList[i]
+        if v ~= nil then
+            if v.isInStaffMode then
+                table.insert(stfList, {name = ('[~g~STAFF MODE~s~] - ~b~%s~s~ - %s'):format(v.source, v.name), playerName = v.name, source = v.source, data = v, ask = _PERMISSION_ROLE[v.permission].label, askX = true, Description = ('UUID: %s'):format(v.id)})
+            else
+                table.insert(stfList, {name = ('~b~%s~s~ - %s'):format(v.source, v.name), playerName = v.name, source = v.source, data = v, ask = _PERMISSION_ROLE[v.permission].label, askX = true, Description = ('UUID: %s'):format(v.id)})
+            end
+        end
+    end
+    return stfList
+end
+function Admin:getPlayerAdvert(id)
+    local AdvertList = nil
+
+    while AdvertList == nil do
+        AdvertList = TriggerServerCallback("core:admin:GetAdvertList", Token, id)
+        Wait(100)
+    end
+    local advlist = {}
+    local CantUse = true
+    if  p:getPermission() >= _PERMISSION['DELETE_ADVERT'] then
+        CantUse = false
+    end
+    for i = 1, #AdvertList do
+        local v = AdvertList[i]
+        if v ~= nil then
+
+            table.insert(advlist, {name = ('~b~%s~s~ - %s'):format(v.id, v.text), idAdvert = v.id, ask = 'admin_delete_advert', askX = true, Description = ('Advert by: %s\nDate: %s'):format(v.staff, v.date), cantUse = CantUse})
+
+        end
+    end
+    return advlist
 end
 
 function Admin:getPlayerList()
@@ -580,6 +623,23 @@ local SelectedMenu = {
                 TriggerServerEvent('core:admin:Teleport', Token, Admin.BringCoords, idPlayer)
                 Admin.BringCoords = false
             end
+        elseif btnName == 'admin_playermenu_advertplayer' then
+            AskEntry(function(msg)
+                if msg and string.len(msg) ~= 0 then
+                    TriggerServerEvent('core:admin:AdvertPlayer', Token, idPlayer, msg)
+                end
+            end, GetPhrase("admin_ban_reason"), 255)
+        elseif btnName == 'admin_playermenu_advertmenu' then
+            Admin.tId = curMenu.temp or Admin.tId
+            menu:OpenMenu('admin_advertmenu')
+        elseif btnName == 'admin_playermenu_kick' then
+            AskEntry(function(reason)
+                if reason and string.len(reason) ~= 0 then
+                    TriggerServerEvent('core:admin:kick', Token, idPlayer, reason)
+                    CloseMenu(true)
+                end
+            end, GetPhrase("admin_ban_reason"), 255)
+        
         elseif btnName == 'admin_playermenu_ban' then
             if self.slidenum == 1 then
                 AskEntry(function(reason)
@@ -587,7 +647,7 @@ local SelectedMenu = {
                         TriggerServerEvent('core:admin:ban', Token, idPlayer, reason, 0, self.slidename)
                         CloseMenu(true)
                     end
-                end, "Reason", 255)
+                end, GetPhrase("admin_ban_reason"), 255)
             elseif self.slidenum == 2 or self.slidenum == 3 then
                     AskEntry(function(time)
                         if time and tonumber(time) > 0 then
@@ -596,7 +656,7 @@ local SelectedMenu = {
                                 TriggerServerEvent('core:admin:ban', Token, idPlayer, reason, tonumber(time), self.slidename)
                                 CloseMenu(true)
                             end
-                        end, "Reason", 255)
+                        end, GetPhrase("admin_ban_reason"), 255)
                     end
                 end, "Time", 255)
             end
@@ -660,6 +720,12 @@ local SelectedMenu = {
             end
         end
     end,
+    ['admin_banmenu'] = function(m, s, name, e, q)
+        if name == 'admin_ban_revok' then
+            CloseMenu(true)
+            TriggerServerEvent('core:admin:unban', Token, Admin.ListBanned.id, Admin.ListBanned.playerName)
+        end
+    end,
     ['admin_tools'] = function(m, s, name, e, q)
         local pPed = PlayerPedId()
         if name == 'admin_teleportpoint' then
@@ -717,6 +783,35 @@ local SelectedMenu = {
         elseif name == "admin_showblips" then
             Admin:CreateBlips()
             Admin.HasBlips = e.checkbox
+        elseif name == "admin_ban_offline" then
+            if e.slidenum == 1 then
+                AskEntry(function(uuid) 
+                    if uuid and tonumber(uuid) > 0 then
+                        AskEntry(function(reason)
+                            if reason and string.len(reason) ~= 0 then
+                                TriggerServerEvent('core:admin:banoffline', Token, tonumber(uuid), reason, 0, e.slidename)
+                                CloseMenu(true)
+                            end
+                        end, GetPhrase("admin_ban_reason"), 255)
+                    end
+                end, "UUID", 32)
+
+            elseif e.slidenum == 2 or e.slidenum == 3 then
+                AskEntry(function(uuid) 
+                    if uuid and tonumber(uuid) > 0 then
+                            AskEntry(function(time)
+                                if time and tonumber(time) > 0 then
+                                AskEntry(function(reason)
+                                    if reason and string.len(reason) ~= 0 then
+                                        TriggerServerEvent('core:admin:banoffline', Token, tonumber(uuid), reason, tonumber(time), e.slidename)
+                                        CloseMenu(true)
+                                    end
+                                end, GetPhrase("admin_ban_reason"), 255)
+                            end
+                        end, "Time", 255)
+                    end
+                end, "UUID", 32)
+            end
         end
     end,
 
@@ -745,16 +840,19 @@ local function OnSelected(menu, menuData, btnData, eg)
         Admin.IdTarget = btnData.source
         Admin.TargetInfo = btnData.data
         menu:OpenMenu("admin_playermenu")
-    elseif currentMenu == "admin_weathermanager" then
-        Utils.ShowLoadingPromptWithTime('Inizializing', 5000, 'BUSY_SPINNER_LEFT')
-        TriggerServerEvent('core:weather:admin:changeWeather', Token, btnData.zone, btnData.slidename)
-    elseif currentMenu == "admin_doorsmanager" then
-        if btnData.slidenum == 1 and btnData.DoorsButton then
-            SetEntityCoords(PlayerPedId(), btnData.DoorsData.coords)
-        elseif btnData.slidenum == 2 then
-            CloseMenu(true)
-            TriggerServerEvent('core:doors:Delete', Token, btnData.id)
-        end
+    elseif currentMenu == "admin_stafflist" then
+        menuData.temp = btnData.source
+        Admin.NameTarget = btnData.playerName
+        Admin.IdTarget = btnData.source
+        Admin.TargetInfo = btnData.data
+        menu:OpenMenu("admin_playermenu")
+
+    elseif currentMenu == "admin_unbanmanager" then
+        Admin.ListBanned = btnData.idBan
+        menu:OpenMenu("admin_banmenu")
+    elseif currentMenu == "admin_advertmenu" then
+        CloseMenu(true)
+        TriggerServerEvent('core:admin:RemoveAdvertPlayer', Token, btnData.idAdvert)
     else
         if SelectedMenu[currentMenu] then
             SelectedMenu[currentMenu](menu, menuData, name, btnData, eg)
@@ -766,13 +864,7 @@ local function OnSlide(menu, menuData, btnData, slide)
 
 end
 local function onOpended()
-    Admin.Players = {}
-    for _, player in ipairs(GetActivePlayers()) do
-        table.insert(Admin.Players, { name = "[" .. GetPlayerServerId(player) .. "] - " .. GetPlayerName(player), source = GetPlayerServerId(player), temp = GetPlayerServerId(player)})
-        Admin.NameTarget = GetPlayerName(player)
-    end
-    Admin.Banned = {}
-    TriggerServerEvent('Freeroam:GetBan')
+
 
 end
 
@@ -809,7 +901,7 @@ Admin.Menu = {
                 return {
                     { name = "ADMIN_TakeService", checkbox = Admin.isInService },
                     { name = "admin_playerlist", cantUse = not Admin.isInService},
-                    { name = "ADMIN_Stafflist", cantUse = not Admin.isInService },
+                    { name = "admin_stafflist", cantUse = not Admin.isInService },
                     { name = "ADMIN_MyPlayer", cantUse = not Admin.isInService },
                     { name = "ADMIN_ManageReport", cantUse = not Admin.isInService },
                     { name = "admin_vehiclemanager", cantUse = not Admin.isInService },
@@ -821,6 +913,7 @@ Admin.Menu = {
                 }
             end
         },
+
         ['admin_vehiclemanager'] = {
             refresh = true,
             b = function()
@@ -848,10 +941,23 @@ Admin.Menu = {
                 return menu
             end
         },
+
+        ['admin_stafflist'] = {
+            useFilter = true,
+            b = function()
+                return Admin:getStaffList()
+            end
+        },
         ['admin_playerlist'] = {
             useFilter = true,
             b = function()
                 return Admin:getPlayerList()
+            end
+        },
+        ['admin_advertmenu'] =  {
+            useFilter = true,
+            b = function()
+                return Admin:getPlayerAdvert(Admin.tId)
             end
         },
         ['admin_playermenu'] = {
@@ -867,10 +973,9 @@ Admin.Menu = {
                     {name = "admin_playermenu_bringback", cantUse = not Admin.BringCoords},
                     {name = "admin_playermenu_showinformation"},
                     {name = "admin_playermenu_screenshot"},
-                    {name = "admin_playermenu_advertPlayer"},
+                    {name = "admin_playermenu_advertplayer"},
                     {name = "admin_playermenu_advertmenu"},
-                    {name = "admin_playermenu_notePlayer"},
-                    {name = "admin_playermenu_notemenu"},
+
                     {name = "admin_playermenu_wipe", colorFree = {205, 45, 45, 165}},
                     {name = "admin_playermenu_kick", colorFree = {205, 45, 45, 165}},
                     {name = "admin_playermenu_ban", colorFree = {205, 45, 45, 165}, slidemax = {'perm', 'days', 'hours'}},
@@ -886,6 +991,26 @@ Admin.Menu = {
                     {name = 'admin_information_serverid', ask = Admin.IdTarget, askX = true},
                     {name = 'admin_information_permission', ask = _PERMISSION_ROLE[Admin.TargetInfo.permission].label, askX = true},
                     {name = 'admin_information_group', ask = ('(%s) %s'):format(Admin.TargetInfo.groupid, Admin.TargetInfo.group), askX = true},
+                }
+            end
+        },
+        ["admin_banmenu"] = {
+            b = function()
+                return {
+                    {name = "~r~" .. Admin.ListBanned.playerName}, 
+                    {name = "admin_ban_id", ask = Admin.ListBanned.id, askX = true},
+                    {name = "admin_ban_reason", ask = Admin.ListBanned.reason, askX = true},
+                    {name = "admin_ban_date", ask = Admin.ListBanned.Date, askX = true}, 
+                    {name = "admin_ban_staff", ask = Admin.ListBanned.Banner, askX = true}, 
+                    {name = "admin_ban_timeremaining", ask = function()
+                        local perm, d, h, m = CheckTimeRemaning(Admin.ListBanned.Expiration)
+                        if perm then
+                            return 'PERMANENT'
+                        else
+                            return ('%s days %s hours %s minutes'):format(d, h, m)
+                        end
+                     end, askX = true}, 
+                    {name = "admin_ban_revok", colorFree = {205, 45, 45, 165}}
                 }
             end
         },
@@ -905,7 +1030,7 @@ Admin.Menu = {
             b = function()
                 return {
                     {name = "admin_unbanmanager", canSee = function()
-                        if p:getPermission() >= _PERMISSION['unban'] then
+                        if p:getPermission() >= _PERMISSION['UNBAN'] then
                             return true
                         else
                             return false
@@ -934,6 +1059,7 @@ Admin.Menu = {
         },
         ["admin_tools"] = {
             refresh = true,
+            refreshTime = 1000,
             b = function()
                 return {
                 {name = "admin_teleportpoint"},
@@ -945,27 +1071,13 @@ Admin.Menu = {
                 {name = 'admin_bonesname', checkbox = Admin.HasBonesName},
                 {name = 'admin_groundname', checkbox = Admin.HasGroundName},
                 {name = "admin_showblips", checkbox = Admin.HasBlips},
+                {name = "admin_ban_offline", colorFree = {205, 45, 45, 165}, slidemax = {'perm', 'days', 'hours'}},
                 }
             end
             
         },
 
-        ["admin_register_doors"] = {
-            refresh = true,
-            b = {
-                    {name = "ADMIN_DOORS_LABEL", ask = ""},
-                    {name = "ADMIN_DOORS_COORDS", ask = "", askX = true, Description = ('Data Doors: %s'):format(json.encode(_MANAGER.DOORS.ADMIN.creator_data.doors))},
-                    {name = "ADMIN_DOORS_DISTANCE", ask = ""},
-                    {name = "ADMIN_DOORS_LOCKED", checkbox = function() return _MANAGER.DOORS.ADMIN.creator_data.DefaultLockStatus end},
-                    {name = "ADMIN_DOORS_USEPIN", checkbox = function() return _MANAGER.DOORS.ADMIN.UsePin end},
-                    {name = "ADMIN_DOORS_PIN", ask = "1234", canSee = function() return _MANAGER.DOORS.ADMIN.UsePin end},
-                    {name = "ADMIN_DOORS_USEJOB", checkbox = function() return _MANAGER.DOORS.ADMIN.UseJob end},
-                    {name = "ADMIN_DOORS_JOB", slidemax = {'ADMIN_DOORS_ADD_SLIDE'}, canSee = function() return _MANAGER.DOORS.ADMIN.UseJob end, Description = ('Whitelist Job: %s'):format(_MANAGER.DOORS.ADMIN.String_Job)},
-                    {name = "ADMIN_DOORS_Confirm" , colorFree = {45, 119, 205, 165}, askX = true, ask = ""}, 
-            }
-            
-            
-        },
+
 
     }
 }
