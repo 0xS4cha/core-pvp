@@ -2,33 +2,23 @@ player = {
     id = 0, ---@private
     source = 0,
     license = "", ---@private
-    firstname = "", ---@private
-    lastname = "", ---@private
-    age = "02/01/2000", ---@private
-    sex = "", ---@private
-    size = 180, ---@private
-    birthplaces = "", ---@private
+    identifier = "", ---@private
+    liveid = "", ---@private
+    xblid = "", ---@private
+    discord = "", ---@private
+    playerip = "", ---@private
+    playerName = "", ---@private
     inventaire = {}, ---@private
     weapons = {}, ---@private
     cloths = { skin = {}, cloths = {} }, ---@private
-    tattoos = {}, ---@private
-    degrader = {},
-    banque = 5000, ---@private
-    pos = _CONFIG.DefaultPos, ---@private
     permission = 0, ---@private
-    balance = 0, ---@private
-    subscription = 0, ---@private
-    job = "aucun", ---@private
-    job_grade = 1, ---@private
+
+
     group = "None", ---@private
     groupID = 0, ---@private
-    status = { hunger = 99, thirst = 99 , health = 200}, ---@private
     vip = 0,
     needSave = false, ---@private
-    needPosSave = false,
     active = 1,
-    idPerso = {},
-    lastProperty = {},
 }
 
 player.__index = player
@@ -51,11 +41,12 @@ function player:new(data, default, source, perm)
         self.id = data.id
         self.source = source
         self.license = data.license
-        self.identifier = data.identifier or ''
-        self.liveid = data.liveid or ''
-        self.xblid = data.xblid or ''
-        self.discord = data.discord or ''
-        self.ip = data.ip or ''
+        self.identifier = GetSteam(source)
+        self.liveid = GetLive(source)
+        self.xblid = GetXbl(source)
+        self.discord = GetDiscord(source)
+        self.playerip = GetIp(source)
+        self.playerName = GetPlayerName(source)
         self.inventaire = json.decode(data.inventaire)
         if data.weapons == nil then
             self.weapons = {}
@@ -76,13 +67,13 @@ function player:new(data, default, source, perm)
         self.lastProperty = json.decode(data.lastProperty)
     else
         self.source = source
-        self.identifier = string.gsub(GetSteam(source), "steam:", "")
-        self.license = string.gsub(GetLicense(source), 'license:', "")
-        self.liveid = string.gsub(GetLive(source), 'live:', "")
-        self.xblid = string.gsub(GetXbl(source), 'xbl:', "")
-        self.discord = string.gsub(GetDiscord(source), 'discord:', "")
-        self.ip = string.gsub(GetIp(source), 'ip:', "")
-
+        self.license = GetLicense(source)
+        self.identifier = GetSteam(source)
+        self.liveid = GetLive(source)
+        self.xblid = GetXbl(source)
+        self.discord = GetDiscord(source)
+        self.playerip = GetIp(source)
+        self.playerName = GetPlayerName(source)
         self.inventaire = {}
         self.weapons = {}
         self.cloths = { skin = {}, cloths = {} }
@@ -472,15 +463,7 @@ function player:GiveWeaponIfPossible(name, source, target)
     end
 end
 
--- bannk fct
 
-function player:HaveMoneyAccount()
-    if self.banque >= 0 then
-        return true
-    else
-        return false
-    end
-end
 
 function player:AddMoneyAccount(money)
     self.banque = self:getBanque() + money
@@ -519,6 +502,23 @@ function player:getPlayerName()
     return GetPlayerName(self.source)
 end
 
+function player:getIdentifier()
+    return self.identifier
+end
+
+function player:getLiveid()
+    return self.liveid
+end
+
+function player:getXblid()
+    return self.xblid
+end
+
+function player:getPlayerIp()
+    return self.playerip
+end
+
+
 GetPlayer = function(source)
     return p[source]
 end
@@ -541,6 +541,14 @@ function GetAllplayer()
     return p
 end
 
+function GetPlayerFromId(id)
+    for k, v in pairs(p) do
+        if v:getId() == id then
+            return v
+        end
+    end
+    return nil
+end
 exports('GetPlayerIdbdd', function(source)
     while GetPlayer(source) == nil do Wait(1000) end
     return GetPlayer(source):GetId()
