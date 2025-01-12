@@ -2,3 +2,9 @@ function all_trim(s)
    if type(s) ~= "string" then return end
    return s:match( "^%s*(.-)%s*$" )
 end
+
+AddEventHandler('onClientMapStart', function()
+   exports.spawnmanager:setAutoSpawn(true)
+   exports.spawnmanager:forceRespawn()
+ end)
+ 
