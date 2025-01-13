@@ -311,5 +311,5 @@ end
 RegisterNetEvent("Core:PrintChangeInstance")
 AddEventHandler("Core:PrintChangeInstance", function(playerid, instance, reason)
 
-    print("Vous avez change d'instance : "..reason .. "I Nouvelle instance : ".. instance)
+    Console.Log("Vous avez change d'instance : "..reason .. "I Nouvelle instance : ".. instance)
 end)

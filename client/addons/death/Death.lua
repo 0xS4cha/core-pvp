@@ -1,13 +1,13 @@
-local isDead = false
-local Token = nil
+isDead = false
+
 local canRespawn = false
+local Token = nil
 TriggerEvent("core:RequestTokenAcces", "core", function(t)
     Token = t
 end)
 
 AddEventHandler('core:onPlayerDeath', function(data)
     isDead = true
-    print(json.encode(data))
     PlayerInComa(data)
 end)
 
@@ -15,6 +15,7 @@ function PlayerInComa(data)
     if isDead then
         canRespawn = false
         SetNuiFocus(true, true)
+        TriggerServerEvent('core:death:RequestInteract', Token)
         Citizen.CreateThread(function()
             Citizen.Wait(_CONFIG.RESPAWNTIME * 1000)
             canRespawn = true
@@ -46,6 +47,7 @@ RegisterNUICallback('death:respawn', function(data, cb)
         TriggerScreenblurFadeOut(10)
         SetNuiFocus(false, false)
         TriggerEvent('core:RevivePlayer')
+
         _NUI.SendNUIMessage('showDeath', {
             show = false,
             timeleft = _CONFIG.RESPAWNTIME,
@@ -63,13 +65,13 @@ AddEventHandler("core:RevivePlayer", function()
         timeleft = _CONFIG.RESPAWNTIME,
         killedByPlayer = false
     })
+    ForceStopCarry()
     TriggerScreenblurFadeOut(10)
     local pos = _SAFEZONE.SafeZones[1].safezone.coords
     SetEntityCoordsNoOffset(p:ped(), pos.x, pos.y, pos.z, false, false, false, true)
     NetworkResurrectLocalPlayer(pos, 0.0, true, false)
-
+    TriggerServerEvent('core:death:RequestUnregister', Token)
     p:setHealth(200)
-
 
 
 end)

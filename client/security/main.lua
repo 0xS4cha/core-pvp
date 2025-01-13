@@ -58,7 +58,9 @@ CreateThread(function()
         HudWeaponWheelIgnoreSelection()
         HideHudComponentThisFrame(19)
         SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
-        SetEntityProofs(PlayerPedId(), false, false, false, false, false, false, false, false)
+
+
+        SetEntityProofs(PlayerPedId(), false, false, true, true, false, false, false, false)
         HideHudComponentThisFrame(20)
         DisableControlAction(0, 37, true)
         DisableControlAction(0, 12, true)

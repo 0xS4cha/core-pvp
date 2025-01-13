@@ -65,7 +65,6 @@ Citizen.CreateThread(function()
             local xPlayer = GetPlayer(source)
             local xTarget = GetPlayer(tempId)
             if xPlayer:getPermission() >= _PERMISSION["ADMINMENU"] then
-                print(xTarget, tempId)
                 local advertList = MySQL.query.await('SELECT * FROM players_adverts WHERE player = @player', { ['@player'] = xTarget:getId() })
                 return advertList
             else

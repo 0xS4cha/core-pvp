@@ -1,5 +1,4 @@
-
---Detection mort
+local InteractDeath = {}
 RegisterNetEvent("core:onPlayerDeath")
 AddEventHandler('core:onPlayerDeath', function(data)
     local source = source
@@ -17,6 +16,22 @@ AddEventHandler('core:onPlayerDeath', function(data)
     end
 end)
 
+RegisterNetEvent("core:death:RequestUnregister")
+AddEventHandler('core:death:RequestUnregister', function(Token)
+    local source = source
+    if CheckPlayerToken(source, Token) then
+        InteractDeath[source] = nil
+        TriggerClientEvent('core:death:UnregisterInteract', -1, source)
+    end
+end)
+RegisterNetEvent("core:death:RequestInteract")
+AddEventHandler('core:death:RequestInteract', function(Token)
+    local source = source
+    if CheckPlayerToken(source, Token) then
+        InteractDeath[source] = true
+        TriggerClientEvent('core:death:RegisterInteract', -1, source)
+    end
+end)
 function GetDiscordId(source)
     local identifiers = GetPlayerIdentifiers(source)
     for _, identifier in pairs(identifiers) do

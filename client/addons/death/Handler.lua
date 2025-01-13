@@ -1,5 +1,5 @@
 Death = {}
-
+local InteractDeath = {}
 local damages = {}
 Death.GetAllDamagePed = {}
 Death.GetBonesType = {
@@ -137,4 +137,50 @@ AddEventHandler('baseevents:onPlayerKilled', function(event, data)
 	if event ~= 'CEventNetworkEntityDamage' then return end
     --print("CEventNetworkEntityDamage")
     CEventNetworkEntityDamage(data[1], data[4])
+end)
+
+RegisterNetEvent("core:death:UnregisterInteract")
+AddEventHandler("core:death:UnregisterInteract", function(player)
+    local entity =  GetPlayerPed(GetPlayerFromServerId(player))
+    if not InteractDeath[entity] then
+        return
+    end
+    InteractAPI.removeInteraction(InteractDeath[entity])
+    InteractAPI.removeInteractionByEntity(entity)
+    InteractDeath[entity] = nil
+end)
+
+RegisterNetEvent("core:death:RegisterInteract")
+AddEventHandler("core:death:RegisterInteract", function(player)
+    local entity =  GetPlayerPed(GetPlayerFromServerId(player))
+    if GetPlayerServerId(PlayerId()) == player then
+        return
+    end
+    InteractDeath[entity] = InteractAPI.addEntityInteraction({
+        netId = entity,
+        distance = 10.0,
+        interactDst = 10.0,
+        offset = vec(0.0, 0.0, 0.0),
+        options = {
+            {
+                label = GetPhrase('Carry'),
+                canInteract = function(entity, coords, args)
+                    return not isDead
+                end,
+                action = function(entity, coords, args)
+                    CarryPeople(entity)
+                end,
+            },
+            {
+                label = GetPhrase('Loot'),
+                canInteract = function(entity, coords, args)
+                    return not isDead
+                end,
+                action = function(entity, coords, args)
+
+                end,
+            },
+
+        }
+    })
 end)

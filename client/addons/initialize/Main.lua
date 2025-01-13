@@ -11,7 +11,7 @@ function _INITIALIZE.ClothingStore(v)
     SetEntityInvincible(ped:getEntityId(), true)
     NetworkSetEntityInvisibleToNetwork(ped:getEntityId(), true)
     SetEntityCanBeDamaged(ped:getEntityId(), false)
-
+    SetBlockingOfNonTemporaryEvents(ped:getEntityId(), true)
     InteractAPI.addLocalEntityInteraction({
         entity = ped:getEntityId(),
         distance = 10.0,
@@ -40,7 +40,7 @@ function _INITIALIZE.SpawnSelector(v)
     SetEntityInvincible(ped:getEntityId(), true)
     NetworkSetEntityInvisibleToNetwork(ped:getEntityId(), true)
     SetEntityCanBeDamaged(ped:getEntityId(), false)
-
+    SetBlockingOfNonTemporaryEvents(ped:getEntityId(), true)
     InteractAPI.addLocalEntityInteraction({
         entity = ped:getEntityId(),
         distance = 10.0,

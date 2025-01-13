@@ -30,7 +30,6 @@ AddEventHandler("playerSpawned", function()
     ShutdownLoadingScreenNui()
     SetEntityInvincible(p:ped(), true)
     RequestAllIpls()
-    print(json.encode(p:getCloths().skin))
     if json.encode(p:getCloths().skin) == "[]" then
         LoadNewCharCreator()
     elseif json.encode(p:getCloths().skin) ~= "" then

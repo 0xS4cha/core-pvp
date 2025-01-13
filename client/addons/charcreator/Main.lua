@@ -116,6 +116,7 @@ RegisterNUICallback("save", function(data, cb)
     })
 
     Wait(1000)
+    TriggerServerEvent("core:InstancePlayer", token, 0, "new_char_creator : Ligne 1177")
     local newSkin = SkinChangerGetSkin()
     p:setSkin(newSkin)
     p:saveSkin()
@@ -129,15 +130,12 @@ RegisterNUICallback("save", function(data, cb)
     DoScreenFadeIn(100)
 end)
 
+
+RegisterCommand('jade', function()
+    TriggerServerEvent("core:InstancePlayer", token, 0, "new_char_creator : Ligne 1177")
+end, false)
 RegisterNetEvent('core:openCreator', function(isAlreadyHaveSkin)
     LoadNewCharCreator(isAlreadyHaveSkin)
 end)
 
 
-RegisterCommand('register', function()
-    LoadNewCharCreator(false)
-end, false)
-
-RegisterCommand('register2', function()
-    LoadNewCharCreator(true)
-end, false)
