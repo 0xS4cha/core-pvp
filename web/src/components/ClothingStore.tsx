@@ -15,7 +15,7 @@ const clotheTypeIndex: { [key: string]: number } = {
   shoes: 6,
   arms: 3,
 };
-/*
+
 debugData([
   {
     action: "Clothing:SendData",
@@ -77,7 +77,7 @@ debugData([
       },
     },
   },
-]);*/
+]);
 const ClothingStore = () => {
   const [opened, setOpened] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("torso");
@@ -163,9 +163,12 @@ const ClothingStore = () => {
 
           return;
         }
-        if (event.deltaY > 0 && opened) {
+
+        if (event.deltaY > 0) {
+
           fetchNui("clothingStoreZoom", 1);
-        } else if (event.deltaY < 0 && opened) {
+        } else if (event.deltaY < 0) {
+
           fetchNui("clothingStoreZoom", 2);
         }
       };
