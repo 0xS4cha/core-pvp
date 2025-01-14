@@ -131,8 +131,8 @@ RegisterNUICallback("save", function(data, cb)
 end)
 
 
-RegisterCommand('jade', function()
-    TriggerServerEvent("core:InstancePlayer", token, 0, "new_char_creator : Ligne 1177")
+RegisterCommand('register', function()
+    TriggerEvent("core:openCreator", true)
 end, false)
 RegisterNetEvent('core:openCreator', function(isAlreadyHaveSkin)
     LoadNewCharCreator(isAlreadyHaveSkin)
