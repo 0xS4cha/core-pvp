@@ -134,9 +134,9 @@ function Admin:getStaffList()
         local v = StaffList[i]
         if v ~= nil then
             if v.isInStaffMode then
-                table.insert(stfList, {name = ('[~g~STAFF MODE~s~] - ~b~%s~s~ - %s'):format(v.source, v.name), playerName = v.name, source = v.source, data = v, ask = _PERMISSION_ROLE[v.permission].label, askX = true, Description = ('UUID: %s'):format(v.id)})
+                table.insert(stfList, {name = ('[%s] [~g~STAFF MODE~s~] - %s'):format(v.source, v.name), playerName = v.name, source = v.source, data = v, ask = _PERMISSION_ROLE[v.permission].label, askX = true, Description = ('UUID: %s\nTempID: %s'):format(v.id,v.source)})
             else
-                table.insert(stfList, {name = ('~b~%s~s~ - %s'):format(v.source, v.name), playerName = v.name, source = v.source, data = v, ask = _PERMISSION_ROLE[v.permission].label, askX = true, Description = ('UUID: %s'):format(v.id)})
+                table.insert(stfList, {name = ('[%s] - %s'):format(v.source, v.name), playerName = v.name, source = v.source, data = v, ask = _PERMISSION_ROLE[v.permission].label, askX = true, Description = ('UUID: %s\nTempID: %s'):format(v.id, v.source)})
             end
         end
     end
