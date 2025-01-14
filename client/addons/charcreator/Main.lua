@@ -123,7 +123,7 @@ RegisterNUICallback("save", function(data, cb)
     ClearPedTasks(PlayerPedId())
     ClearPedTasksImmediately(PlayerPedId())
     InitPositionHandler(_CONFIG.Lobby)
-    
+    DisplayRadar(true)
     SetEntityInvincible(PlayerPedId(), false)
     FreezeEntityPosition(PlayerPedId(), false)
     ClearTimecycleModifier()
