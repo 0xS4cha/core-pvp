@@ -14,29 +14,31 @@ Citizen.CreateThread(function()
         if CheckPlayerToken(source, token) then
             local staff = {}
             for k,v in pairs(GetAllplayer()) do
+                local isStaff = false
 
                 if v['permission'] > 0 then
                     for k2, inStaffMode in pairs(StaffInStaffMode) do
                         if inStaffMode == v["source"]  then
-                            table.insert(staff, { 
-                                id = tonumber(v["id"]),
-                                source = tonumber(v["source"]), 
-                                name =(v["playerName"]),
-                                permission = v["permission"],
-                                isInStaffMode = true
-                            })
-                        else
-                            table.insert(staff, { 
-                                id = tonumber(v["id"]),
-                                source = tonumber(v["source"]), 
-                                name = v["playerName"],
-                                permission = v["permission"],
-                                isInStaffMode = false
-                            })
-                        
+                            isStaff = true
                         end
                     end 
-                    
+                    if isStaff then
+                        table.insert(staff, { 
+                            id = tonumber(v["id"]),
+                            source = tonumber(v["source"]), 
+                            name =(v["playerName"]),
+                            permission = v["permission"],
+                            isInStaffMode = true
+                        })
+                    else
+                        table.insert(staff, { 
+                            id = tonumber(v["id"]),
+                            source = tonumber(v["source"]), 
+                            name = v["playerName"],
+                            permission = v["permission"],
+                            isInStaffMode = false
+                        })
+                    end
                 end
             end
             return staff
