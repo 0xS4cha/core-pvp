@@ -5,6 +5,7 @@ import { debugData } from "../utils/debugData";
 import { Divider } from "@mantine/core";
 
 import RentalSCSS from "./Rental.module.scss";
+import { cp } from "fs";
 
 debugData([
   {
@@ -12,14 +13,14 @@ debugData([
     data: {
       show: true,
       data: [
-        { name: "test", type: "FREE", image: "revolter.png" },
-        { name: "test", type: "FREE", image: "revolter.png" },
-        { name: "test", type: "FREE", image: "revolter.png" },
-        { name: "test", type: "FREE", image: "revolter.png" },
-        { name: "test", type: "FREE", image: "revolter.png" },
-        { name: "test", type: "FREE", image: "revolter.png" },
-        { name: "test", type: "FREE", image: "revolter.png" },
-        { name: "test", type: "FREE", image: "revolter.png" },
+        { name: "T20", type: "FREE", image: "revoltefdsr.png" },
+        { name: "T20", type: "FREE", image: "revolter.png" },
+        { name: "T20", type: "FREE", image: "revolter.png" },
+        { name: "T20", type: "FREE", image: "revolter.png" },
+        { name: "T20", type: "FREE", image: "revolter.png" },
+        { name: "T20", type: "FREE", image: "revolter.png" },
+        { name: "T20", type: "FREE", image: "revolter.png" },
+        { name: "T20", type: "FREE", image: "revolter.png" },
         { name: "test", type: "FREE", image: "revolter.png" },
         { name: "test", type: "FREE", image: "revolter.png" },
         { name: "test", type: "FREE", image: "revolter.png" },
@@ -34,9 +35,9 @@ debugData([
   },
 ]);
 const Rental = () => {
-  const [opened, setOpened] = useState(true);
+  const [opened, setOpened] = useState(false);
   const [data, setData] = useState<any>([]);
-  const [car, setCar] = useState<any>([]);
+  const [car, setCar] = useState<any>(0);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -65,9 +66,16 @@ const Rental = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   });
-  const handleSelectCar = (car: any) => {
-    setCar(car);
+  const handleSelectCar = (car2: any) => {
+    setCar(car2);
   };
+
+  const spawnCar = () => {
+    fetchNui("spawnSelector:Spawn", car);
+  };
+  const CloseSpawner = () => {
+    fetchNui("spawnSelector:Close");
+  }
 
   return (
     opened &&
@@ -77,20 +85,18 @@ const Rental = () => {
         <div className={RentalSCSS["container"]}>
           <div className={RentalSCSS["con1"]}>
             <div className={RentalSCSS["con1_1"]}>
-              <h2 className={RentalSCSS["vert"]}>CAR RENTAL</h2>
-              <p>RENT A VEHICLE</p>
+              <h1 className={RentalSCSS["vert"]}>CAR SPAWNER</h1>
+              <h2>SPAWN A VEHICLE</h2>
             </div>
 
-            <div className={RentalSCSS["con1_3"]}>
-              <button className={RentalSCSS["exit"]}>Exit</button>
-            </div>
+
           </div>
           <div className={RentalSCSS["con2"]}>
             <div className={RentalSCSS["con2_2"]} id="carContainer">
               {Object.entries(data).map(([key, value]) => (
                 <div
-                  className={RentalSCSS["car"]}
-                  onClick={() => handleSelectCar(value)}
+                  className={car === key ? RentalSCSS["carSlt"] : RentalSCSS["car"] }
+                  onClick={() => handleSelectCar(key)}
                 >
                   <p>{//@ts-ignore
                   value.name}</p>
@@ -98,7 +104,7 @@ const Rental = () => {
                     <img
                       src={`../assets/images/vehicle/${//@ts-ignore
                         value.image}`}
-                      alt="${car.name}"
+    
                     />
                   </div>
                   <p className={RentalSCSS["line"]}>{//@ts-ignore
@@ -109,11 +115,10 @@ const Rental = () => {
           </div>
 
           <div className={RentalSCSS["con4"]}>
-            <p className={RentalSCSS["vert"]}>Payment</p>
-            <p>Total Price</p>
+
             <div>
-              <button id="bankingCardBtn">Banking Card</button>
-              <button id="cashBtn">Pay via Cash</button>
+              <button  className={car !== 0 ? RentalSCSS["blueBtn"] : RentalSCSS["greyBtn"] } onClick={spawnCar}>SPAWN</button>
+              <button className={RentalSCSS["CloseBtn"]} onClick={CloseSpawner}>Fermer</button>
             </div>
           </div>
         </div>

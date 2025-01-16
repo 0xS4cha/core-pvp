@@ -37,6 +37,8 @@
         rgba(20, 22, 24, 0.5);
     --degrade-radial-sombre:
         linear-gradient(180deg, rgba(21, 77, 187, 0.02) 0%, rgba(21, 77, 187, 0.08) 100%), radial-gradient(50% 50.00% at 50% 50.00%, rgba(27, 28, 30, 0.48) 0%, rgba(27, 28, 30, 0.36) 100%);
+    --degrade-radial-sombre2:
+        linear-gradient(180deg, rgba(21, 77, 187, 0.02) 0%, rgba(21, 77, 187, 0.08) 100%), radial-gradient(50% 50.00% at 50% 50.00%, rgba(30, 77, 138, 0.48) 0%, rgba(30, 77, 138, 0.36) 100%);
     --degrade-radial-sombre-inverse:
         linear-gradient(180deg, rgba(27, 28, 30, 0.48) 0%, rgba(27, 28, 30, 0.36),  100%), radial-gradient(50% 50.00% at 50% 50.00%, rgba(21, 77, 187, 0.02) 0%, rgba(21, 77, 187, 0.08) 100%);
     --degrade-radial-inventory:
@@ -108,6 +110,8 @@
         linear-gradient(180deg, rgb(0, 255, 0) 0%, rgb(119, 192, 119) 100%);
     --degrade-linear-vert-blanc:
     linear-gradient(80deg, rgba(46, 46, 46, 0.64) 0%, rgba(104, 104, 104, 0.48) 100%);
+    --degrade-linear-gris: 
+    linear-gradient(180deg, rgba(46, 46, 46, 0.64) 0%, rgba(104, 104, 104, 0.48) 100%);
 
     --FatherColorRadius:
         #507ace;    

@@ -2,20 +2,16 @@ button{
     cursor: pointer;
 }
 :root {
-    --vert: #00ccb8;
     --gris1: #121314;
     --gris2:#141318;
     --gris3: #2e2e32;
 }
-.vert{
-    color: var(--vert);
-    text-shadow: 1px 1px 2px var(--vert);
-}
+
 .active-btn{
-    border: 2px solid var(--vert);
+    border: 2px solid rgb(30, 77, 138);
     width: 150px;
     height: 80%;
-    color: var(--vert);
+    color: rgb(30, 77, 138);
     text-align: start;
     background: linear-gradient(125deg, var(--gris1) 0 20%, var(--gris2) 20% 50%,var(--gris3));
     box-shadow: 0px 0px 35px 8px #00a970 inset;
@@ -55,15 +51,41 @@ button{
     justify-content: space-between;
     margin-top: 30px;
 }
-.container .con1 .con1_1 h2{
+
+.fdsfds{
     margin: 0%;
     padding: 0;
     font-size: 20px;
     top: 10%;
 }
-.container .con1 .con1_1 p{
-    margin: 0%;
-    font-size: 10px;
+.container .con1 .con1_1 {
+    margin-left: 10px;
+    padding: 0;
+    font-size: 20px;
+    top: 10%;
+}
+.container .con1 .con1_1 h1 {
+    
+    font-size:xx-large;
+    color: var(--white-70)
+}
+.container .con1 .con1_1 h2{
+    font-size: medium;
+    color: var(--white-30)
+}
+
+.CloseBtn {
+    background: var(--degrade-linear-rouge);
+}
+
+
+
+.greyBtn {
+    background: var(--degrade-linear-gris);
+}
+
+.blueBtn {
+    background: var(--degrade-linear-bleu-full);
 }
 #search{
     width: 250px;
@@ -125,6 +147,43 @@ button{
     overflow-y:auto;
     
 }
+
+
+.carSlt {
+    transform: scale(1.10);
+    /* background:linear-gradient(45deg,var(--gris1),var(--gris2),var(--gris3)); */
+    background: var(--degrade-radial-sombre2);
+    color: #ffffff;
+    height:150px;
+    width: 150px;
+    margin: 13px;
+    padding:10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    border-radius: 4px;
+    border: none;
+}
+.carSlt p {
+    position: absolute;
+    margin: 10px;
+    padding: 0%;
+}
+.carSlt p:last-child{
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+}
+.carSlt > div{
+    width: 100%;
+    text-align: center;
+}
+.carSlt img{
+    width: 130px;
+    
+}
+
 .car{
     /* background:linear-gradient(45deg,var(--gris1),var(--gris2),var(--gris3)); */
     background: var(--degrade-radial-sombre);
@@ -141,10 +200,13 @@ button{
     border: none;
 
 }
+.car:hover {
+    transform: scale(0.98);
+}
 .line {
     padding: 0%;
     margin: 0%;
-    border-bottom: 1px solid var(--vert);
+    border-bottom: 1px solid rgb(30, 77, 138);
 }
 .car p {
     position: absolute;
@@ -195,7 +257,7 @@ button{
     background-color: #fffdfd35;
     border-radius: 5px;
     padding: 0%;
-    color: var(--vert);
+    color: rgb(30, 77, 138);
 }
 .con3_2 button{
     height: 50px;
@@ -222,7 +284,7 @@ button{
     height: 50px;
     margin-right: 0;
     font-size: 15px;
-    color: var(--vert);
+    color: rgb(30, 77, 138);
 }
 .con3_2 p{
     margin-left: 0;
@@ -239,15 +301,24 @@ button{
 .con4 div{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    margin: 13px;
+    gap: 10px
+
 }
 .con4 div button{
-    width: 48%;
+    border-radius: 4px;
+    margin-top: 20px;
+    width: 250px;
     height: 40px;
     border: none;
     color: #ffffff;
-    background: linear-gradient(125deg, var(--gris1) 0 20%, var(--gris2) 20% 50%,var(--gris3));
-    
+}
+
+
+.con4 div button:hover{
+
+    transform: scale(0.98);
+
 }
 
 .image-container img {
