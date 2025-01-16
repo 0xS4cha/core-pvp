@@ -31,6 +31,43 @@ function _INITIALIZE.ClothingStore(v)
     })
 end
 
+function _INITIALIZE.SquadMenu(v)
+    Utils.CreateBlips(v.Pos, v.Blip.display, v.Blip.colour, GetPhrase(v.Blip.name), false, v.Blip.size)
+    local ped = entity:CreatePedLocal("csb_maude", v.Pos, v.Heading)
+    ped:setFreeze(true)
+
+    SetEntityInvincible(ped:getEntityId(), true)
+    NetworkSetEntityInvisibleToNetwork(ped:getEntityId(), true)
+    SetEntityCanBeDamaged(ped:getEntityId(), false)
+    SetBlockingOfNonTemporaryEvents(ped:getEntityId(), true)
+
+    InteractAPI.addLocalEntityInteraction({
+        entity = ped:getEntityId(),
+        distance = 10.0,
+        interactDst = 10.0,
+        offset = vec(0.0, 0.0, 0.5),
+        options = {
+            {
+                label = GetPhrase('Squad_MENU'),
+                canInteract = function(entity, coords, args)
+                    return true
+                end,
+                action = function(entity, coords, args)
+
+                end,
+            },
+            {
+                label = GetPhrase('Crew_MENU'),
+                canInteract = function(entity, coords, args)
+                    return true
+                end,
+                action = function(entity, coords, args)
+
+                end,
+            },
+        }
+    })
+end
 
 function _INITIALIZE.SpawnSelector(v)
     Utils.CreateBlips(v.Pos, v.Blip.display, v.Blip.colour, GetPhrase(v.Blip.name), false, v.Blip.size)
@@ -77,6 +114,7 @@ end
 
 CreateThread(function()
     for i = 1, #_SAFEZONE.SafeZones do
+        _INITIALIZE.SquadMenu(_SAFEZONE.SafeZones[i].squadMenu)
         _INITIALIZE.SpawnSelector(_SAFEZONE.SafeZones[i].lobbySelector)
         _INITIALIZE.ClothingStore(_SAFEZONE.SafeZones[i].clothingStore)
     end
