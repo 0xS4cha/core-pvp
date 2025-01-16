@@ -13,29 +13,30 @@ end)
 
 
 
-RegisterNetEvent("core:redzone:UpdateZones", function(value, index, key, keyValue, keyIndex, keyIndexValue, keyIndexKey, keyIndexKeyValue)
-    if index then
-        if key then
-            if keyIndex then
-                if keyIndexKey then
-                    Zones[index][key][keyIndex][keyIndexKey] = keyIndexKeyValue
+RegisterNetEvent("core:redzone:UpdateZones",
+    function(value, index, key, keyValue, keyIndex, keyIndexValue, keyIndexKey, keyIndexKeyValue)
+        if index then
+            if key then
+                if keyIndex then
+                    if keyIndexKey then
+                        Zones[index][key][keyIndex][keyIndexKey] = keyIndexKeyValue
+                    else
+                        Zones[index][key][keyIndex] = keyIndexValue
+                    end
                 else
-                    Zones[index][key][keyIndex] = keyIndexValue
+                    Zones[index][key] = keyValue
                 end
             else
-                Zones[index][key] = keyValue
+                Zones[index] = value
             end
         else
-            Zones[index] = value
+            Zones = value
         end
-    else
-        Zones = value
-    end
-    if Zones == nil or next(Zones) == nil then
-        isPlayerInZone, zoneIndex = false, false
-    end
-    UpdateZoneUI()
-end)
+        if Zones == nil or next(Zones) == nil then
+            isPlayerInZone, zoneIndex = false, false
+        end
+        UpdateZoneUI()
+    end)
 
 RegisterNetEvent("core:redzone:CreateZone", function()
     CreateZoneBlips()
@@ -111,16 +112,20 @@ end
 
 function UpdateZoneUI()
     if isPlayerInZone and zoneIndex then
+
+
+        local leaderIdentifier = GetKillLeader(Zones[zoneIndex].players)
+
+        Zones[zoneIndex].leader = Zones[zoneIndex].players[leaderIdentifier]
         if not Zones[zoneIndex].leader then
-            local leaderIdentifier = GetKillLeader(Zones[zoneIndex].players)
-            Zones[zoneIndex].leader = Zones[zoneIndex].players[leaderIdentifier]
-            if not Zones[zoneIndex].leader then
-                Zones[zoneIndex].leader = {
-                    name = "None",
-                    kill = 0
-                }
-            end
+            Zones[zoneIndex].leader = {
+                name = "None",
+                kill = 0
+            }
         end
+
+
+
         _NUI.SendNUIMessage('showRedzone', { --REPLACE TO UPDATE
             show = true,
             scoreboard = {
@@ -132,30 +137,6 @@ function UpdateZoneUI()
     end
 end
 
-
-RegisterCommand('redzone', function()
-    _NUI.SendNUIMessage('showRedzone', { --REPLACE TO UPDATE
-    show = true,
-    scoreboard = {
-        identifier = "steam:11000010",
-        myRank = 4,
-        zone = {
-          leader = {
-            name ="Danny Brian",
-            kill = 20,
-          },
-          totalKills = 100,
-          players = {
-            ["steam:11000010"] = {
-              kill = 20,
-            },
-          },
-        },
-
-          
-    }
-})
-end, false)
 Citizen.CreateThread(function()
     local enteredEventSend, exitedEventSend, zoneId = false, true, 1
     while true do
@@ -198,7 +179,7 @@ end
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(math.random(5, 15)*1000)
+        Citizen.Wait(math.random(5, 15) * 1000)
         RemoveKilleaderBlips()
         for i = 1, #Zones do
             local leaderIdentifier = GetKillLeader(Zones[i].players)
@@ -206,11 +187,10 @@ Citizen.CreateThread(function()
             local leader = Zones[i].players[leaderIdentifier]
             if leader then
                 local playerIdx = GetPlayerFromServerId(leader.source)
-                if playerIdx ~= - 1 then
+                if playerIdx ~= -1 then
                     local ped = GetPlayerPed(playerIdx)
                     if ped ~= -1 then
-                        local blip = AddKillerLeaderBlips(GetEntityCoords(ped))
-                        SetBlipInfo(leader, blip, Zones[i].totalKills)
+                        AddKillerLeaderBlips(GetEntityCoords(ped))
                     end
                 end
             end
@@ -218,27 +198,15 @@ Citizen.CreateThread(function()
     end
 end)
 
-function SetBlipInfo(leader, blip, total)
-    RequestStreamedTextureDict("gfx_logo", 1)
-    while not HasStreamedTextureDictLoaded("gfx_logo") do
-        Wait(0)
-    end
-    SetBlipInfoTitle(blip, "Redzone Kill Leader", false)
-    SetBlipInfoImage(blip, "gfx_logo", "gfx_logo")
-    AddBlipInfoText(blip, "Leader", leader.n)
-    AddBlipInfoText(blip, "Killed Player By Leader", tostring(leader.kill))
-    AddBlipInfoText(blip, "Total Kills", tostring(total))
-    AddBlipInfoHeader(blip, "")
-    AddBlipInfoText(blip, "This Blip Show The Kill Leader Of The Redzone")
-end
+
 
 function AddKillerLeaderBlips(coords)
-    local blip = AddBlipForCoord(coords.x,coords.y,coords.z)
+    local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipSprite(blip, 310)
     SetBlipColour(blip, 1)
     SetBlipScale(blip, 1.0)
     SetBlipDisplay(blip, 4)
-    SetBlipAsShortRange(blip,true)
+    SetBlipAsShortRange(blip, true)
     BeginTextCommandSetBlipName("STRING")
     AddTextComponentString("Kill Leader")
     EndTextCommandSetBlipName(blip)
@@ -255,7 +223,10 @@ end
 
 function GetKillLeader(t)
     local sortedTable = {}
-    for k, v in spairs(t, function(t,a,b) return t[b].kill < t[a].kill end) do
+    for k, v in spairs(t, function(t, a, b)
+
+        return t[b].kill < t[a].kill
+    end) do
         if v.source ~= nil then
             if v.into and v.kill > 0 then
                 table.insert(sortedTable, k)
@@ -267,7 +238,7 @@ end
 
 function GetMyRank(t)
     local sortedTable = {}
-    for k, v in spairs(t, function(t,a,b) return t[b].kill < t[a].kill end) do
+    for k, v in spairs(t, function(t, a, b) return t[b].kill < t[a].kill end) do
         if v.source ~= nil then
             if v.into and v.kill > 0 then
                 table.insert(sortedTable, k)
@@ -286,9 +257,9 @@ end
 
 function spairs(t, order)
     local keys = {}
-    for k in pairs(t) do keys[#keys+1] = k end
+    for k in pairs(t) do keys[#keys + 1] = k end
     if order then
-        table.sort(keys, function(a,b) return order(t, a, b) end)
+        table.sort(keys, function(a, b) return order(t, a, b) end)
     else
         table.sort(keys)
     end
@@ -302,20 +273,15 @@ function spairs(t, order)
     end
 end
 
-
-
 AddEventHandler('gameEventTriggered', function(name, eventData)
-
-    if name == "CEventNetworkEntityDamage"  then
-
+    if name == "CEventNetworkEntityDamage" then
         local ped, victim, killer, isFatal = PlayerPedId(), eventData[1], eventData[2], eventData[6] == 1
         local killerId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(killer))
-        local victimId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(victim)) or tostring(victim==-1 and " " or victim)
-        
+        local victimId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(victim)) or
+        tostring(victim == -1 and " " or victim)
+
         if ped == victim and isFatal then
-
             if isPlayerInZone and zoneIndex then
-
                 TriggerServerEvent("core:redzone:playerKilled", Token, zoneIndex, killerId, victimId)
             end
         end
