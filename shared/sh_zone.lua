@@ -27,6 +27,11 @@ _SAFEZONE.SafeZones = {
             Heading = 232.22766113281,
             Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
         },
+        vehicleMenu = {
+            Pos = vector3(-123.18510437012, -1591.1706542969, 34.20779800415 - 1.02),
+            Heading = 68.537330627441,
+            Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
+        },
     },
     {
         Description = 'Lobby of Sandy Shore',
@@ -51,6 +56,11 @@ _SAFEZONE.SafeZones = {
         squadMenu = {
             Pos = vector3(0.0, 0.0, 0.0),
             Heading = 232.22766113281,
+            Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
+        },
+        vehicleMenu = {
+            Pos = vector3(0.0, 0.0, 0.0),
+            Heading = 68.537330627441,
             Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
         },
     },

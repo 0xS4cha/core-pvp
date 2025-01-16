@@ -69,6 +69,40 @@ function _INITIALIZE.SquadMenu(v)
     })
 end
 
+function _INITIALIZE.VehicleMenu(v)
+    Utils.CreateBlips(v.Pos, v.Blip.display, v.Blip.colour, GetPhrase(v.Blip.name), false, v.Blip.size)
+    local ped = entity:CreatePedLocal("u_m_m_vince", v.Pos, v.Heading)
+    ped:setFreeze(true)
+
+    SetEntityInvincible(ped:getEntityId(), true)
+    NetworkSetEntityInvisibleToNetwork(ped:getEntityId(), true)
+    SetEntityCanBeDamaged(ped:getEntityId(), false)
+    SetBlockingOfNonTemporaryEvents(ped:getEntityId(), true)
+
+    InteractAPI.addLocalEntityInteraction({
+        entity = ped:getEntityId(),
+        distance = 10.0,
+        interactDst = 10.0,
+        offset = vec(0.0, 0.0, 0.5),
+        options = {
+            {
+                label = GetPhrase('vehicle_MENU'),
+                canInteract = function(entity, coords, args)
+                    return true
+                end,
+                action = function(entity, coords, args)
+                    SetNuiFocus(true, true)
+                    _NUI.SendNUIMessage('showRental', {
+                        show = true,
+                        data = _VEHICLE.LIST.FREE
+                    })
+                end,
+            },
+
+        }
+    })
+end
+
 function _INITIALIZE.SpawnSelector(v)
     Utils.CreateBlips(v.Pos, v.Blip.display, v.Blip.colour, GetPhrase(v.Blip.name), false, v.Blip.size)
     local ped = entity:CreatePedLocal("s_m_m_movspace_01", v.Pos, v.Heading)
@@ -115,6 +149,7 @@ end
 CreateThread(function()
     for i = 1, #_SAFEZONE.SafeZones do
         _INITIALIZE.SquadMenu(_SAFEZONE.SafeZones[i].squadMenu)
+        _INITIALIZE.VehicleMenu(_SAFEZONE.SafeZones[i].vehicleMenu)
         _INITIALIZE.SpawnSelector(_SAFEZONE.SafeZones[i].lobbySelector)
         _INITIALIZE.ClothingStore(_SAFEZONE.SafeZones[i].clothingStore)
     end

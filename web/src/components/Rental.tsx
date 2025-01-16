@@ -71,10 +71,10 @@ const Rental = () => {
   };
 
   const spawnCar = () => {
-    fetchNui("spawnSelector:Spawn", car);
+    fetchNui("vehicleSpawner:Spawn", car);
   };
   const CloseSpawner = () => {
-    fetchNui("spawnSelector:Close");
+    fetchNui("vehicleSpawner:Close");
   }
 
   return (
