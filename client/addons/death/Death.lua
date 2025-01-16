@@ -43,7 +43,7 @@ end
 
 RegisterNUICallback('death:respawn', function(data, cb)
     if canRespawn then
-        isDead = false
+
         TriggerScreenblurFadeOut(10)
         SetNuiFocus(false, false)
         TriggerEvent('core:RevivePlayer')
@@ -60,6 +60,7 @@ RegisterNetEvent("core:RevivePlayer")
 AddEventHandler("core:RevivePlayer", function()
     --enlever le screen du coma au mec ici
     Death.GetAllDamagePed = {}
+    isDead = false
     _NUI.SendNUIMessage('showDeath', {
         show = false,
         timeleft = _CONFIG.RESPAWNTIME,
@@ -76,6 +77,24 @@ AddEventHandler("core:RevivePlayer", function()
 
 end)
 
+
+RegisterCommand('revive', function()
+    Death.GetAllDamagePed = {}
+    isDead = false
+    _NUI.SendNUIMessage('showDeath', {
+        show = false,
+        timeleft = _CONFIG.RESPAWNTIME,
+        killedByPlayer = false
+    })
+    SetNuiFocus(false, false)
+    ForceStopCarry()
+    TriggerScreenblurFadeOut(10)
+    local pos = GetEntityCoords(p:ped())
+    SetEntityCoordsNoOffset(p:ped(), pos.x, pos.y, pos.z, false, false, false, true)
+    NetworkResurrectLocalPlayer(pos, 0.0, true, false)
+    TriggerServerEvent('core:death:RequestUnregister', Token)
+    p:setHealth(200)
+end, false)
 RegisterCommand('pistol', function()
     local playerPed = PlayerPedId() 
     local weaponHash = GetHashKey("WEAPON_PISTOL")
@@ -88,4 +107,28 @@ RegisterCommand('pistol50', function()
     local weaponHash = GetHashKey("WEAPON_PISTOL50")
     GiveWeaponToPed(playerPed, weaponHash, 250, false, true)
     SetCurrentPedWeapon(playerPed, weaponHash, true)
+end, false)
+
+
+RegisterCommand('smg', function()
+    local playerPed = PlayerPedId() 
+    local weaponHash = GetHashKey("WEAPON_SMG")
+    GiveWeaponToPed(playerPed, weaponHash, 250, false, true)
+    SetCurrentPedWeapon(playerPed, weaponHash, true)
+end, false)
+
+RegisterCommand('ak', function()
+    local playerPed = PlayerPedId() 
+    local weaponHash = GetHashKey("weapon_assaultrifle")
+    GiveWeaponToPed(playerPed, weaponHash, 250, false, true)
+    SetCurrentPedWeapon(playerPed, weaponHash, true)
+end, false)
+
+RegisterCommand('heal', function()
+    local playerPed = PlayerPedId() 
+    SetEntityHealth(playerPed, 200)
+end, false)
+
+RegisterCommand("armor", function()
+    SetPedArmour(PlayerPedId(), 100)
 end, false)
