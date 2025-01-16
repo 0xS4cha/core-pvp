@@ -94,10 +94,10 @@ local function CreateInteractions()
                     if table_type(options) ~= 'empty' then
                         createOptions(coords, options)
 
-                        if CURRENT_SELECTION ~= 1 and (IsControlJustPressed(0, 172) or IsControlJustPressed(0, 15)) then
+                        if CURRENT_SELECTION ~= 1 and (IsControlJustPressed(0, 172) or IsDisabledControlJustPressed(0, 15)) then
     
                             CURRENT_SELECTION -= 1
-                        elseif CURRENT_SELECTION ~= #options and (IsControlJustPressed(0, 173) or IsControlJustPressed(0, 14)) then
+                        elseif CURRENT_SELECTION ~= #options and (IsControlJustPressed(0, 173) or IsDisabledControlJustPressed(0, 14)) then
                             CURRENT_SELECTION += 1
                         end
                     end
