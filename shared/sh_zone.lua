@@ -21,7 +21,12 @@ _SAFEZONE.SafeZones = {
             Pos = vector3(-120.33229064941, -1574.6842041016, 34.176578521729 - 1.02),
             Heading = 117.94702148438,
             Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
-        }
+        },
+        squadMenu = {
+            Pos = vector3(-134.40435791016, -1580.4940185547, 34.207954406738 - 1.02),
+            Heading = 232.22766113281,
+            Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
+        },
     },
     {
         Description = 'Lobby of Sandy Shore',
@@ -42,7 +47,12 @@ _SAFEZONE.SafeZones = {
             Pos = vector3(1549.0236816406, 3516.1254882812, 35.993576049805 - 1.02),
             Heading = 7.2120108604431,
             Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
-        }
+        },
+        squadMenu = {
+            Pos = vector3(0.0, 0.0, 0.0),
+            Heading = 232.22766113281,
+            Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
+        },
     },
 }
 
