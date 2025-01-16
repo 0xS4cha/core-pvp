@@ -1,0 +1,29 @@
+.color__palette__container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.color__palette__container .color__palette__wrapper {
+  height: 32px;
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  flex-wrap: unset;
+  gap: 3px;
+  margin: 5px 0;
+}
+.color__palette__container .color__palette__wrapper .citem {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  transition: filter 0.3s;
+  border: 1px solid grey;
+  min-width: 30px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.color__palette__container .color__palette__wrapper .citem:hover {
+  filter: brightness(30%);
+}
+.color__palette__container .color__palette__wrapper .citem.selected {
+  filter: brightness(30%);
+}/*# sourceMappingURL=ColorPalette.css.map */

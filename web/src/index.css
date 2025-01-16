@@ -40,7 +40,10 @@
     --degrade-radial-sombre-inverse:
         linear-gradient(180deg, rgba(27, 28, 30, 0.48) 0%, rgba(27, 28, 30, 0.36),  100%), radial-gradient(50% 50.00% at 50% 50.00%, rgba(21, 77, 187, 0.02) 0%, rgba(21, 77, 187, 0.08) 100%);
     --degrade-radial-inventory:
-        radial-gradient(50% 50.00% at 50% 50.00%, rgba(155, 155, 155, 0.089) 0%, rgba(26, 36, 53, 0.767) 100%);
+        radial-gradient(50% 50.00% at 50% 50.00%, rgba(155, 155, 155, 0.089) 0%, rgba(20, 36, 51, 0.767) 100%);
+    --degrade-radial-inventory2: 
+        linear-gradient(-90deg, rgba(155, 155, 155, 0.089) 0%, rgba(20, 36, 51, 0.767) 100%);
+
     --degrade-radial-clair:
         linear-gradient(-80deg, rgba(255, 255, 255, 0.2) 0%, rgba(154, 191, 224, 0.04) 100%);
     --degrade-radial:

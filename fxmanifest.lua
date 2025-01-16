@@ -30,9 +30,13 @@ shared_scripts {
 files {
     'files/MINIMAP_LOADER.gfx',
     'web/assets/**/*.png',
+    'web/assets/**/*.webp',
+    'web/assets/**/**/*.webp',
     'web/assets/images/clothing/*.png',
     'web/assets/**/*.svg',
     'web/assets/**/**/*.svg',
+    'web/assets/**/*.webp',
+    'web/assets/**/**/*.webp',
     'web/build/index.html',
 	'web/build/**/*',
     'client/loadscreen/*',

@@ -77,7 +77,7 @@ const PaginatedClothingItems: React.FC<ClothingItemProps> = ({
           >
             <div className={clothingStore["storeleftmenuclothingpart_item_img"]}>
               <img className={clothingStore["storeleftmenu_mmenu_ngfdgfd"]}
-                src={`https://sacha-dev.fr/${gender}_${clotheTypeIndex[activeTab]}_${index}.png`}
+                src={`../assets/images/clothing/${gender}_${clotheTypeIndex[activeTab]}_${index}.png.webp`}
                 alt={`Item ${index}`}
               />
             </div>

@@ -38,6 +38,12 @@ function PlayerInComa(data)
             killedByPlayer = data.killedByPlayer
         })
         TriggerScreenblurFadeIn(10)
+        while isDead do
+            Utils.LoadAnimDict( "dead" )
+            
+			TaskPlayAnim(PlayerPedId(), "dead", "dead_a", 1.0, 1.0, -1, 1, 0, 0, 0, 0)
+            Wait(0)
+        end
     end
 end
 

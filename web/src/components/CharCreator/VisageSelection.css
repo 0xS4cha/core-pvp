@@ -1,0 +1,43 @@
+.visage__container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.visage__container .visage__container_wrapper {
+  height: 166px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow-y: scroll;
+  width: 99%;
+}
+.visage__container .visage__container_wrapper .visage__item {
+  width: 77px;
+  height: 77px;
+  border-radius: 3px;
+  border: 1px solid rgb(30, 77, 138) !important;
+  background-color: rgba(29, 29, 29, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  overflow: hidden;
+}
+.visage__container .visage__container_wrapper .visage__item img {
+  width: 100% !important;
+  transition: all 0.3s;
+}
+.visage__container .visage__container_wrapper .visage__item.selected {
+  background-color: rgb(30, 77, 138) !important;
+}
+.visage__container .visage__container_wrapper .visage__item.selected img {
+  transform: scale(1.05);
+}
+.visage__container .visage__container_wrapper .visage__item:hover {
+  background-color: rgb(30, 77, 138) !important;
+}
+.visage__container .visage__container_wrapper .visage__item:hover img {
+  transform: scale(1.05);
+}/*# sourceMappingURL=VisageSelection.css.map */

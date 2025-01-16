@@ -18,7 +18,7 @@ const DraggableSlot: React.FC<{ item: any }> = ({ item }) => {
       <div
         className={InventorySCSS["item"]}
         style={{
-          backgroundImage: `url(https://sacha-dev.fr/${item.name}.png)`,
+          backgroundImage: `url(../assets/images/inventaire/${item.name}.png.webp)`,
         }}
       >
         <div className={InventorySCSS["item-count"]}>{item.count}</div>

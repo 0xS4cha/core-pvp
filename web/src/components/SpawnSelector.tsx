@@ -73,7 +73,7 @@ const SpawnSelector = () => {
   return opened && (
     <div className={SpawnSelectorSCSS["ui"]}>
 <div className={SpawnSelectorSCSS["main-screen"]}>
-    <img src={`https://sacha-dev.fr/${dataSelector[tab - 1].Image}`} alt='' />
+    <img src={`../assets/images/${dataSelector[tab - 1].Image}.webp`} alt='' />
             <div className={SpawnSelectorSCSS["spawn-selector"]}>
                 
                 <div className={SpawnSelectorSCSS["selected-spawn"]}>
