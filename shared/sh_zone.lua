@@ -6,6 +6,10 @@ _SAFEZONE.SafeZones = {
         Description = 'Lobby of Los Santos',
         Name = 'Los Santos',
         Image = 'lspd.png',
+        vehicle = {
+            coords = vector3(-114.8243560791, -1605.9400634766, 31.772033691406),
+            heading = 320.3176574707
+        },
         clothingStore = {
             Pos = vector3(-137.83258056641, -1595.5024414062, 34.243640899658 - 1.02),
             Heading = 310.88244628906,
@@ -63,6 +67,7 @@ _SAFEZONE.SafeZones = {
             Heading = 68.537330627441,
             Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
         },
+
     },
 }
 

@@ -1,5 +1,5 @@
 local leavingsafezone = false
-local safeZoneId = nil
+safeZoneId = nil
 
 local CreateThread <const> = CreateThread
 
