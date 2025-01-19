@@ -24,7 +24,7 @@ end, false)
 AddEventHandler("playerSpawned", function()
 
     while p == nil do Wait(1000) end
-
+    DisableIdleCamera(true)
     FreezeEntityPosition(p:ped(), true)
     DisablePlayerVehicleRewards(p:ped())
     ShutdownLoadingScreenNui()
@@ -40,7 +40,7 @@ AddEventHandler("playerSpawned", function()
         
         FreezeEntityPosition(p:ped(), false)
     end
-
+    TriggerScreenblurFadeOut(10)
 end)
 
 function LoadPlayerData(fromCharCreator) -- Tout les init irons ici
@@ -121,6 +121,7 @@ AddEventHandler("core:addItemPlayer", function(item)
     local inv = p:getInventaire()
     table.insert(inv, item)
     p:setInventaire(inv)
+    RefreshInventory()
 end)
 
 RegisterNetEvent("core:addExistItemPlayer")
@@ -133,6 +134,7 @@ AddEventHandler("core:addExistItemPlayer", function(item, quantity)
         end
     end
     p:setInventaire(inv)
+    RefreshInventory()
 end)
 
 RegisterNetEvent("core:renameItemPlayer")
@@ -181,16 +183,15 @@ AddEventHandler("core:RemoveItemFromInventoryNil", function(name, quantity, meta
         end
     end
 end)
-
-RegisterNetEvent("core:RemoveMetadatasInventory")
-AddEventHandler("core:RemoveMetadatasInventory", function(name, quantity, metadatas)
+RegisterNetEvent("core:RemoveItemInventory")
+AddEventHandler("core:RemoveItemInventory", function(name, quantity, slot)
     local inv = p:getInventaire()
     if inv ~= nil then
 
         for i = 1, #inv do
             if inv[i] ~= nil then
 
-                if inv[i].name ~= nil and inv[i].metadatas ~= nil and CompareMetadatas(inv[i].metadatas, metadatas) and inv[i].name == name then
+                if inv[i].name ~= nil and inv[i].name == name and slot == inv[i].slot == slot then
 
                     if inv[i].count - quantity <= 0 then table.remove(inv, i)
                     else inv[i].count = inv[i].count - quantity end
@@ -200,5 +201,7 @@ AddEventHandler("core:RemoveMetadatasInventory", function(name, quantity, metada
                 end
             end
         end
+        RefreshInventory()
     end
+    
 end)

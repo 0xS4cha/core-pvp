@@ -15,6 +15,7 @@ _CONFIG.SLOTMAX = 255
 _CONFIG.DISCORD = {
     LINK = 'gsfdgsfdgfds'
 }
+_CONFIG.MAXMONEYLOOT = 8000
 _CONFIG.ISINWAITING = true
 _CONFIG.RESPAWNTIME = 2 -- SECONDS
 _CONFIG.LOGO_LINK = 'https://sacha-dev.fr/ldo_logo.PNG'

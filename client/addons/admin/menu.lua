@@ -372,7 +372,7 @@ function Admin:ScalformSpectate()
         if Admin.tId and Admin.tId > 0 then
             CreateMenu(Admin.Menu)
             Wait(15)
-            OpenMenu("joueur")
+            OpenMenu("admin_playermenu")
         end
     end
     if GetGameTimer() > Admin.Timer then
@@ -485,7 +485,6 @@ Admin.HasHitbox = false;
 Admin.HasSkeleton = false;
 Admin.HasPlayerLine = false;
 Admin.HasBlips = false;
-
 Admin.HasPropsName = false;
 Admin.HasBonesName = false;
 Admin.HasGroundName = false;
@@ -629,6 +628,10 @@ local SelectedMenu = {
                     TriggerServerEvent('core:admin:AdvertPlayer', Token, idPlayer, msg)
                 end
             end, GetPhrase("admin_ban_reason"), 255)
+        elseif btnName == 'admin_playermenu_screenshot' then
+            TriggerServerEvent('core:admin:Screenshot', Token, idPlayer)
+        elseif btnName == 'admin_givevehicle' then
+            TriggerServerEvent('core:admin:GiveVehicle', Token, idPlayer, self.slidename, GetDisplayNameFromVehicleModel(self.slidename))
         elseif btnName == 'admin_playermenu_advertmenu' then
             Admin.tId = curMenu.temp or Admin.tId
             menu:OpenMenu('admin_advertmenu')
@@ -781,8 +784,10 @@ local SelectedMenu = {
                 Admin.HasBonesName = false
             end
         elseif name == "admin_showblips" then
-            Admin:CreateBlips()
-            Admin.HasBlips = e.checkbox
+            Admin.HasBlips = not Admin.HasBlips
+            
+            CreateBlips()
+
         elseif name == "admin_ban_offline" then
             if e.slidenum == 1 then
                 AskEntry(function(uuid) 
@@ -975,7 +980,13 @@ Admin.Menu = {
                     {name = "admin_playermenu_screenshot"},
                     {name = "admin_playermenu_advertplayer"},
                     {name = "admin_playermenu_advertmenu"},
-
+                    {name = "admin_givevehicle", canSee = function()
+                        if p:getPermission() >= _PERMISSION['GIVE_VEHICLE'] then
+                            return true
+                        else
+                            return false
+                        end
+                    end, slidemax = _VEHICLE.LIST.ADMIN, colorFree = {238, 255, 93, 165}},
                     {name = "admin_playermenu_wipe", colorFree = {205, 45, 45, 165}},
                     {name = "admin_playermenu_kick", colorFree = {205, 45, 45, 165}},
                     {name = "admin_playermenu_ban", colorFree = {205, 45, 45, 165}, slidemax = {'perm', 'days', 'hours'}},
@@ -1082,16 +1093,16 @@ Admin.Menu = {
     }
 }
 
-RegisterKeyMapping("spec", "Mode Spectate", "keyboard", "O")
-RegisterCommand("spec", function()
-    if Admin.PlyGroup >= _PERMISSION['SPECTATE'] then
-        Admin:Spectate()
-    end
-end)
 
-RegisterKeyMapping("menuadmin", "Menu Admin", "keyboard", "F4")
-RegisterCommand("menuadmin", function()
+Keys.Register('O', 'O', GetPhrase('Spec_mode'), function()
+    if Admin.PlyGroup >= _PERMISSION['SPECTATE'] and Admin.isInService then
+        Admin:Spectate()
+    end       
+    
+end)
+Keys.Register('F4', 'F4', GetPhrase('Menu_Admin'), function()
     if Admin.PlyGroup >= _PERMISSION['ADMINMENU'] then
         CreateMenu(Admin.Menu)
     end
 end)
+

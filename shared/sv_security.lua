@@ -81,6 +81,7 @@ _SECURITY.AntiInternal = { -- this will protect your server from cheaters when c
 _SECURITY.EntityLockdownMode = "inactive" -- relaxed: Only script-owned entities created by clients are blocked., strict: Only Server-Side Scripts can create entites. | inactive 
 _SECURITY.EntitySecurity = { -- Resources that are causing false bans add to here make sure to use lowercases and put the name corretely
 	{ resource = "bob74_ipl",  whitelist = true},
+	{ resource = "core",  whitelist = true},
 }
 
 _SECURITY.ExplosionsWhitelist = {
@@ -441,6 +442,28 @@ _SECURITY.Protection.BlacklistedVehicles = { -- Vehicles List can be found here:
 	{ name = "limo2",         time = "Ban", webhook = "" },
 	{ name = "scramjet",      time = "Ban", webhook = "" },
 	{ name = "vigilante",     time = "Ban", webhook = "" },
+	{ name = "besra",       time = "Ban", webhook = "" },
+	{ name = "tanker",       time = "Ban", webhook = "" },
+	{ name = "tanker2",       time = "Ban", webhook = "" },
+	{ name = "alkonost",       time = "Ban", webhook = "" },
+	{ name = "alphaz1",       time = "Ban", webhook = "" },
+	{ name = "avenger3",       time = "Ban", webhook = "" },
+	{ name = "avenger4",       time = "Ban", webhook = "" },
+
+	{ name = "howard",       time = "Ban", webhook = "" },
+	{ name = "jet",       time = "Ban", webhook = "" },
+	{ name = "luxor",       time = "Ban", webhook = "" },
+	{ name = "luxor2",       time = "Ban", webhook = "" },
+	{ name = "mammatus",       time = "Ban", webhook = "" },
+	{ name = "microlight",       time = "Ban", webhook = "" },
+	{ name = "mogul",       time = "Ban", webhook = "" },
+	{ name = "nimbus",       time = "Ban", webhook = "" },
+	{ name = "raiju",       time = "Ban", webhook = "" },
+	{ name = "seabreeze",       time = "Ban", webhook = "" },
+	{ name = "shamal",       time = "Ban", webhook = "" },
+	{ name = "streamer216",       time = "Ban", webhook = "" },
+	{ name = "stunt",       time = "Ban", webhook = "" },
+	{ name = "volatol",       time = "Ban", webhook = "" },
 }
 
 _SECURITY.Webhooks.BlacklistedObjects = ""

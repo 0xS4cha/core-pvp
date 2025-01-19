@@ -11,7 +11,8 @@ import InputComponent from "./Input";
 import Redzoneui  from "./Redzonesb";
 import CharCreator from "./CharCreator";
 import Inventory from "./Inventory/Inventory";
-import Squad from "./Squad";
+import Screenshot from "./Screenshot";
+import Cardealer from "./Cardealer";
 import Rental from "./Rental";
 import PinComponent from "./Pin";
 import PromptComponent from "./Prompt";
@@ -47,9 +48,11 @@ const App: React.FC = () => {
     <>
       <Copy/>
       <HudComponent/>
+      <Screenshot/>
       <CharCreator/>
       <Rental />
-      {/*<Squad/>*/}
+      <Cardealer />
+
       <ClothingStore />
       <SpawnSelector/>
       <Redzoneui />

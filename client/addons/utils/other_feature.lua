@@ -1,35 +1,7 @@
 PlayerUtils = {}
 
 --@class Keys
-Keys = {};
 
----Register
----@param Controls string
----@param ControlName string
----@param Description string
----@param Action function
----@return Keys
----@public
-
-Keys = {
-    keysAllow = true 
-}
-
-function Keys.Register(Controls, ControlName, Description, Action)
-    local _Keys = {
-        CONTROLS = Controls
-    }
-    RegisterKeyMapping(string.format('rageui-%s', ControlName), Description, "keyboard", Controls)
-    RegisterCommand(string.format('rageui-%s', ControlName), function(source, args)
-        if (Action ~= nil) then
-            if Keys.keysAllow then 
-               Action();
-
-            end 
-        end
-    end, false)
-    return setmetatable(_Keys, Keys)
-end
 
 ---Exists
 ---@param Controls string
@@ -108,27 +80,7 @@ local relationshipTypes = { "PLAYER", "CIVMALE", "CIVFEMALE", "COP", "SECURITY_G
     "ARMY", "GUARD_DOG", "AGGRESSIVE_INVESTIGATE", "MEDIC", "CAT" }
 local RELATIONSHIP_HATE = 1
 
-CreateThread(function()
-    while p == nil do
-        Wait(1)
-    end
-    AddTextEntry('PM_PANE_CFX', '~HUD_COLOUR_PM_MITEM_HIGHLIGHT~Vision')
 
-    for k, v in pairs(relationshipTypes) do
-        SetRelationshipBetweenGroups(RELATIONSHIP_HATE, GetHashKey('PLAYER'), GetHashKey(v))
-        SetRelationshipBetweenGroups(RELATIONSHIP_HATE, GetHashKey(v), GetHashKey('PLAYER'))
-    end
-    SetCanAttackFriendly(PlayerId(), true, false)
-    NetworkSetFriendlyFireOption(true)
-    SetAudioFlag("PoliceScannerDisabled", true)
-    for i = 0, 15 do
-        EnableDispatchService(i, false)
-    end
-
-    ClearPlayerWantedLevel(PlayerId())
-    SetMaxWantedLevel(0)
-    SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
-end)
 
 local spawnVeh = { "rhino", "hydra", "buzzard", "lazer", "titan", "cargobob", "adder", "zentorno", "blimp", "blimp2",
     "blimp3" }

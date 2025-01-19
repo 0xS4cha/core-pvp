@@ -1,1 +1,205 @@
-[{"name": "bread", "count": 1, "label": "Pain", "slot": 2, "type": "items"}]
+[
+    {
+        "type": "items",
+        "label": "bread",
+        "count": 0,
+        "slot": 3,
+        "name": "bread"
+    },
+    {
+        "type": "items",
+        "label": "bread",
+        "count": 0,
+        "slot": 4,
+        "name": "bread"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 7,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 9,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 8,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 13,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 1,
+        "slot": 0,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 1,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 2,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 6,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 12,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 14,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 11,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 10,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 15,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 18,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 16,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 17,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 1,
+        "slot": 19,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 1,
+        "slot": 21,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 23,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 22,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 24,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 1,
+        "slot": 20,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 28,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 29,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 27,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 26,
+        "name": "weapon_pistol"
+    },
+    {
+        "type": "weapons",
+        "label": "weapon_pistol",
+        "count": 0,
+        "slot": 25,
+        "name": "weapon_pistol"
+    }
+]

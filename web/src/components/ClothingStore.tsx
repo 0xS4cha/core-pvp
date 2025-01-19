@@ -163,13 +163,14 @@ const ClothingStore = () => {
 
           return;
         }
+        if (opened) {
+          if (event.deltaY > 0) {
 
-        if (event.deltaY > 0) {
+            fetchNui("clothingStoreZoom", 1);
+          } else if (event.deltaY < 0) {
 
-          fetchNui("clothingStoreZoom", 1);
-        } else if (event.deltaY < 0) {
-
-          fetchNui("clothingStoreZoom", 2);
+            fetchNui("clothingStoreZoom", 2);
+          }
         }
       };
     
@@ -197,9 +198,7 @@ const ClothingStore = () => {
     console.log(gender, translation, data, opened, data2.show);
   });
 
-  useEffect(() => {
-    console.log('Opened state updated:', opened);
-  }, [opened]);
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };

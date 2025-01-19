@@ -65,7 +65,7 @@ Citizen.CreateThread(function()
             end
             return {
                 logo = imgURL,
-                name = GetPlayerName(id),
+                name = ("%s - %s"):format(killerPlayr:getId(), GetPlayerName(id)),
                 vip  = vip
             }
         end

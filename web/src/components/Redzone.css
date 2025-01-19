@@ -8,7 +8,7 @@
 
 .redzone-container {
     position: absolute;
-    left: 145.5vh;
+    right: 2.8vh;
     bottom: 10.0488474204171241vh; 
     background-color: rgba(20, 36, 51, 0.55);
     display: flex;
@@ -82,7 +82,7 @@
     
     font-family: 'Exo', sans-serif;
     position: absolute;
-    left: 143vh;
+    right: 2.76vh;
     display: flex;
     align-items: center;
     justify-content: center; 

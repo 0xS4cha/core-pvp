@@ -529,7 +529,58 @@ function ToogleHitbox()
         end
     end)
 end
+local blips = {}
+function CreateBlips()
+    if Admin.HasBlips then
 
+		Citizen.CreateThread(function()
+			while Admin.HasBlips do
+				for k,v in pairs(GetActivePlayers()) do
+					local pPed = GetPlayerPed(v)
+
+					if blips[v] == nil then
+						local blip = AddBlipForEntity(pPed)
+						SetBlipScale(blip, 0.75)
+						SetBlipCategory(blip, 2)
+						blips[v] = blip
+					else
+						local blip = GetBlipFromEntity(pPed)
+						RemoveBlip(blip)
+						RemoveBlip(blips[v])
+						local blip = AddBlipForEntity(pPed)
+						SetBlipScale(blip, 0.75)
+						SetBlipCategory(blip, 2)
+						blips[v] = blip
+					end
+					SetBlipNameToPlayerName(blips[v], v)
+					SetBlipSprite(blips[v], 1)
+					SetBlipRotation(blips[v], math.ceil(GetEntityHeading(pPed)))
+					
+
+					if IsPedInAnyVehicle(pPed, false) then
+						ShowHeadingIndicatorOnBlip(blips[v], false)
+						local pVeh = GetVehiclePedIsIn(pPed, false)
+						SetBlipRotation(blips[v], math.ceil(GetEntityHeading(pVeh)))
+
+					
+							SetBlipSprite(blips[v], 227)
+							SetBlipColour(blips[v], 0)
+					else
+						ShowHeadingIndicatorOnBlip(blips[v], true)
+						HideNumberOnBlip(blips[v])
+					end
+
+				end
+				Wait(500)
+			end
+        end)
+    else
+		for k,v in pairs(blips) do
+			RemoveBlip(v)
+		end
+		blips = {}
+    end
+end
 function ToogleGamerTag()
     tagBoucle = true
     local perm

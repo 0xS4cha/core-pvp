@@ -330,8 +330,12 @@ function startClothingStore()
             local Skin = p:skin()
             ApplySkinFake(Skin)
         end
-        instruction = Utils.Instructions({ [1] = { key = 198, message = "Zoom" }, [2] = { key = 18, message = "Camera" },
-            [3] = { key = 308, message = "Previous variation" }, [4] = { key = 307, message = "Next variation" } })
+        instruction = Utils.Instructions({
+            [1] = { key = 198, message = "Zoom" },
+            [2] = { key = 18, message = "Camera" },
+            [3] = { key = 308, message = "Previous variation" },
+            [4] = { key = 307, message = "Next variation" }
+        })
         SetNuiFocus(true, true)
         _NUI.SendNUIMessage('Clothing:SendData', {
             gender = 'male',
@@ -407,5 +411,3 @@ function startClothingStore()
         end
     end
 end
-
-

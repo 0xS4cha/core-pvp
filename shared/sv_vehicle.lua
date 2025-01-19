@@ -6,7 +6,10 @@ _VEHICLE.Whitelist.Free = {
 }
 
 _VEHICLE.Whitelist.Paid = {
-    ['revolter'] = true,
-    ['sultan2'] = true,
-    ['bf400'] = true,
+    ['kuruma2'] = true,
+    ['buffalo4'] = true,
+    ['paragon2'] = true,
+    ['insurgent2'] = true,
+    ['schafter5'] = true,
+    ['schafter6'] = true,
 }

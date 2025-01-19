@@ -2,6 +2,8 @@ local Token = nil
 TriggerEvent("core:RequestTokenAcces", "core", function(t)
     Token = t
 end)
+
+vehListSelector = {}
 RegisterNUICallback('vehicleSpawner:Close', function(data, cb)
 
     SetNuiFocus(false, false)
@@ -27,9 +29,16 @@ RegisterNUICallback('vehicleSpawner:Spawn', function(data, cb)
 
         data = {}
     })
-
-    TriggerServerEvent('core:vehicle:spawn', Token, _VEHICLE.LIST.FREE[data].vehicle, safeZoneId)
+    if vehListSelector[data].type == "PAID" then
+        TriggerServerEvent('core:vehicle:spawn', Token, vehListSelector[data].vehicle, safeZoneId, true, vehListSelector[data].plate)
+    else
+        TriggerServerEvent('core:vehicle:spawn', Token, vehListSelector[data].vehicle, safeZoneId, false)
+    end
     if cb then
         cb('ok')
     end
+end)
+
+RegisterNetEvent("core:vehicle:loadProps", function(vehicle, props)
+    vehicleClass.setProps(vehicle, props)
 end)

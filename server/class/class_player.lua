@@ -9,10 +9,9 @@ player = {
     playerip = "", ---@private
     playerName = "", ---@private
     inventaire = {}, ---@private
-    weapons = {}, ---@private
+    storage = {}, ---@private
     cloths = { skin = {}, cloths = {} }, ---@private
     permission = 0, ---@private
-
 
     group = "None", ---@private
     groupID = 0, ---@private
@@ -48,11 +47,7 @@ function player:new(data, default, source, perm)
         self.playerip = GetIp(source)
         self.playerName = GetPlayerName(source)
         self.inventaire = json.decode(data.inventaire)
-        if data.weapons == nil then
-            self.weapons = {}
-        else
-            self.weapons = json.decode(data.weapons)
-        end
+        self.storage = json.decode(data.storage)
         self.cloths = json.decode(data.cloths)
         self.permission = data.permission
         self.group = data.group
@@ -60,11 +55,10 @@ function player:new(data, default, source, perm)
         self.vip = data.vip
         self.needSave = false
         self.active = data.active or 1
-        self.idPerso = {}
         if self.cloths.cloths == nil then
             self.cloths.cloths = {}
         end
-        self.lastProperty = json.decode(data.lastProperty)
+
     else
         self.source = source
         self.license = GetLicense(source)
@@ -75,7 +69,7 @@ function player:new(data, default, source, perm)
         self.playerip = GetIp(source)
         self.playerName = GetPlayerName(source)
         self.inventaire = {}
-        self.weapons = {}
+        self.storage = {}
         self.cloths = { skin = {}, cloths = {} }
         self.permission = perm or 0
         self.subscription = data.subscription
@@ -113,6 +107,8 @@ function player:getSource()
     return self.source
 end
 
+
+
 function player:setLicense(license)
     self.license = license
 end
@@ -130,7 +126,13 @@ end
 function player:getInventaire()
     return self.inventaire
 end
+function player:getStorage()
+    return self.storage
+end
 
+function player:setStorage(storage)
+    self.storage = storage
+end
 function player:GetId()
     return self.id
 end

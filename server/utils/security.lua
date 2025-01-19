@@ -1,6 +1,37 @@
 local PlayersToken = {}
 PlayersLastTrigger = {}
-
+substitutionTable = {          
+    ["a"] = "8", ["b"] = "@", ["c"] = "#", ["d"] = "4",
+    ["e"] = "1", ["f"] = "!", ["g"] = "9", ["h"] = "0",
+    ["i"] = "2", ["j"] = "&", ["k"] = "3", ["l"] = "$",
+    ["m"] = "5", ["n"] = "%", ["o"] = "7", ["p"] = "*",
+    ["q"] = "6", ["r"] = "(", ["s"] = ")", ["t"] = "-",
+    ["u"] = "_", ["v"] = "+", ["w"] = "=", ["x"] = "[",
+    ["y"] = "]", ["z"] = "{",
+    
+    ["A"] = "Q", ["B"] = "W", ["C"] = "E", ["D"] = "R",
+    ["E"] = "T", ["F"] = "Y", ["G"] = "U", ["H"] = "I",
+    ["I"] = "O", ["J"] = "P", ["K"] = "A", ["L"] = "S",
+    ["M"] = "D", ["N"] = "F", ["O"] = "G", ["P"] = "H",
+    ["Q"] = "J", ["R"] = "K", ["S"] = "L", ["T"] = "Z",
+    ["U"] = "X", ["V"] = "C", ["W"] = "V", ["X"] = "B",
+    ["Y"] = "N", ["Z"] = "M",
+    
+    ["0"] = "t", ["1"] = "u", ["2"] = "v", ["3"] = "w",
+    ["4"] = "x", ["5"] = "y", ["6"] = "z", ["7"] = "a",
+    ["8"] = "b", ["9"] = "c",
+    
+    [" "] = " ", ["_"] = "?"
+}
+function _TRGSE(input)
+    local encrypted = ""
+    for i = 1, #input do
+        local char = input:sub(i, i)
+        local encryptedChar = substitutionTable[char] or char
+        encrypted = encrypted .. encryptedChar
+    end
+    return encrypted
+end
 local function DoesPlayerHaveToken(source)
     if PlayersToken[source] == nil then
         return false
@@ -46,9 +77,8 @@ end
 
 function CheckGiveTrigger(source, time, secu, item, count, ban)
     if CheckLastTrigger(source, time) then
-        local size = GetPlayer(source):getSize()
-        local fname = GetPlayer(source):getFirstname()
-        local crypte = _TRGSE(source..time..tostring(count)..size..item..fname)
+
+        local crypte = _TRGSE(source..time..tostring(count)..item)
         if tostring(crypte) == tostring(secu) then
             return true
         else
@@ -66,19 +96,16 @@ end
 
 function CheckTrigger(source, time, secu, ban)
     if CheckLastTrigger(source, time) then
-        local size = GetPlayer(source):getSize()
-        local fname = GetPlayer(source):getFirstname()
-        local crypte = _TRGSE(fname..time..source..size)
+
+        local crypte = _TRGSE(time..source)
         if tostring(crypte) == tostring(secu) then
             return true
         else
-            SunWiseKick(source, "(Execute Trigger) : "..ban)
             DropPlayer(source, "(Execute Trigger) : "..ban)
             return false
         end
     else
         PlayersLastTrigger[source] = nil
-        SunWiseKick(source, "(Try a fake exec) : "..ban)
         DropPlayer(source, "(Try a fake exec) : "..ban)
     end
 end

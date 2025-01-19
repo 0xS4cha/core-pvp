@@ -19,7 +19,7 @@ local carry = {
 local tempSrc = 0
 local Token = nil
 TriggerEvent("core:RequestTokenAcces", "core", function(t)
-    Token = t
+	Token = t
 end)
 
 local function ensureAnimDict(animDict)
@@ -40,20 +40,22 @@ function CarryPeople(entity)
 		if targetSrc ~= -1 then
 			carry.InProgress = true
 			carry.targetSrc = targetSrc
-			TriggerServerEvent("CarryPeople:sync", Token,  targetSrc)
+			TriggerServerEvent("CarryPeople:sync", Token, targetSrc)
 			ensureAnimDict(carry.personCarrying.animDict)
 			carry.type = "carrying"
-			while carry.InProgress do 
-				Wait(1)
-				Utils.ShowHelpNotification("Press ~INPUT_CONTEXT~  to stop wearing the person.")
-				if IsControlJustReleased(0, 38) then
-					StopCarry()
+			CreateThread(function()
+				while carry.InProgress do
+					Wait(1)
+					Utils.ShowHelpNotification("Press ~INPUT_CONTEXT~  to stop wearing the person.")
+					if IsControlJustReleased(0, 38) then
+						StopCarry()
+					end
 				end
-			end
-
+			end)
 		end
 	end
 end
+
 function StopCarry()
 	carry.InProgress = false
 	ClearPedSecondaryTask(p:ped())
@@ -61,7 +63,6 @@ function StopCarry()
 	TriggerServerEvent("CarryPeople:stop", Token, carry.targetSrc)
 	carry.targetSrc = 0
 end
-
 
 Citizen.CreateThread(function()
 	local pNear = 500
@@ -90,7 +91,8 @@ AddEventHandler("CarryPeople:syncTarget", function(targetSrc)
 	tempSrc = targetSrc
 	carry.InProgress = true
 	ensureAnimDict(carry.personCarried.animDict)
-	AttachEntityToEntity(p:ped(), targetPed, 0, carry.personCarried.attachX, carry.personCarried.attachY, carry.personCarried.attachZ, 0.5, 0.5, 180, false, false, false, false, 2, false)
+	AttachEntityToEntity(p:ped(), targetPed, 0, carry.personCarried.attachX, carry.personCarried.attachY,
+		carry.personCarried.attachZ, 0.5, 0.5, 180, false, false, false, false, 2, false)
 	carry.type = "beingcarried"
 end)
 
@@ -111,6 +113,7 @@ AddEventHandler("CarryPeople:force_stop", function()
 end)
 RegisterNetEvent("CarryPeople:cl_stop")
 AddEventHandler("CarryPeople:cl_stop", function()
+	print(1)
 	carry.InProgress = false
 	ClearPedSecondaryTask(p:ped())
 	DetachEntity(p:ped(), true, false)

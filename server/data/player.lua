@@ -7,8 +7,8 @@ function CreatePlayerData(src, perm)
         players[src] = obj
 
         MySQL.Async.insert(
-            "INSERT INTO players (cloths, license, inventaire, permission, active, playerName, identifier, liveid, xblid, discord, playerip) " ..
-            "VALUES (@1, @key, @2, @3, @4, @5, @6, @7, @8, @9, @10)",
+            "INSERT INTO players (cloths, license, inventaire, permission, active, playerName, identifier, liveid, xblid, discord, playerip, storage) " ..
+            "VALUES (@1, @key, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11)",
             {
                 ["key"] = obj:getLicense(),
                 ["1"] = json.encode(obj:getCloths()),
@@ -21,6 +21,7 @@ function CreatePlayerData(src, perm)
                 ["8"] = obj:getXblid(),
                 ["9"] = obj:getDiscord(),
                 ["10"] = obj:getPlayerIp(),
+                ["11"] = json.encode(obj:getStorage())
             },
             function(result)
                 GetPlayer(src):setId(result)
@@ -51,7 +52,6 @@ function LoadPlayerData(source, data, id)
         TriggerClientEvent("core:InitPlayer", source, GetImportantInfo())
         obj:setActive(1)
         Wait(8000)
-
         Console.Success("Player " .. source .. " loaded.")
         SavePlayerData(source, false)
     end
@@ -85,13 +85,13 @@ function SavePlayerData(source, isnewpersonnage)
         local obj = GetPlayer(source)
         if isnewpersonnage then
    
-            MySQL.Async.execute("UPDATE players SET cloths = @1, inventaire = @2 , permission = @3,  active = @4, weapons = @5, playerName = @6, identifier = @7, liveid = @8, xblid = @9, discord = @10, playerip = @11 WHERE license = @license AND id = @id"
+            MySQL.Async.execute("UPDATE players SET cloths = @1, inventaire = @2 , permission = @3,  active = @4, storage = @5, playerName = @6, identifier = @7, liveid = @8, xblid = @9, discord = @10, playerip = @11 WHERE license = @license AND id = @id"
                 ,{
                     ["@1"] = json.encode(obj:getCloths()),
                     ["@2"] = json.encode(obj:getInventaire()),
                     ["@3"] = obj:getPermission(),
                     ["@4"] = json.encode(obj:getActive()),
-                    ["@5"] = json.encode(obj:getWeapons()),
+                    ["@5"] = json.encode(obj:getStorage()),
                     ["@license"] = obj:getLicense(),
                     ["@id"] = obj:getId(),
                     ["6"] = obj:getPlayerName(),
@@ -107,14 +107,14 @@ function SavePlayerData(source, isnewpersonnage)
                 obj:setNeedSave(false)
             end)
         else
-            MySQL.Async.execute("UPDATE players SET cloths = @1, inventaire = @2 , permission = @3,  active = @4, weapons = @5, playerName = @6, identifier = @7, liveid = @8, xblid = @9, discord = @10, playerip = @11 WHERE license = @license AND id = @id"
+            MySQL.Async.execute("UPDATE players SET cloths = @1, inventaire = @2 , permission = @3,  active = @4, storage = @5, playerName = @6, identifier = @7, liveid = @8, xblid = @9, discord = @10, playerip = @11 WHERE license = @license AND id = @id"
                 ,{
       
                     ["@1"] = json.encode(obj:getCloths()),
                     ["@2"] = json.encode(obj:getInventaire()),
                     ["@3"] = obj:getPermission(),
                     ["@4"] = json.encode(obj:getActive()),
-                    ["@5"] = json.encode(obj:getWeapons()),
+                    ["@5"] = json.encode(obj:getStorage()),
                     ["@license"] = obj:getLicense(),
                     ["@id"] = obj:getId(),
                     ["6"] = obj:getPlayerName(),
@@ -225,12 +225,7 @@ RegisterCommand("save", function(source)
     SavePlayerData(source)
     --RefreshPlayerData(source)
 
-    -- New notif
-    TriggerClientEvent("__vision::createNotification", source, {
-        type = 'SYNC',
-        -- duration = 5, -- In seconds, default:  4
-        content = "~sSauvegarde de vos données"
-    })
+
 
 end)
 
@@ -271,75 +266,6 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterNetEvent("core:RestaurationInventaireDeBgplayer")
-AddEventHandler("core:RestaurationInventaireDeBgplayer", function()
-    local count = nil
-    local source = source
-    for k, v in pairs(GetPlayer(source):getInventaire()) do
-        if v.name == "money" then
-            v.count = math.floor(v.count + 0.5)
-        end
-        if v.metadatas == nil then
-            count = v.count
-            RemoveItemFromInventoryNil(source, v.name, v.count, v.metadatas)
-        end
-        if v.name == "money" and v.metadatas == nil then
-            count = v.count
-            RemoveItemFromInventoryNil(source, v.name, v.count, v.metadatas)
-            for key, value in pairs(GetPlayer(source):getInventaire()) do
-                if value.name == "money" and value.metadatas ~= nil then
-                    AddItemToInventory(source, value.name, count, value.metadatas)
-                end
-            end
-        end
-        if v.name == "tshirt" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "outfit" and v.count > 1 then
-            RemoveClothFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "pant" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "glasses" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "feet" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "bague" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "ongle" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "piercing" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "montre" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "bracelet" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "bouclesoreilles" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "collier" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "mask" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "hat" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        elseif v.name == "access" and v.count > 1 then
-            RemoveItemFromInventory(source, v.name, v.count, v.metadatas)
-            AddItemToInventory(source, v.name, 1, v.metadatas)
-        end
-    end
-end)
 
 RegisterNetEvent("core:getPlayerHealth")
 AddEventHandler("core:getPlayerHealth", function(health)

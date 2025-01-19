@@ -11,6 +11,7 @@ debugData([
       show: true,
       timeleft: 4,
       killedByPlayer: true,
+    
     },
   },
 ]);
@@ -31,6 +32,7 @@ debugData([
 const Death = () => {
   const [openedDeath, setOpenedDeath] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300); // Initialisation à 5 minutes (300 secondes)
+  const [translation, setTranslation] = useState<any>({});
   const [killedByPlayer, setKilledByPlayer] = useState(false);
   const [killer, setKiller] = useState<any>({ killerName: "Sacha", killerImage: "", killerVip: false, hit: 1, apDamage: 3, hpDamage: 1 });
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -43,6 +45,7 @@ const Death = () => {
       if (data2.action === "showDeath") {
 
         setOpenedDeath(data2.data.show);
+        setTranslation(data2.data.data.translation);
         setKilledByPlayer(data2.data.killedByPlayer);
         // Redémarrer le timer si la mort est affichée
         if (data2.data.show) {
@@ -99,7 +102,7 @@ const Death = () => {
       <div>
         <div className={`${DeathSCSS["v14_250"]} ${killedByPlayer ? DeathSCSS["v14_KilledByPlayer"] : ""}`}>
           <span className={DeathSCSS["v14_216"]}>
-            Vous êtes <span className={DeathSCSS["incon"]}>inconscient</span>...
+            {translation.you_are} <span className={DeathSCSS["incon"]}>{translation.unconscious}</span>...
           </span>
           <div className={DeathSCSS["v14_249"]}>
             <div className={DeathSCSS["v14_246"]}>
@@ -113,7 +116,7 @@ const Death = () => {
                 }
                 onClick={handleRespawn}
               >
-                <span className={DeathSCSS["v14_223"]}>RESPAWN</span>
+                <span className={DeathSCSS["v14_223"]}>{translation.respawn}</span>
               </div>
 
             </div>
@@ -146,7 +149,7 @@ const Death = () => {
                     <div className={DeathSCSS["description"]}>
                         <div className={DeathSCSS["killer"]}>
                             <h1>
-                                KILLER NAME
+                                {translation.killername}
                             </h1>
                             <h2 className={`${killer.killerVip ? DeathSCSS["textVip"] : ""}`}>
                                 {killer.killerName}

@@ -1,22 +1,12 @@
 vehicle = {
     plate = "", ---@private
-    currentPlate = "", ---@private
     owner = "", ---@private
     name = "", ---@private
     props = {}, ---@private
-    garage = nil, ---@private
-    stored = 0, ---@private
-    vente = nil, ---@private
-    coowner = {}, ---@private
-    job = nil, ---@private
-    inventory = {}, ---@private
-    mileage = 0, ---@private
-    fuel = 100, ---@private
     body = {}, ---@private
     needSave = false,
     netId = 0,
     entity = 0,
-    usedTrunk = nil,
     tmpVeh = false
 }
 
@@ -52,28 +42,12 @@ end
 function vehicle:new(data, playerVeh)
     local self = setmetatable({}, vehicle)
     self.plate = data.plate
-    if data.currentPlate == nil then self.currentPlate = data.plate
-    else self.currentPlate = data.currentPlate end
+
     self.owner = data.owner
     self.name = data.name
     self.props = json.decode(data.props)
-    self.garage = data.garage
-    self.stored = data.stored
-    self.vente = data.vente
-    self.coowner = json.decode(data.coowner)
-    self.job = data.job
-    if json.decode(data.inventory).item == nil then
-        if coffre[GetHashKey(data.name)] ~= nil and coffre[GetHashKey(data.name)] / 1000 ~= nil then
-            self.inventory = {item={}, cloths={}, weapons={}, weight={max=coffre[GetHashKey(data.name)] / 1000, current=0}}
-        else
-            self.inventory = {item={}, cloths={}, weapons={}, weight={max=100, current=0}}
-        end
-    else
-        self.inventory = json.decode(data.inventory)
-    end
-    self.mileage = data.mileage
-    self.fuel = data.fuel
-    self.body = json.decode(data.body)
+
+    self.label = data.label
     self.needSave = false
     self.netId = data.netId or 0
     self.entity = data.entity or 0
@@ -83,7 +57,7 @@ function vehicle:new(data, playerVeh)
     else
         self.tmpVeh = false
     end
-    CorePrint("Le vehicule " .. self.plate .."/".. self.currentPlate .. " a été crée pour " .. self.owner)
+    Console.Success("The vehicle " .. self.plate  .. " was created for " .. self.owner)
     -- print(data.plate, json.encode(self))
     classVeh[data.plate] = self
     return self
@@ -106,6 +80,14 @@ end
 
 function vehicle:getName()
     return self.name
+end
+
+function vehicle:getLabel()
+    return self.label
+end
+
+function vehicle:setLabel(label)
+    self.label = label
 end
 
 ---@private
@@ -313,18 +295,14 @@ end
 
 function vehicle:saveVehicle()
     MySQL.Async.execute(
-        "UPDATE vehicles SET vehicles.owner = @owner, vehicles.vente = @crew, vehicles.plate = @plates, vehicles.currentPlate = @currentPlate, vehicles.props = @1, vehicles.inventory = @2, vehicles.garage = @3, vehicles.stored = @4 ,vehicles.vente = @5,vehicles.coowner = @6 WHERE vehicles.plate = @plates",
+        "UPDATE players_vehicles SET players_vehicles.owner = @owner, players_vehicles.plate = @plates, players_vehicles.props = @props, players_vehicles.name = @name, players_vehicles.label = @label  WHERE players_vehicles.plate = @plates",
         {
             ['owner'] = self.owner,
             ['plates'] = self.plate,
-            ['currentPlate'] = self.currentPlate,
-            ['crew'] = self.vente,
-            ['1'] = json.encode(self.props),
-            ['2'] = json.encode(self.inventory),
-            ['3'] = self.garage,
-            ['4'] = self.stored,
-            ['5'] = self.vente,
-            ['6'] = json.encode(self.coowner),
+            ['props'] = json.encode(self.props),
+            ['name'] = self.name,
+            ['label'] = self.label
+
         }, function(affectedRows)
             self:setNeedSave(false)
         end
@@ -339,9 +317,3 @@ function vehicle:changeOwner(id, crew, job)
     self:setNeedSave(true)
 end
 
-function vehicle:AddCoowner(id)
-    local co = self:getCoowner()
-    table.insert(co, id)
-    self:setCoowner(co)
-    self:setNeedSave(true)
-end

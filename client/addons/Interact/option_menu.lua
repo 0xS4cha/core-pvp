@@ -1,10 +1,10 @@
 
 
-RegisterKeyMapping("+option", "Menu Option", "keyboard", "F1")
-RegisterCommand("+option", function()
+
+
+Keys.Register('F1', 'F1', GetPhrase('Menu_Option'), function()
     CreateMenu(Preference)
 end)
-
 Citizen.CreateThread(function()
     ReplaceHudColourWithRgba(116, 0, 249, 185, 255)
     ReplaceHudColourWithRgba(117, 0, 0, 0, 0)

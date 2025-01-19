@@ -1,5 +1,5 @@
 -- "simulation" d'une class car Lua n'a pas vraiment de class, c'est juste pratique de faire ça
-vehicle = {
+vehicleClass = {
 
 	create = function(model, pos, props)
         TriggerServerEvent("TREFSDFD5156FD", "VZEFDSF", 5000)
@@ -12,7 +12,7 @@ vehicle = {
 			model = GetHashKey(model)
 		end
 		local veh = CreateVehicle(model, pos.xyz, pos.w, true, false)
-		vehicle.setProps(veh, props)
+		vehicleClass.setProps(veh, props)
 		SetVehicleHasBeenOwnedByPlayer(veh, true)
 		SetEntityAsMissionEntity(veh, 1, 1)
 		SetVehicleDoorsLocked(veh, 0)
@@ -31,7 +31,7 @@ vehicle = {
 		-- LoadModel(model)
 		--if IsModelInCdimage(model) and IsModelAVehicle(model) then
 			local veh = CreateVehicle(model, pos.xyz, pos.w, false, false)
-			vehicle.setProps(veh, props)
+			vehicleClass.setProps(veh, props)
 			SetEntityAsMissionEntity(veh, 1, 1)
 			SetVehicleDoorsLocked(veh, 0)
 		-- else
@@ -147,7 +147,6 @@ vehicle = {
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 		SetVehicleModKit(vehicle, 0)
-		print(props, props.bodyHealth, props.engineHealth, props.tankHealth)
 		--if props == nil then return end
 		if props.plate then SetVehicleNumberPlateText(vehicle, props.plate) end
 		if props.plateIndex then SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex) end
@@ -253,10 +252,10 @@ vehicle = {
 	IsSpawnPointClear = function(coords, radius)
 		local found = false
 		if type(coords) ~= "table" then
-			return #vehicle.GetVehicleInArea(coords, radius) == 0
+			return #vehicleClass.GetVehicleInArea(coords, radius) == 0
 		else
 			for k, v in pairs(coords) do
-				if #vehicle.GetVehicleInArea(v.pos, radius) == 0 then
+				if #vehicleClass.GetVehicleInArea(v.pos, radius) == 0 then
 					found = v
 					break
 				end

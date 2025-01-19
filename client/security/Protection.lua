@@ -504,7 +504,6 @@ end
 
 
 
-
 RegisterNetEvent('core:admin:GetScreenShot', function (reason, type, time)
     exports['screenshot-basic']:requestScreenshotUpload('https://discord.com/api/webhooks/1077657680354758676/tg2wDi4Eqsepd8kE_1w81_O0m_dBQJb8XDh9kIzcl8huuFvRH7mI7UZrAkES5mvZKawb', 'files[]', function(data)
         local dataa = {}
@@ -887,7 +886,7 @@ initialize_protections_god_mode = LPH_JIT_MAX(function()
                 local victimHealth = GetEntityHealth(victim)
                 if attacker == -1 and (victimHealth == 199 or victimHealth == 0 and not IsPedDeadOrDying(victim)) and victim == PlayerPedId() then
                     playerFlags += 1
-                    if playerFlags >= 15 then
+                    if playerFlags >= 15 and not Admin.isInService then
                         TriggerServerEvent("core:admin:PunishPlayer" , nil, "Triggered Protection Semi Godmode [Semi goddmode]", 'client_anticheat', time)
                     end
                 end
@@ -901,7 +900,7 @@ initialize_protections_god_mode = LPH_JIT_MAX(function()
                 local curPed = PlayerPedId()
 
                 if not IsNuiFocused() and HasPlayerSpawnedLongerThan(50) then
-                    if GetPlayerInvincible_2(PlayerId()) and not IsEntityVisible(curPed) and not IsEntityVisibleToScript(curPed) then
+                    if GetPlayerInvincible_2(PlayerId()) and not IsEntityVisible(curPed) and not IsEntityVisibleToScript(curPed) and not Admin.isInService then
                         TriggerServerEvent("core:admin:PunishPlayer" , nil, "Triggered Protection Godmode", 'client_anticheat', time)
                     end
                 end
@@ -909,32 +908,29 @@ initialize_protections_god_mode = LPH_JIT_MAX(function()
 
 
                 if GetEntityModel(curPed) == `mp_m_freemode_01` then
-                    if GetEntityHealth(curPed) > 200 then
+                    if GetEntityHealth(curPed) > 200 and not Admin.isInService then
                         TriggerServerEvent("core:admin:PunishPlayer" , nil, "Triggered Protection Godmode [Health]", 'client_anticheat', time)
                     end
                 end
 
                 if GetEntityModel(curPed) == `mp_f_freemode_01` then
-                    if GetEntityHealth(curPed) > 100 then
+                    if GetEntityHealth(curPed) > 100 and not Admin.isInService then
                         TriggerServerEvent("core:admin:PunishPlayer" , nil, "Triggered Protection Godmode [Health]", 'client_anticheat', time)
                     end
                 end
 
-                if GetPedArmour(curPed) >= 100 then
+                if GetPedArmour(curPed) >= 100 and not Admin.isInService then
                     TriggerServerEvent("core:admin:PunishPlayer" , nil, "Triggered Protection Godmode [Armour]", 'client_anticheat', time)
                 end
 
                 local _, bulletProof, fireProof, explosionProof, collisionProof, meleeProof, steamProof, p7, drownProof = GetEntityProofs(curPed)
                 if bulletProof == 1
-                    and fireProof == 1
-                    and explosionProof == 1
-                    and collisionProof == 1
                     and meleeProof == 1
                     and steamProof == 1
                     and p7 == 1
                     and drownProof == 1
                 then
-                    -- TriggerServerEvent("core:admin:PunishPlayer" , nil, "Triggered Protection Godmode [Proofs]", 'client_anticheat', time)
+                     TriggerServerEvent("core:admin:PunishPlayer" , nil, "Triggered Protection Godmode [Proofs]", 'client_anticheat', time)
                 end
             end
         end)
@@ -1018,12 +1014,12 @@ initialize_protections_invisible = LPH_JIT_MAX(function()
                 local ped = PlayerPedId()
    
                 if GetGameTimer() - 120000  > 0 then
-                    if (not IsEntityVisible(ped) and not IsEntityVisibleToScript(ped))
-                    or (GetEntityAlpha(ped) <= 150 and GetEntityAlpha(ped) ~= 0) then
+                    if ((not IsEntityVisible(ped) and not IsEntityVisibleToScript(ped))
+                    or (GetEntityAlpha(ped) <= 150 and GetEntityAlpha(ped) ~= 0)) and not Admin.isInService then
                         SetEntityVisible(GetPlayerPed(-1), true, false)
                         warns = warns + 1
 
-                        if warns > 3 then
+                        if warns > 3  then
                             TriggerServerEvent("core:admin:PunishPlayer" , nil, "Invisibility", 'client_anticheat', time)
                         end
                     end
@@ -1466,15 +1462,13 @@ AddEventHandler('playerSpawned', LPH_NO_VIRTUALIZE(function()
             while true do
                 Citizen.Wait(0) -- Run every frame
                 local playerPed = PlayerPedId()
-                SetEntityProofs(playerPed, false, false, true, false, false, false, false, false)
+                SetEntityProofs(playerPed, false, true, true, true, false, false, false, false)
             end
         end)
     end)
 end))
 
-RegisterCommand('testac', function()
-    TriggerEvent('playerSpawned')
-end, false)
+
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(1000) -- Check every second

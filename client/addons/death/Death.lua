@@ -14,6 +14,16 @@ end)
 function PlayerInComa(data)
     if isDead then
         canRespawn = false
+        if _INVENTORY.open then
+            
+            _INVENTORY.open = false
+            SetNuiFocus(false, false)
+            DeleteEntity(clonedPed)
+            clonedPed = nil
+            _NUI.SendNUIMessage('showInventory', {
+                show = false
+            })
+        end
         SetNuiFocus(true, true)
         TriggerServerEvent('core:death:RequestInteract', Token)
         Citizen.CreateThread(function()
@@ -35,15 +45,16 @@ function PlayerInComa(data)
         _NUI.SendNUIMessage('showDeath', {
             show = true,
             timeleft = _CONFIG.RESPAWNTIME,
-            killedByPlayer = data.killedByPlayer
+            killedByPlayer = data.killedByPlayer,
+            translation = {
+                killername = GetPhrase('killername'),
+                respawn = GetPhrase('respawn'),
+                unconscious = GetPhrase('unconscious'),
+                you_are = GetPhrase('you_are')
+            }
         })
         TriggerScreenblurFadeIn(10)
-        while isDead do
-            Utils.LoadAnimDict( "dead" )
-            
-			TaskPlayAnim(PlayerPedId(), "dead", "dead_a", 1.0, 1.0, -1, 1, 0, 0, 0, 0)
-            Wait(0)
-        end
+
     end
 end
 

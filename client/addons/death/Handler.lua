@@ -97,17 +97,11 @@ function PlayerKilledByPlayer(killerServerId, killerClientId, killerWeapon, dama
         hit = damage.hit or 0,
         causeDeath = table.pack(p:GetAllCauseOfDeath()),
         killedByPlayer = true,
-        deathCause = GetEntityModel(killerWeapon),
         distance = math.round(distance, 1),
 
         killerServerId = killerServerId,
         killerClientId = killerClientId,
-
-
-
     }
-
-
     TriggerEvent('core:onPlayerDeath', data)
     TriggerServerEvent('core:onPlayerDeath', data)
 
@@ -177,7 +171,17 @@ AddEventHandler("core:death:RegisterInteract", function(player)
                     return not isDead
                 end,
                 action = function(entity, coords, args)
-
+                    LootPlayer(player)
+                    Citizen.CreateThread(function()
+                        while _INVENTORY.open do
+                            local dist = #(GetEntityCoords(entity) - GetEntityCoords(PlayerPedId()))
+                            if dist > 5.0 then
+                                _INVENTORY.TargetLoot = nil
+                                CloseInventory()
+                            end
+                            Wait(1)
+                        end
+                    end)
                 end,
             },
 

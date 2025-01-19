@@ -15,6 +15,7 @@ player = {
     playerip = "", ---@private
     playerName = "", ---@private
     inventaire = {}, ---@private
+    storage = {}, ---@private
     weapons = {}, ---@private
     cloths = { skin = {}, cloths = {} }, ---@private
     permission = 0, ---@private
@@ -44,7 +45,7 @@ function player:new(data)
     obj.inventaire = data.inventaire ---@private
     obj.cloths = data.cloths ---@private
     obj.permission = data.permission ---@private
-
+    obj.storage = data.storage --@private
 
     obj.group = data.group
     obj.vip = data.vip ---@private
@@ -61,6 +62,12 @@ end
 
 --getters and setters
 
+function player:getStorage()
+    return self.storage
+end
+function player:setStorage(storage)
+    self.storage = storage
+end
 function player:getId()
     return self.id
 end
@@ -85,17 +92,7 @@ function player:getFirstname()
     return self.firstname
 end
 
-function player:setFirstname(firstname)
-    self.firstname = firstname
-end
 
-function player:getLastname()
-    return self.lastname
-end
-
-function player:setLastname(lastname)
-    self.lastname = lastname
-end
 
 function player:getAge()
     return self.age

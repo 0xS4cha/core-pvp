@@ -168,6 +168,16 @@ RegisterNetEvent('core:admin:kick', function(token, target, reason)
     end
 end)
 
+
+RegisterNetEvent('core:admin:Screenshot', function(token, idplayer)
+    local source = source
+    if CheckPlayerToken(source, token) then 
+        local screen = TriggerClientCallback(idplayer, 'core:admin:GetScreenShotAdmin')
+        Console.Success('Screenshot', screen)
+        TriggerClientEvent('core:admin:ShowScreenshot', source, screen)
+    end
+end)
+
 RegisterNetEvent('core:admin:AdvertPlayer', function(token, idPlayer, msg)
     local source = source
     if CheckPlayerToken(source, token) then 

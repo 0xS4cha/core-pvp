@@ -1,28 +1,13 @@
-RegisterNetEvent("core:SetPlayerIdentity")
-AddEventHandler("core:SetPlayerIdentity", function(token, nom, prenom, age, sexe, taille, birthplaces)
-    if CheckPlayerToken(source, token) then
-        local player = GetPlayer(source)
-        player:setLastname(nom)
-        player:setFirstname(prenom)
-        player:setAge(age)
-        player:setSex(sexe)
-        player:setSize(taille)
-        player:setBirthplaces(birthplaces)
-        triggerEventPlayer("core:setIdentityPlayer", source, nom, prenom, age, sexe, taille, birthplaces)    
-        --RefreshPlayerData(source)
-        MarkPlayerDataAsNonSaved(source)
-        SavePlayerData(source, true)
-    end
-end)
-
+SetRoutingBucketPopulationEnabled(0, false)
 
 
 RegisterNetEvent("core:InstancePlayer")
 AddEventHandler("core:InstancePlayer", function(token, instance, reason)
     local src = source
     if CheckPlayerToken(src, token) then
+        SetRoutingBucketPopulationEnabled(tonumber(instance), false)
         SetPlayerRoutingBucket(src, tonumber(instance))
-        ChangePlayerBucket(src, tonumber(instance))
+   
 
        TriggerClientEvent("Core:PrintChangeInstance", src, src, tonumber(instance), reason)
     else
@@ -57,7 +42,7 @@ end, false)
 
 RegisterCommand("leaveinstance", function(source, args, rawCommand)
     SetPlayerRoutingBucket(source, 0)
-    ChangePlayerBucket(source, 0)
+
 end, false)
 
 

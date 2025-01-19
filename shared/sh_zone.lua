@@ -29,13 +29,18 @@ _SAFEZONE.SafeZones = {
         squadMenu = {
             Pos = vector3(-134.40435791016, -1580.4940185547, 34.207954406738 - 1.02),
             Heading = 232.22766113281,
-            Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
+            Blip = { display = 378, colour = 32, size = 0.6, name = 'SquandAndCrew' },
         },
         vehicleMenu = {
             Pos = vector3(-123.18510437012, -1591.1706542969, 34.20779800415 - 1.02),
             Heading = 68.537330627441,
-            Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
+            Blip = { display = 225, colour = 32, size = 0.6, name = 'GaragePNJ' },
         },
+        chestMenu = {
+            Pos = vector3(-118.70900726318, -1586.0874023438, 34.212963104248 - 1.02),
+            Heading = 48.500534057617,
+            Blip = { display = 850, colour = 32, size = 0.6, name = 'chestMenu' },
+        }
     },
     {
         Description = 'Lobby of Sandy Shore',
@@ -60,13 +65,18 @@ _SAFEZONE.SafeZones = {
         squadMenu = {
             Pos = vector3(0.0, 0.0, 0.0),
             Heading = 232.22766113281,
-            Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
+            Blip = { display = 378, colour = 32, size = 0.6, name = 'SquandAndCrew' },
         },
         vehicleMenu = {
             Pos = vector3(0.0, 0.0, 0.0),
             Heading = 68.537330627441,
-            Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
+            Blip = { display = 225, colour = 32, size = 0.6, name = 'GaragePNJ' },
         },
+        chestMenu = {
+            Pos = vector3(0.0, 0.0, 0.0),
+            Heading = 68.537330627441,
+            Blip = { display = 850, colour = 32, size = 0.6, name = 'chestMenu' },
+        }
 
     },
 }

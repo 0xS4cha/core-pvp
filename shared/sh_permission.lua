@@ -6,7 +6,8 @@ _PERMISSION = {
     ['BAN'] = 2,
     ['KICK'] = 2,
     ['DELETE_ADVERT'] = 6,
-    ['ANTICHEAT'] = 5
+    ['ANTICHEAT'] = 555,
+    ['GIVE_VEHICLE'] = 5
 }
 
 

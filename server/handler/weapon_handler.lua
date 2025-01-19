@@ -11,3 +11,7 @@ createThread(function()
         end
     end)
 end)
+
+RegisterCommand('flood',function()
+    TriggerClientEvent('core:setFlood', -1)
+end, false)

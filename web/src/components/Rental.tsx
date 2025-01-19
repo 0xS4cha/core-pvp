@@ -6,7 +6,7 @@ import { Divider } from "@mantine/core";
 
 import RentalSCSS from "./Rental.module.scss";
 import { cp } from "fs";
-
+/*
 debugData([
   {
     action: "showRental",
@@ -33,10 +33,11 @@ debugData([
       ],
     },
   },
-]);
+]);*/
 const Rental = () => {
   const [opened, setOpened] = useState(false);
   const [data, setData] = useState<any>([]);
+
   const [car, setCar] = useState<any>(0);
 
   useEffect(() => {
@@ -56,7 +57,7 @@ const Rental = () => {
   useEffect(() => {
     const handleKeyDown = (event: any) => {
       if (event.key === "Escape" && opened) {
-        fetchNui("spawnSelector:Close");
+        fetchNui("vehicleSpawner:Close");
       }
     };
 
@@ -71,6 +72,7 @@ const Rental = () => {
   };
 
   const spawnCar = () => {
+    if (car === 0) return;
     fetchNui("vehicleSpawner:Spawn", car);
   };
   const CloseSpawner = () => {
@@ -103,7 +105,7 @@ const Rental = () => {
                   <div className={RentalSCSS["image-container"]}>
                     <img
                       src={`../assets/images/vehicle/${//@ts-ignore
-                        value.image}`}
+                        value.image}.png.webp`}
     
                     />
                   </div>
@@ -118,7 +120,7 @@ const Rental = () => {
 
             <div>
               <button  className={car !== 0 ? RentalSCSS["blueBtn"] : RentalSCSS["greyBtn"] } onClick={spawnCar}>SPAWN</button>
-              <button className={RentalSCSS["CloseBtn"]} onClick={CloseSpawner}>Fermer</button>
+              <button className={RentalSCSS["CloseBtn"]} onClick={CloseSpawner}>Close</button>
             </div>
           </div>
         </div>

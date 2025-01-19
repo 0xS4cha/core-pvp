@@ -24,6 +24,10 @@ local defaultPhrases = {
     admin_ban_reason = 'Reason:',
     admin_ban_date = 'Date:',
     admin_ban_staff = 'Staff:',
+    admin_givevehicle = 'Give vehicle',
+    your_garage_menu = 'Your garage',
+    your_chest = 'Your storage',
+    cardealer = 'Car dealer',
     admin_ban_timeremaining = 'Time remaining:',
     admin_ban_revok = 'Revoke ban',
     ADMIN_ManageReport = 'Manage reports',
@@ -173,7 +177,7 @@ local defaultPhrases = {
     STORE_Clothing_Price = 'Price',
     STORE_Clothing_TotalPrice = 'Total price',
     STORE_Clothing_Bank = 'Bank',
-    STORE_Clothing_Cash = 'Cash',
+    STORE_Clothing_Cash = 'Confirm',
     STORE_Clothing_Basket = 'Basket',
     STORE_Clothing_Mask = 'Mask',
     STORE_Clothing_Tshirt = 'Tshirt',
@@ -183,7 +187,13 @@ local defaultPhrases = {
     LeaveSafeZoneTime = "~o~You leave the Safe Zone. ~o~Remaining invincibility : %s second(s).",
     LeaveSafeZone = "~r~You have left the SafeZone. Combat is now enabled. Good luck !",
     STORE_LobbySelector = 'Lobby selector',
-    SELECT = 'SELECT'
+    SELECT = 'SELECT',
+    CLOSE = 'CLOSE',
+    killername = 'Killer name',
+    respawn = 'RESPAWN',
+    unconscious = 'UNCONSCIOUS',
+    you_are = 'You are',
+
     
 }
 

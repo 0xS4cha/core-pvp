@@ -12,7 +12,7 @@ body {
 .ui {
     font-family: 'Exo', sans-serif;
     position: absolute;
-    left: 145.5vh;
+    right: 2.8vh;
 
     bottom: 3vh;
     color: white;
@@ -20,9 +20,10 @@ body {
 
 .ui2 {
     font-family: 'Exo', sans-serif;
-    position: absolute;
-    left: 143vh;
     display: flex;
+    position: absolute;
+    right: 33vh;
+
     gap: 5px;
     flex-direction: column;
     bottom: 3vh;
