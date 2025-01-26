@@ -89,15 +89,15 @@ end
 
 
 local function getMissingPhrases(ply, args, cmd)
-    if not args[1] then print("Please run the command with a language code e.g. darkrp_getphrases \"" .. mainLanguage .. "\"") return end
+    if not args[1] then Console.Warn("Please run the command with a language code e.g. darkrp_getphrases \"" .. mainLanguage .. "\"") return end
     local lang = registeredLanguages[args[1]]
-    if not lang then print("This language does not exist! Make sure the casing is right.")
-        print("Available languages:")
+    if not lang then Console.Warn("This language does not exist! Make sure the casing is right.")
+        Console.Log("Available languages:")
         for k in pairs(registeredLanguages) do print(k) end
         return
     end
 
-    print(GetMissingPhrases(args[1]))
+    Console.Log(GetMissingPhrases(args[1]))
 end
 
 
