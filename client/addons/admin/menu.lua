@@ -13,6 +13,7 @@ end)
 
 
 Admin.tId = nil
+Admin.rptSlt = {}
 Admin.Cam = nil 
 Admin.InSpec = false
 Admin.SpeedNoclip = 1
@@ -53,6 +54,14 @@ Admin.DetailsScalform = {
     slow = {
         control = 36,
         label = GetPhrase('Slow_Spectate')
+    },
+    back2player = {
+        control = 45,
+        label = GetPhrase('BackToPlayer')
+    },
+    bringMyCharacter = {
+        control = 246,
+        label = GetPhrase('BringMyCharacter')
     },
 }
 
@@ -105,7 +114,7 @@ function Admin:getBanList()
 
     while Banlist == nil do
         Banlist = TriggerServerCallback("core:admin:GetAllBan", Token)
-        Wait(100)
+        Wait(1)
     end
     local blList = {}
     for i = 1, #Banlist do
@@ -127,7 +136,7 @@ function Admin:getStaffList()
     local StaffList = nil
     while StaffList == nil do 
         StaffList = TriggerServerCallback("core:GetAllStaff", Token)
-        Wait(100)
+        Wait(1)
     end
     local stfList = {}
     for i = 1, #StaffList do
@@ -147,7 +156,7 @@ function Admin:getPlayerAdvert(id)
 
     while AdvertList == nil do
         AdvertList = TriggerServerCallback("core:admin:GetAdvertList", Token, id)
-        Wait(100)
+        Wait(1)
     end
     local advlist = {}
     local CantUse = true
@@ -165,12 +174,28 @@ function Admin:getPlayerAdvert(id)
     return advlist
 end
 
+function Admin:getReport() 
+    local reportList = nil
+    while reportList == nil do
+        reportList = TriggerServerCallback("core:admin:GetAllReports", Token)
+        Wait(1)
+    end
+    local rptList = {}
+    for k,v in pairs(reportList) do
+        if not v.taken then
+            table.insert(rptList, {name = '['..v['tempId']..'] '..v['playerName'], ask = v['time'], source = v.id, data = v, askX = true, Description = 'UUID: '..v['uuid']..'\nReason: '..v['reason']})
+        else
+            table.insert(rptList, {name = '~y~['..v['tempId']..'] '..v['playerName'], ask = v['time'], source = v.id, data = v, askX = true, Description = 'Staff: '..v['staff']..'\nUUID: '..v['uuid']..'\nReason: '..v['reason']})
+        end
+    end
+    return rptList
+end
 function Admin:getPlayerList()
     local PlayerList = nil
     while PlayerList == nil do 
         PlayerList = TriggerServerCallback("core:GetAllPlayer", Token)
 
-        Wait(100) 
+        Wait(1) 
     end
     local plyList = {}
 
@@ -183,19 +208,7 @@ function Admin:getPlayerList()
     
     return plyList
 end
-local RprtList = {}
-function Admin:getReportList()
-    local ReportList = TriggerServerCallback("core:admin:GetAllReports", Token)
-    RprtList = {}
-    for k,v in pairs(ReportList) do
-        v.reportId = k
-        if v.alreadyTake then
-            table.insert(RprtList, {name = "~g~("..v.id..") "..v.name, ask = v.time, data = v, askX = true, playerName = v.name, id = v.id, uniqueID = v.uniqueID, time = v.time, reason = v.reason, Description = v.reason.." Pris par "..v.staff})
-        else
-            table.insert(RprtList, {name = "("..v.id..") "..v.name, ask = v.time, askX = true, data = v, playerName = v.name, id = v.id, uniqueID = v.uniqueID, time = v.time, reason = v.reason, Description = v.reason})
-        end
-    end
-end
+
 
 function Admin:TeleportCoords(vector, peds)
 	if not vector or not peds then return end
@@ -405,6 +418,14 @@ function Admin:SpecAndPos()
         local camActive = GetCamCoord(Admin.Cam)
         Admin:Spectate(camActive)
     end
+    if IsControlJustPressed(1, Admin.DetailsScalform.back2player.control) then
+   
+        SetCamCoord(Admin.Cam, p:pos().x, p:pos().y, p:pos().z)
+    end
+    if IsControlJustPressed(1, Admin.DetailsScalform.bringMyCharacter.control) then
+        local camActive = GetCamCoord(Admin.Cam)
+        SetEntityCoords(p:ped(), camActive)
+    end
 end
 
 -- Render Cam
@@ -510,8 +531,6 @@ local SelectedMenu = {
                 Admin.isInService = not Admin.isInService
             end
             
-        elseif btnName == 'reportlist' then
-            Admin:getReportList()
         end
     end,
     ["admin_vehiclemanager"] = function(menu, curMenu, name, self)
@@ -603,17 +622,20 @@ local SelectedMenu = {
             end, "Message", 255)
         elseif btnName == "admin_playermenu_teleport2player" then
             local idPed = GetPlayerPed(GetPlayerFromServerId(idPlayer))
-            TriggerServerEvent('core:admin:Teleport', Token, GetEntityCoords(idPed))
+            TriggerServerEvent('core:admin:Teleport2', Token, idPlayer)
+
         elseif btnName == "admin_playermenu_teleport2me" then
             local idPed = GetPlayerPed(GetPlayerFromServerId(idPlayer))
             Admin.BringCoords = GetEntityCoords(idPed)
             TriggerServerEvent('core:admin:Teleport', Token, GetEntityCoords(PlayerPedId()), idPlayer)
+
         elseif btnName == "admin_playermenu_teleport2camera" then
             if Admin.Cam then
                 local pCam = GetCamCoord(Admin.Cam)
                 local idPed = GetPlayerPed(GetPlayerFromServerId(idPlayer))
                 Admin.BringCoords = GetEntityCoords(idPed)
-                TriggerServerEvent('core:admin:Teleport', Token, pCam)
+                TriggerServerEvent('core:admin:Teleport', Token, pCam, idPlayer)
+                
             else
                 Utils.ShowNotification(GetPhrase("admin_not_in_cam"))
             end
@@ -729,6 +751,23 @@ local SelectedMenu = {
             TriggerServerEvent('core:admin:unban', Token, Admin.ListBanned.id, Admin.ListBanned.playerName)
         end
     end,
+    ['admin_report'] = function(m, s, name, e, q)
+        if name == 'admin_report_claim' then
+            local response = TriggerServerCallback('core:admin:claimReport', Token, Admin.rptSlt['tempId'], Admin.rptSlt['time'])
+            if response then
+                Console.debugPrint(Admin.rptSlt)
+                Admin.NameTarget = Admin.rptSlt['playerName']
+                Admin.IdTarget = Admin.rptSlt['tempId']
+                Admin.TargetInfo = Admin.rptSlt['data']
+                OpenMenu("admin_playermenu")
+            else
+                Utils.ShowNotification(GetPhrase('ReportAlreadyClaim'))
+            end
+        elseif name == 'admin_report_delete' then
+            TriggerServerEvent('core:admin:closeReport', Token, Admin.rptSlt['tempId'], Admin.rptSlt['time'])
+            CloseMenu(true)
+        end
+    end,
     ['admin_tools'] = function(m, s, name, e, q)
         local pPed = PlayerPedId()
         if name == 'admin_teleportpoint' then
@@ -831,9 +870,6 @@ LoadModel = function(model)
 end
 
 local function OnBack(Data, lastMenu)
-    if Data.currentMenu == "reportlist" then
-        Admin:getReportList()
-    end
 
 end
 local function OnSelected(menu, menuData, btnData, eg)
@@ -845,6 +881,10 @@ local function OnSelected(menu, menuData, btnData, eg)
         Admin.IdTarget = btnData.source
         Admin.TargetInfo = btnData.data
         menu:OpenMenu("admin_playermenu")
+    elseif currentMenu == 'admin_managereport' then
+        menuData.temp = btnData.source
+        Admin.rptSlt = btnData.data
+        menu:OpenMenu("admin_report")
     elseif currentMenu == "admin_stafflist" then
         menuData.temp = btnData.source
         Admin.NameTarget = btnData.playerName
@@ -908,7 +948,7 @@ Admin.Menu = {
                     { name = "admin_playerlist", cantUse = not Admin.isInService},
                     { name = "admin_stafflist", cantUse = not Admin.isInService },
                     { name = "ADMIN_MyPlayer", cantUse = not Admin.isInService },
-                    { name = "ADMIN_ManageReport", cantUse = not Admin.isInService },
+                    { name = "admin_managereport", cantUse = not Admin.isInService },
                     { name = "admin_vehiclemanager", cantUse = not Admin.isInService },
                     { name = "ADMIN_NearbyManage", cantUse = not Admin.isInService },
                     { name = "admin_management", cantUse = not Admin.isInService },
@@ -959,6 +999,23 @@ Admin.Menu = {
                 return Admin:getPlayerList()
             end
         },
+        ['admin_managereport'] = {
+            refresh = true,
+            refreshTime = 2000,
+            useFilter = true,
+            b = function()
+                return Admin:getReport()
+            end
+        },
+        ['admin_report'] = {
+            b = function()
+                return {
+                    {name = ("~r~[%s]~s~ %s"):format(Admin.rptSlt['tempId'], Admin.rptSlt['playerName']), Description = ('UUID: %s\nReason: %s'):format(Admin.rptSlt['uuid'], Admin.rptSlt['reason'])}, 
+                    {name = 'admin_report_claim'},
+                    {name = 'admin_report_delete', colorFree = {205, 45, 45, 165}, Description = 'Are you sure ?'},
+                }
+            end,
+        },
         ['admin_advertmenu'] =  {
             useFilter = true,
             b = function()
@@ -987,9 +1044,9 @@ Admin.Menu = {
                             return false
                         end
                     end, slidemax = _VEHICLE.LIST.ADMIN, colorFree = {238, 255, 93, 165}},
-                    {name = "admin_playermenu_wipe", colorFree = {205, 45, 45, 165}},
-                    {name = "admin_playermenu_kick", colorFree = {205, 45, 45, 165}},
-                    {name = "admin_playermenu_ban", colorFree = {205, 45, 45, 165}, slidemax = {'perm', 'days', 'hours'}},
+                    {name = "admin_playermenu_wipe", colorFree = {205, 45, 45, 165}, Description = 'Are you sure ?'},
+                    {name = "admin_playermenu_kick", colorFree = {205, 45, 45, 165}, Description = 'Are you sure ?'},
+                    {name = "admin_playermenu_ban", colorFree = {205, 45, 45, 165}, slidemax = {'perm', 'days', 'hours'}, Description = 'Are you sure ?'},
                     
                 }
             end
@@ -1021,7 +1078,7 @@ Admin.Menu = {
                             return ('%s days %s hours %s minutes'):format(d, h, m)
                         end
                      end, askX = true}, 
-                    {name = "admin_ban_revok", colorFree = {205, 45, 45, 165}}
+                    {name = "admin_ban_revok", colorFree = {205, 45, 45, 165}, Description = 'Are you sure ?'}
                 }
             end
         },
@@ -1029,12 +1086,6 @@ Admin.Menu = {
             useFilter = true,
             b = function()
                 return Admin:getBanList()
-            end
-        },
-        ['admin_anticheatalert'] = {
-            refresh = true,
-            refreshTime = 2000,
-            b = function()
             end
         },
         ['admin_management'] = {
@@ -1046,9 +1097,6 @@ Admin.Menu = {
                         else
                             return false
                         end
-                    end},
-                    {name = "admin_anticheatalert", canSee = function()
-                        return true
                     end},
  
                     {name = "admin_coordsmanager", canSee = function()
