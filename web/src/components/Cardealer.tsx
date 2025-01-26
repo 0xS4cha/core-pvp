@@ -6,12 +6,12 @@ import { debugData } from "../utils/debugData";
 
 import CardealerSCSS from "./Cardealer.module.scss";
 
-/*
+
 debugData([
   {
     action: "showCardealer",
     data: {
-      show: true,
+      show: false,
       data: {
           'offroad': [
             { name: "T20", price: 2, image: "revolter", vehicle: 't20' },
@@ -149,7 +149,7 @@ debugData([
         
     },
   },
-]);*/
+]);
 const Cardealer = () => {
   const [opened, setOpened] = useState(false);
   const [data, setData] = useState<any>({});

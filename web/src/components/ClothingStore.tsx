@@ -195,7 +195,6 @@ const ClothingStore = () => {
     setGender(data2.gender);
     setData(data2.clothesData);
     setTranslation(data2.translation);
-    console.log(gender, translation, data, opened, data2.show);
   });
 
 
@@ -299,7 +298,7 @@ const ClothingStore = () => {
               </div>
             </div>
 
-            {/* Menu droit */}
+            
             <div className={clothingStore["storerightmenu"]}>
               <div className={clothingStore["storerightmenu_top"]}>
                 <div className={clothingStore["storerightmenu_top_text"]}>{translation.title}<span style={{ marginTop: "-5px" }}><br/>basket</span></div>
