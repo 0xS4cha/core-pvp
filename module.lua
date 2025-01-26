@@ -149,13 +149,7 @@ if IsDuplicityVersion() then
 					local rencrypted_event_namea = encryptEventName("core:admin:PunishPlayer", encryption_key)
 					TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. event_name, 'events_anticheat', 'Ban')
 				end
-				if not exports['core']:IsEventWhitelisted(decryptEventName(event_name, encryption_key)) then
-					if source and GetPlayerPing(source) > 0 then
-						local TE = TriggerEvent
-						local rencrypted_event_namea = encryptEventName("core:admin:PunishPlayer", encryption_key)
-						TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. event_name, 'events_anticheat', 'Ban')
-					end
-				end
+				exports['core']:IsEventWhitelisted(decryptEventName(event_name, encryption_key), source)
 			end)
 		end
 	end)
@@ -190,13 +184,7 @@ if IsDuplicityVersion() then
 						TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. decrypted_name, 'events_anticheat', 'Ban')
 					end
 					
-					if not exports['core']:IsEventWhitelisted(decrypted_name) then
-						if source and GetPlayerPing(source) > 0 then
-							local TE = TriggerEvent
-							local rencrypted_event_namea = encryptEventName("core:admin:PunishPlayer", encryption_key)
-							TE(rencrypted_event_namea, source, "Triggerd server event via excutor: ".. decrypted_name, 'events_anticheat', 'Ban')
-						end
-					end
+					exports['core']:IsEventWhitelisted(decryptEventName(event_name, encryption_key), source)
 				end)
             else
                 print("Failed to decrypt event name: " .. event_name .. "Event wont be protected and will be needed to chnage manully to use only RegisterNetEvent")
