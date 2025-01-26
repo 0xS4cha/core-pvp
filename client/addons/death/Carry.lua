@@ -113,7 +113,6 @@ AddEventHandler("CarryPeople:force_stop", function()
 end)
 RegisterNetEvent("CarryPeople:cl_stop")
 AddEventHandler("CarryPeople:cl_stop", function()
-	print(1)
 	carry.InProgress = false
 	ClearPedSecondaryTask(p:ped())
 	DetachEntity(p:ped(), true, false)
