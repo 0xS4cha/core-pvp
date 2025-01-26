@@ -218,7 +218,7 @@ function Utils.isJson(data)
 end
 
 function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
-	Utils.ShowNotification("Appuyer sur ~g~E~s~ pour valider\nAppuyer sur ~b~L~s~ pour changer de cible\nAppuyer sur ~r~X~s~ pour annuler")
+	Utils.ShowNotification(GetPhrase('ChoicePlayerMessage'))
 
 	if choiceSelfPlayer == nil then
 		choiceSelfPlayer = true
@@ -227,7 +227,7 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 	local inChoice = true
 	local selectedPlayer = 1
 
-	local players = GetAllPlayersInArea(p:pos(), range)
+	local players = Utils.GetAllPlayersInArea(p:pos(), range)
 	if choiceSelfPlayer == false then
 		for k, v in pairs(players) do
 			if v == PlayerId() then
@@ -237,18 +237,21 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 	end
 	if #players == 0 then
 		-- New notif
-		Utils.ShowNotification("~r~Aucun joueur dans la zone")
+		Utils.ShowNotification("~r~No player in the area")
 
 		inChoice = false
 		return nil
 	else
 		-- New notif
-		Utils.ShowNotification("Appuyer sur ~g~E~s~ pour valider\nAppuyer sur ~b~L~s~ pour changer de cible\nAppuyer sur ~r~X~s~ pour annuler")
+		Utils.ShowNotification(GetPhrase('ChoicePlayerMessage'))
 		
 	end
 
 	while inChoice do
-		local players = GetAllPlayersInArea(p:pos(), range)
+		local pcoords = p:pos()
+		local players = Utils.GetAllPlayersInArea(p:pos(), range)
+		DrawMarker(6, pcoords.x, pcoords.y, pcoords.z - 0.8, 0.0, 0.0, 0.0, 90.0, 0.0, 0.0, range, range, range, 30, 77, 138 , 120, 0, 1, 2, 0, nil, nil, 0)
+
 		if choiceSelfPlayer == false then
 			for k, v in pairs(players) do
 				if v == PlayerId() then
@@ -257,7 +260,7 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 			end
 		end
 		if #players == 0 then
-			Utils.ShowNotification("~r~Aucun joueur dans la zone")
+			Utils.ShowNotification("~r~No player in the area")
 
 
 			inChoice = false
@@ -266,7 +269,7 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 		local mCoors = GetEntityCoords(GetPlayerPed(players[selectedPlayer]))
 		DrawMarker(20, mCoors.x, mCoors.y, mCoors.z + 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255 , 120, 0, 1, 2, 0, nil, nil, 0)
 		if GetGameTimer() > timer then
-			Utils.ShowNotification("~r~Le délai est dépassé")
+			Utils.ShowNotification("~r~The deadline is exceeded")
 
 
 			inChoice = false
@@ -279,7 +282,7 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 			selectedPlayer = selectedPlayer + 1
 		elseif IsControlJustPressed(0, 73) then -- X
 
-			Utils.ShowNotification("~r~Vous avez annulé")
+			Utils.ShowNotification("~r~You have canceled")
 			
 
 
