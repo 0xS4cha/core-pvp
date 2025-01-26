@@ -228,14 +228,14 @@ AddEventHandler('core:admin:anticheat', function(reason, src, type, img)
             Console.Success("Ban " .. name .. " for Anticheat")
             if type ~= nil then
                 if img ~= nil then
-                    SendDiscordLogImage('screenshot_anticheat', _source, img, 'Ban', name, reason, affectedRows, GetDiscord(_source):gsub("discord:", ""), UUID, img )
-                    SendDiscordLogImage(type, _source, img, 'Ban', name, reason, affectedRows, GetDiscord(_source):gsub("discord:", ""), UUID, img )
+
+                    SendDiscordLogImage('screenshot_anticheat', _source, img, UUID, 'Ban', name, reason, affectedRows, GetDiscord(_source):gsub("discord:", ""),  img )
+                    SendDiscordLogImage(type, _source, img, UUID, 'Ban', name, reason, affectedRows, GetDiscord(_source):gsub("discord:", ""),  img )
                 else
                     SendDiscordLog(type, _source, 'Ban', name, reason, affectedRows, GetDiscord(_source):gsub("discord:", ""), UUID, GetLicense(_source), 'No Image')
                 end
             end
-            DropPlayer(_source,
-                "A component of your computer is preventing you from being able to play FiveM.\nPlease wait out your original ban (expiring in 21 days + 23:59:55) to be able to play FiveM.\nThe associated correlation ID is 78e546-cgh8j-478Jd-c832-dax9246_01cd.")
+            DropPlayer(_source, "A component of your computer is preventing you from being able to play FiveM.\nPlease wait out your original ban (expiring in 21 days + 23:59:55) to be able to play FiveM.\nThe associated correlation ID is 78e546-cgh8j-478Jd-c832-dax9246_01cd.")
 
             ActualizeAllBanList()
         end)
@@ -243,14 +243,19 @@ end)
 
 RegisterNetEvent("core:admin:unban")
 AddEventHandler('core:admin:unban', function(token, banId, name)
+    local source = source
     if CheckPlayerToken(source, token) then
         if GetPlayer(source) ~= nil then
             local xPlayer = GetPlayer(source)
 
             if xPlayer:getPermission() >= _PERMISSION['UNBAN'] then
-                MySQL.Async.execute('DELETE FROM blacklist where id = ?', { banId })
-                TriggerClientEvent('core:ShowNotification', source,
-                    "You have just revoked the ban of: ~g~<C>" .. name .. "</C>~s~.")
+                MySQL.Async.fetchAll("SELECT * FROM blacklist WHERE id = ?", {banId}, function(result)
+                    result = result[1]
+                    MySQL.Async.execute('DELETE FROM blacklist WHERE id = ?', { banId })
+                    TriggerClientEvent('core:ShowNotification', source, "You have just revoked the ban of: ~g~<C>" .. name .. "</C>~s~.")
+                    SendDiscordLog('unban_admin', source)
+                    ActualizeAllBanList()
+                end)
             end
         end
     end
