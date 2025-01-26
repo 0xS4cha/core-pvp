@@ -16,12 +16,13 @@ debugData([
   {
     action: "showInventory",
     data: {
-      show: false,
+      show: true,
       maximumCase: 30,
       secondInventory: true,
       Inventory2: {
         name: "Trunk",
         canLoot: true,
+        canTrade: false,
         Items: [
           { label: "Pain", name: "bread", count: 5, slot: 1 },
           { label: "Argent", name: "money", count: 2800, slot: 2 },
@@ -52,7 +53,7 @@ debugData([
 const Inventory = () => {
   const [openedInventory, setOpenedInventory] = useState(false);
   const [secondInventory, setSecondInventory] = useState(false);
-  const [Quantity, setQuantity] = useState<any>('0');
+  const [Quantity, setQuantity] = useState<string>('0');
   const [dataInventory, setDataInventory] = useState<any>({
     Items: {},
     fastItems: {},
@@ -89,11 +90,22 @@ const Inventory = () => {
   }, []);
 
   const handleDrop = (slotKey: string, droppedItem: any, type: any) => {
-    if (type === "ITEM") {
-    fetchNui("dropItem", { item: droppedItem, slot: slotKey, quantity: Quantity });
-    } else if (type === "LOOT") {
-      fetchNui("lootItem", { item: droppedItem, slot: slotKey, quantity: Quantity  });
-    }
+    setQuantity((prevQuantity) => {
+      if (type === "ITEM") {
+        fetchNui("dropItem", { item: droppedItem, slot: slotKey, quantity: prevQuantity });
+      } else if (type === "LOOT") {
+        fetchNui("lootItem", { item: droppedItem, slot: slotKey, quantity: prevQuantity  });
+      } else if (type === 'STORAGE') {
+        fetchNui("dropStorage", { item: droppedItem, slot: slotKey, quantity: prevQuantity  });
+      }
+      return prevQuantity; // S'assurer que la dernière valeur est bien utilisée
+    });
+};
+  const handleDropStorage = (slotKey: string, droppedItem: any, type: any) => {
+    setQuantity((prevQuantity) => {
+        fetchNui("dropStorage", { item: droppedItem, slot: slotKey, quantity: prevQuantity  });
+      return prevQuantity; // S'assurer que la dernière valeur est bien utilisée
+    });
   };
   const handleUse = (slotKey: string, droppedItem: any) => {
     fetchNui("inventory-use-item", { item: droppedItem, slot: slotKey });
@@ -101,6 +113,9 @@ const Inventory = () => {
   const handleFastDrop = (slotKey: string, droppedItem: any) => {
     fetchNui("dropFastItem", { item: droppedItem, slot: slotKey });
   };
+  const HandleQuantity = (quantity2: string) => {
+    setQuantity(quantity2)
+  }
   useNuiEvent<any>("updateInventory", (data2) => {
     setDataInventory(data2.inventory);
   });
@@ -154,7 +169,7 @@ const Inventory = () => {
                 className={InventorySCSS["control"]}
                 id={InventorySCSS["count"]}
                 value={Quantity}
-                onChange={(e) => setQuantity(e.target.value)}
+                onChange={(e) => HandleQuantity(e.target.value)}
               />
               <div
                 className={InventorySCSS["control2"]}
@@ -193,9 +208,19 @@ const Inventory = () => {
                       </>
                     ) : (
    
-                      <div className={InventorySCSS["slot"]}>
+                      <>
+                      {dataInventory2.canTrade ? (
+                        
+                        <DroppableSlot
+                        key={index}
+                        slotKey={String(index)}
+                        onDrop={handleDropStorage}
+                      />
                       
-                    </div>
+                      ) : (
+                        <div className={InventorySCSS["slot"]}></div>
+                      )}
+                      </>
                     );
                   })}
                 </div>

@@ -11,7 +11,12 @@ debugData([
       show: true,
       timeleft: 4,
       killedByPlayer: true,
-    
+      translation: {
+        respawn: 'RESPAWN',
+        unconscious: 'UNCONSCIOUS',
+        you_are: 'You are'
+        
+      }
     },
   },
 ]);
@@ -45,7 +50,7 @@ const Death = () => {
       if (data2.action === "showDeath") {
 
         setOpenedDeath(data2.data.show);
-        setTranslation(data2.data.data.translation);
+        setTranslation(data2.data.translation);
         setKilledByPlayer(data2.data.killedByPlayer);
         // Redémarrer le timer si la mort est affichée
         if (data2.data.show) {
@@ -101,9 +106,9 @@ const Death = () => {
     openedDeath && (
       <div>
         <div className={`${DeathSCSS["v14_250"]} ${killedByPlayer ? DeathSCSS["v14_KilledByPlayer"] : ""}`}>
-          <span className={DeathSCSS["v14_216"]}>
-            {translation.you_are} <span className={DeathSCSS["incon"]}>{translation.unconscious}</span>...
-          </span>
+          <div className={DeathSCSS["v14_2162"]}>
+          <span className={DeathSCSS["v14_216"]}>{translation.you_are}{' '}<span className={DeathSCSS["incon"]}>{translation.unconscious}{' '}</span>...</span>
+          </div>
           <div className={DeathSCSS["v14_249"]}>
             <div className={DeathSCSS["v14_246"]}>
 

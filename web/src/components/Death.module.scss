@@ -32,19 +32,29 @@
     top: 74%;
   }
   .v14_216 {
-    width: 289px;
     color: white;
-    position: absolute;
-    top: 0px;
-    left: 61px;
+
+
+    opacity: 1;
+    text-align: left;
     text-shadow: rgb(0, 0, 0) 3px 0 10px;
     font-family: 'Kanit', sans-serif;
     font-style: normal;
     font-weight: Regular;
     font-size: 26px;
     opacity: 1;
-    text-align: left;
+
   }
+  .v14_2162 {
+ 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+
+
   .incon {
     color: red;
   }

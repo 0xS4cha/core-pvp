@@ -3,7 +3,7 @@ import { fetchNui } from "../utils/fetchNui";
 import { useNuiEvent } from "../hooks/useNuiEvent";
 import { debugData } from "../utils/debugData";
 import ScreenCSS from "./Screenshot.module.scss";
-
+/*
 debugData([
     {
       action: "showScreenshot",
@@ -18,7 +18,7 @@ debugData([
       }
 
     }
-]);
+]);*/
 
 
 const Hudui = () => {
