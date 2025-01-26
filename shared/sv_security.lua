@@ -3,20 +3,9 @@ _SECURITY.Protection = {}
 _SECURITY.Webhooks = {}
 
 _DISCORD = {
-	Token = 'NzkzNTQzOTQ3MjEyNDIzMTk5.GA4wGD.V4eipOE-CBjSwRMUOoIuyMrbbyoLYlOd03RfaE',
-	Guild = '1054758981614178344'
+	Token = 'OTk5MjQ3MTEwMzkyMjY2Nzcz.GO68XT.tUST9naqLVGMkbZeFkEtpLycKAyhp50yepzI-4',
+	Guild = '1276608029730668587'
 }
--- _SECURITY Logs they are
-_SECURITY.OtherLogs = {
-    JoinWebhook = "YOUR_WEBHOOK_URL", -- Logs when a player connects to the server, including their identifiers such as Steam ID, Discord ID, license, and IP address.
-    LeaveWebhook = "YOUR_WEBHOOK_URL", -- Logs when a player disconnects from the server, including their name, Steam ID, Discord ID, and the reason for leaving.
-    ExplosionsWebhook = "YOUR_WEBHOOK_URL", -- Logs when an explosion occurs in the server. It includes details like the player responsible, the explosion type, its location (coordinates), and the damage scale.
-    KillWebhook = "YOUR_WEBHOOK_URL", -- Logs player kills in the server. It records details about the attacker, victim, and possibly the weapon or method used.
-    ResourceWebhook = "YOUR_WEBHOOK_URL" -- Logs resource-related events such as when a resource starts or stops on the server. Useful for monitoring the health and status of server resources.
-}
-
-
-
 
 
 _SECURITY.Protection.Simple = {     
@@ -86,12 +75,11 @@ _SECURITY.EntitySecurity = { -- Resources that are causing false bans add to her
 
 _SECURITY.ExplosionsWhitelist = {
     -- Add resource names here to whitelist them for explosion events
-    ["resource_name_1"] = true,
-    ["resource_name_2"] = true,
+    ["core"] = true,
     -- Example: ["my_custom_resource"] = true,
 }
 _SECURITY.EventWhitelist = {
-	"TestEvent",
+	"__cfx_internal:commandFallback",
 	"test",
 }
 
@@ -451,7 +439,6 @@ _SECURITY.Protection.BlacklistedVehicles = { -- Vehicles List can be found here:
 	{ name = "avenger4",       time = "Ban", webhook = "" },
 
 	{ name = "howard",       time = "Ban", webhook = "" },
-	{ name = "jet",       time = "Ban", webhook = "" },
 	{ name = "luxor",       time = "Ban", webhook = "" },
 	{ name = "luxor2",       time = "Ban", webhook = "" },
 	{ name = "mammatus",       time = "Ban", webhook = "" },
