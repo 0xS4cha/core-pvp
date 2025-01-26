@@ -176,8 +176,8 @@ RegisterNetEvent('core:admin:SendScreenShot', function(link)
         local player = GetPlayer(WaitScreen[source])
         local target = GetPlayer(source)
 
-        SendDiscordLogImage('screenshot_admin', _source, link, GetDiscord(WaitScreen[source]), link )
         TriggerClientEvent('core:admin:ShowScreenshot', WaitScreen[source], link)
+        SendDiscordLogImage('screenshot_admin', source, link, string.sub(GetDiscord(WaitScreen[source]), 9, -1), link )
         WaitScreen[source] = nil
     end
 end)
@@ -199,7 +199,7 @@ RegisterNetEvent('core:admin:AdvertPlayer', function(token, idPlayer, msg)
                 local dataOfBan = os.date("%d/%m/%Y %X")
                 MySQL.Async.insert("INSERT INTO players_adverts (player, text, staff, date) VALUES (?, ?, ?, ?)"
                 , {
-                    idPlayer,
+                    target:getId(),
                     msg,
                     _PERMISSION_ROLE[ply:getPermission()].prefix..' - '..ply:getPlayerName(),
                     dataOfBan
@@ -211,6 +211,21 @@ RegisterNetEvent('core:admin:AdvertPlayer', function(token, idPlayer, msg)
             else
                 TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:AdvertPlayer', source, 'events_anticheat')
 
+            end
+        end
+    end
+end)
+
+RegisterNetEvent("core:admin:Teleport2", function(token, id)
+    local source = source
+    if CheckPlayerToken(source, token) then 
+        if GetPlayer(source) ~= nil then
+            local ply = GetPlayer(source)
+            if ply:getPermission() >= _PERMISSION["ADMINMENU"]  then
+                local target = GetPlayerPed(id)
+                local player = GetPlayerPed(source)
+                local coords = GetEntityCoords(target)
+                SetEntityCoords(player, coords.x, coords.y, coords.z, false, false, false, false)
             end
         end
     end
