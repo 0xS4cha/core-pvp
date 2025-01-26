@@ -5,6 +5,7 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import DraggableSlot from "./DraggableSlot";
 import DroppableSlot from "./DroppableSlot";
 import DroppableSlotFast from "./DroppableSlotFast";
+import TradeButton from "./DroppableTrade";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { debugData } from "../../utils/debugData";
@@ -16,7 +17,7 @@ debugData([
   {
     action: "showInventory",
     data: {
-      show: false,
+      show: true,
       maximumCase: 30,
       secondInventory: true,
       Inventory2: {
@@ -53,7 +54,7 @@ debugData([
 const Inventory = () => {
   const [openedInventory, setOpenedInventory] = useState(false);
   const [secondInventory, setSecondInventory] = useState(false);
-  const [Quantity, setQuantity] = useState<string>('0');
+  const [Quantity, setQuantity] = useState<string>("0");
   const [dataInventory, setDataInventory] = useState<any>({
     Items: {},
     fastItems: {},
@@ -92,18 +93,45 @@ const Inventory = () => {
   const handleDrop = (slotKey: string, droppedItem: any, type: any) => {
     setQuantity((prevQuantity) => {
       if (type === "ITEM") {
-        fetchNui("dropItem", { item: droppedItem, slot: slotKey, quantity: prevQuantity });
+        fetchNui("dropItem", {
+          item: droppedItem,
+          slot: slotKey,
+          quantity: prevQuantity,
+        });
       } else if (type === "LOOT") {
-        fetchNui("lootItem", { item: droppedItem, slot: slotKey, quantity: prevQuantity  });
-      } else if (type === 'STORAGE') {
-        fetchNui("dropStorage", { item: droppedItem, slot: slotKey, quantity: prevQuantity  });
+        fetchNui("lootItem", {
+          item: droppedItem,
+          slot: slotKey,
+          quantity: prevQuantity,
+        });
+      } else if (type === "STORAGE") {
+        fetchNui("dropStorage", {
+          item: droppedItem,
+          slot: slotKey,
+          quantity: prevQuantity,
+        });
       }
       return prevQuantity; // S'assurer que la dernière valeur est bien utilisée
     });
-};
+  };
+
+  const handleTrade = (droppedItem: any, type: any) => {
+    setQuantity((prevQuantity) => {
+      fetchNui("SendTrade", {
+        item: droppedItem,
+        quantity: prevQuantity,
+      });
+      return prevQuantity; 
+    });
+  }
+
   const handleDropStorage = (slotKey: string, droppedItem: any, type: any) => {
     setQuantity((prevQuantity) => {
-        fetchNui("dropStorage", { item: droppedItem, slot: slotKey, quantity: prevQuantity  });
+      fetchNui("dropStorage", {
+        item: droppedItem,
+        slot: slotKey,
+        quantity: prevQuantity,
+      });
       return prevQuantity; // S'assurer que la dernière valeur est bien utilisée
     });
   };
@@ -114,8 +142,8 @@ const Inventory = () => {
     fetchNui("dropFastItem", { item: droppedItem, slot: slotKey });
   };
   const HandleQuantity = (quantity2: string) => {
-    setQuantity(quantity2)
-  }
+    setQuantity(quantity2);
+  };
   useNuiEvent<any>("updateInventory", (data2) => {
     setDataInventory(data2.inventory);
   });
@@ -124,14 +152,11 @@ const Inventory = () => {
     setDataInventory2(data2.inventory);
   });
 
-
-
   return (
     openedInventory && (
       <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
         <div className={InventorySCSS["ui"]}>
           <div className={InventorySCSS["inventory"]}>
-
             <div id={InventorySCSS["playerInventory"]}>
               {Array.from({ length: 30 }, (_, index) => {
                 const matchingItem = Object.values(dataInventory.Items).find(
@@ -140,7 +165,7 @@ const Inventory = () => {
                 return matchingItem ? (
                   <DraggableSlot
                     key={index}
-                    itemType='ITEM'
+                    itemType="ITEM"
                     item={matchingItem}
                     onContextMenu={handleUse}
                   />
@@ -171,12 +196,8 @@ const Inventory = () => {
                 value={Quantity}
                 onChange={(e) => HandleQuantity(e.target.value)}
               />
-              <div
-                className={InventorySCSS["control2"]}
-                id={InventorySCSS["give"]}
-              >
-                <FontAwesomeIcon icon={faRotate} />
-              </div>
+              <TradeButton onDrop={handleTrade} />
+
               <div
                 className={InventorySCSS["control3"]}
                 id={InventorySCSS["drop"]}
@@ -198,28 +219,31 @@ const Inventory = () => {
                     ).find((value: any) => value.slot === index);
                     return matchingItem ? (
                       <>
-                      {dataInventory2.canLoot ? (
-                        
-                        <DraggableSlot key={index} item={matchingItem} itemType='LOOT' />
-                      
-                      ) : (
-                        <DraggableSlot key={index} item={matchingItem} itemType='NOLOOT'/>
-                      )}
+                        {dataInventory2.canLoot ? (
+                          <DraggableSlot
+                            key={index}
+                            item={matchingItem}
+                            itemType="LOOT"
+                          />
+                        ) : (
+                          <DraggableSlot
+                            key={index}
+                            item={matchingItem}
+                            itemType="NOLOOT"
+                          />
+                        )}
                       </>
                     ) : (
-   
                       <>
-                      {dataInventory2.canTrade ? (
-                        
-                        <DroppableSlot
-                        key={index}
-                        slotKey={String(index)}
-                        onDrop={handleDropStorage}
-                      />
-                      
-                      ) : (
-                        <div className={InventorySCSS["slot"]}></div>
-                      )}
+                        {dataInventory2.canTrade ? (
+                          <DroppableSlot
+                            key={index}
+                            slotKey={String(index)}
+                            onDrop={handleDropStorage}
+                          />
+                        ) : (
+                          <div className={InventorySCSS["slot"]}></div>
+                        )}
                       </>
                     );
                   })}
@@ -242,9 +266,6 @@ const Inventory = () => {
             <div className={InventorySCSS["raccours10"]}>Backpack</div>
           </div>
         </div>
-
-        
-
       </DndProvider>
     )
   );

@@ -9,7 +9,7 @@ debugData([
   {
     action: "showShop",
     data: {
-      show: true,
+      show: false,
       data: {
         weapons: {
           label: "Weapons",
@@ -71,7 +71,9 @@ const Shop = () => {
   const [openedSHOP, setOpenedSHOP] = useState(false);
   const [dataSHOP, setDataSHOP] = useState<any>({});
   const [subMenu, setSubMenu] = useState<string>("");
-  const [purshasedItems, setPurshasedItems] = useState<Array<{ item: string, price: number, label: string, quantity: number }>>([]);
+  const [purshasedItems, setPurshasedItems] = useState<
+    Array<{ item: string; price: number; label: string; quantity: number }>
+  >([]);
   const [price, setPrice] = useState<number>(0);
   useNuiEvent<any>("showShop", (data2) => {
     setDataSHOP(data2.data);
@@ -88,13 +90,16 @@ const Shop = () => {
 
   const pushased = (data: any) => {
     setPurshasedItems((prevState) => {
-      const exists = prevState.some(item => item.item === data.item);
-  
+      const exists = prevState.some((item) => item.item === data.item);
+
       if (exists) {
-        return prevState.filter(item => item.item !== data.item);
+        return prevState.filter((item) => item.item !== data.item);
       }
-  
-      return [...prevState, {label: data.label, item: data.item, price: data.price, quantity: 1}];
+
+      return [
+        ...prevState,
+        { label: data.label, item: data.item, price: data.price, quantity: 1 },
+      ];
     });
   };
   return (
@@ -160,15 +165,39 @@ const Shop = () => {
                     <>
                       {Object.entries(dataSHOP[subMenu].list).map(
                         ([key, value]) => (
-                          <div className={(purshasedItems.some(item => item.item === value.item)) ? ShopCSS["itemslt"] : ShopCSS["item"] }
-                           onClick={() => pushased(value)}>
-                            <p>{value.label}</p>
+                          <div
+                            className={
+                              purshasedItems.some(
+                                (item) =>
+                                  item.item === //@ts-ignore
+                                  value.item
+                              )
+                                ? ShopCSS["itemslt"]
+                                : ShopCSS["item"]
+                            }
+                            onClick={() => pushased(value)}
+                          >
+                            <p>
+                              {
+                                //@ts-ignore
+                                value.label
+                              }
+                            </p>
                             <div className={ShopCSS["image-container"]}>
                               <img
-                                src={`../assets/images/inventaire/items/${value.item}.png.webp`}
+                                src={`../assets/images/inventaire/items/${
+                                  //@ts-ignore
+                                  value.item
+                                }.png.webp`}
                               />
                             </div>
-                            <p className={ShopCSS["line"]}>${value.price}</p>
+                            <p className={ShopCSS["line"]}>
+                              $
+                              {
+                                //@ts-ignore
+                                value.price
+                              }
+                            </p>
                           </div>
                         )
                       )}
