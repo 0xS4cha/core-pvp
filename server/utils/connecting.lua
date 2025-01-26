@@ -46,17 +46,18 @@ AddEventHandler('playerConnecting', function(name, skr, data)
     local live = nil
     PlayerTokens = {}
     banned = {}
+
     data.defer()
     if #BanList <= 0 then
         data.presentCard(
-        [==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"Serveur en cours d'initialisation.","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==],
+            [==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"Serveur en cours d'initialisation.","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==],
             function(data, rawData)
             end)
         CancelEvent()
         return
     end
     data.presentCard(
-    [==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"Initialisation de la connexion au proxy..","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==],
+        [==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"Initialisation de la connexion au proxy..","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==],
         function(data, rawData)
         end)
     for i = 0, GetNumPlayerIdentifiers(_source) - 1 do
@@ -76,9 +77,45 @@ AddEventHandler('playerConnecting', function(name, skr, data)
         end
     end
     Wait(1000)
+    local Roles = GetUserRoles(GetDiscord(_source):gsub("discord:", ""))
+    if not Roles then
+        local card = {
+            type = "AdaptiveCard",
+            version = "1.2",
+            body = {
+                { type = "TextBlock", text = "You are not on our Discord !",           wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large", weight = "Bolder", color = "Orange" },
+                { type = "ActionSet", horizontalAlignment = "Center",                  actions = { { type = "Action.OpenUrl", title = "Join Discord", url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
+                { type = "TextBlock", text = "This server protected by SxProtection®", wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small", weight = "Bolder", color = "Light" },
+            }
+        }
+        data.presentCard(card, "XD")
+        CancelEvent()
+        return
+    else
+        local State = false
+        for k, v in pairs(Roles) do
+            if _CONFIG.DISCORD.WHITELIST[v] then
+                State = true
+            end
+        end
+        if not State then
+            local card = {
+                type = "AdaptiveCard",
+                version = "1.2",
+                body = {
+                    { type = "TextBlock", text = "You are not whitelisted from our Discord !", wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large", weight = "Bolder", color = "Orange" },
+                    { type = "ActionSet", horizontalAlignment = "Center",                      actions = { { type = "Action.OpenUrl", title = "Join Discord", url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
+                    { type = "TextBlock", text = "This server protected by SxProtection®",     wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small", weight = "Bolder", color = "Light" },
+                }
+            }
+            data.presentCard(card, "XD")
+            CancelEvent()
+            return
+        end
+    end
     if not license or license == "" or license == nil or not ip then
         data.presentCard(
-        [==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"License invalide.","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==],
+            [==[{"type":"AdaptiveCard","version":"1.0","body":[{"type":"ColumnSet","columns":[{"type":"Column","width":"auto","items":[{"type":"Image","altText":"","url":"https://cdn.discordapp.com/attachments/1018546650668605460/1117940194595844136/ylcv2.png","size":"Medium"}]},{"type":"Column","width":"stretch","items":[{"type":"TextBlock","text":"Admin","weight":"Bolder","size":"Medium"},{"type":"TextBlock","text":"Blacklist"}]}]},{"type":"TextBlock","text":"License invalide.","size":"Medium","weight":"Lighter"}],"$schema":"http://adaptivecards.io/schemas/adaptive-card.json"}]==],
             function(data, rawData)
             end)
         CancelEvent()
@@ -166,16 +203,15 @@ AddEventHandler('playerConnecting', function(name, skr, data)
     end
     if banned[ip] then
         if reason and nameBan and nameBanner and timeRimaing then
-
             local card = {
                 type = "AdaptiveCard",
                 version = "1.2",
                 body = {
-                    { type = "TextBlock", text = "You are blacklisted from our server !", wrap = true, horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large",  weight = "Bolder", color = "Orange" },
-                    { type = "TextBlock", text = "Ban Information :\nReason: " .. reason .. "\nBan ID: #" .. BanId .. "\nBy: " .. nameBanner .. "\nTime remaining: " .. timeRimaing .. ".", wrap = true, horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Medium", weight = "Bolder", color = "Light" },
-                    { type = 'Image', url = ProofBan },
-                    { type = "ActionSet", horizontalAlignment = "Center", actions = { { type = "Action.OpenUrl", title = "Join Discord", url = "https://discord.gg/", iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
-                    { type = "TextBlock", text = "This server protected by SxProtection®", wrap = true, horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small",  weight = "Bolder", color = "Light" },
+                    { type = "TextBlock", text = "You are blacklisted from our server !",                                                                                                   wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large",  weight = "Bolder", color = "Orange" },
+                    { type = "TextBlock", text = "Ban Information :\nReason: " .. reason .. "\nBan ID: #" .. BanId .. "\nBy: " .. nameBanner .. "\nTime remaining: " .. timeRimaing .. ".", wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Medium", weight = "Bolder", color = "Light" },
+                    { type = 'Image',     url = ProofBan },
+                    { type = "ActionSet", horizontalAlignment = "Center",                                                                                                                   actions = { { type = "Action.OpenUrl", title = "Join Discord", url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
+                    { type = "TextBlock", text = "This server protected by SxProtection®",                                                                                                  wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small",  weight = "Bolder", color = "Light" },
                 }
             }
             while true do
