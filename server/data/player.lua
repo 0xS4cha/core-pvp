@@ -50,6 +50,8 @@ function LoadPlayerData(source, data, id)
         TriggerEvent("core:playerLoaded", source)
         --TriggerClientEvent("core:updateBankPhoneValue", source, Bank.GetPlayerCommonAccount(tonumber(source)).balance)
         TriggerClientEvent("core:InitPlayer", source, GetImportantInfo())
+        local discord = GetDiscord(source)
+        SendDiscordLog("connexion", source, obj:getId(), string.sub(discord, 9, -1), obj:getPlayerName())
         obj:setActive(1)
         Wait(8000)
         Console.Success("Player " .. source .. " loaded.")
@@ -140,7 +142,7 @@ function SavePlayerPos(source)
         local obj = GetPlayer(source)
         sql.update("players", { { column = "pos", data = json.encode(obj:getPos()) } },
             { "license = '" .. obj:getLicense() .. "'", 'id = ' .. obj:getId() })
-        -- CorePrint("Player " .. source .. " pos saved.")
+
         obj:setNeedSave(false)
     end
 end
@@ -185,14 +187,14 @@ AddEventHandler("core:InitPlayer", function()
     local discord = GetDiscord(src)
     local identifiers = PlayersIdentifierToString(src)
     if obj ~= nil and discord ~= nil and identifiers ~= nil then
-      --  SendDiscordLog("connexion", src, string.sub(discord, 9, -1), obj:getFirstname() .. " " .. obj:getLastname()
+
        --     , string.sub(identifiers, 1, string.find(identifiers, "ip:") - 1))
         --givekeytmp(obj:getId(), obj:getCrew(), obj:getJob(), src)
     end
 end)
 
 function triggerEventPlayer(eventName, source, ...)
-    --print(eventName)
+
 	TriggerClientEvent(eventName, source, ...)
 end
 
@@ -236,7 +238,7 @@ AddEventHandler("playerDropped", function(reason)
     if obj ~= nil then
         local discord = GetDiscord(_source)
         local identifiers = PlayersIdentifierToString(_source)
-        SendDiscordLog("deconnexion", _source, string.sub(discord, 9, -1), obj:getPlayerName(), reason, string.sub(identifiers, 1, string.find(identifiers, "ip:") - 1))
+        SendDiscordLog("deconnexion", _source, obj:getId(), string.sub(discord, 9, -1), obj:getPlayerName(), reason)
         --SaveDemarchePlayer(source)
 
         local ped = GetPlayerPed(_source)
@@ -311,7 +313,7 @@ function SetPlayerToActive(source, id)
             },
             function(affectedRows)
                 switchPlayer(source)
-                -- CorePrint("Player " .. source .. " saved.")
+
             end)
 end
 
