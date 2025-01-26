@@ -790,8 +790,8 @@ function PMenu:DrawHelpers(tableButtons)
 
 		local padding = 0.015
 
-		DrawSprite("commonmenu", "gradient_bgd", self.Width - _intW / 2, self.Height + nwintH / 2 - padding, _intW,
-			nwintH, .0, 255, 255, 255, 255)
+		--DrawSprite("commonmenu", "gradient_bgd", self.Width - _intW / 2, self.Height + nwintH / 2 - padding, _intW, nwintH, .0, 255, 255, 255, 255)
+		DrawRect(self.Width - _intW / 2, self.Height + nwintH / 2 - padding, _intW, nwintH, 40, 40, 40, 240)
 		DrawText2(defaultFont, descText, scale, self.Width - _intW + .005, self.Height - padding + 0.008, color_white)
 	end
 end
