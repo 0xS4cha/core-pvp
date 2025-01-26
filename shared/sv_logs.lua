@@ -63,7 +63,7 @@ _LOGS = {
         hook = "https://discord.com/api/webhooks/1331341082029592678/QsonXd4uUyouhSgvAZMqDhdQHcEj1ckGGyGAq8V6oqFVyfPz43ArFd953tkDSnL3Mbon", -- OP
         color = 0x03fc20,
         title = "Screen Anticheat | Client Detection",
-        text = "**By**:<@%s>\n**Image**: \n%s",
+        text = "**TempID**: %s\n**Screen of**:<@%s>\n**Image**: \n%s",
     },
     ["death"] = {
         hook = "https://discord.com/api/webhooks/1331716733664493732/-P5201lylb2h1PpocRhxCYGyqXCuHSF9ue-0z3wmf1Qki7XPbrUm3yOUIISZjO9agZc3", -- OP
