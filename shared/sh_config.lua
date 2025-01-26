@@ -13,7 +13,10 @@ _CONFIG.RGBA = {
 _CONFIG.RefreshBanList = 30
 _CONFIG.SLOTMAX = 255
 _CONFIG.DISCORD = {
-    LINK = 'discord.gg/LDO-PVP'
+    WHITELIST = {
+        ['1276612208746430554'] = true
+    },
+    LINK = 'https://discord.gg/LDO-PVP'
 }
 _CONFIG.MAXMONEYLOOT = 8000
 _CONFIG.ISINWAITING = true
