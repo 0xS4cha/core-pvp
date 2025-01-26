@@ -70,7 +70,7 @@ Citizen.CreateThread(function()
                 local advertList = MySQL.query.await('SELECT * FROM players_adverts WHERE player = @player', { ['@player'] = xTarget:getId() })
                 return advertList
             else
-                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:GetAdvertList', source)
+                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:GetAdvertList', source, 'events_anticheat')
             end
         end
     end)
@@ -95,7 +95,7 @@ Citizen.CreateThread(function()
                     end
                     return returnList
                 else
-                    TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:GetVehicleNetwork')
+                    TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:GetVehicleNetwork', source, 'events_anticheat')
                 end
             end
         end
@@ -117,7 +117,7 @@ Citizen.CreateThread(function()
                     end
                     return true
                 else
-                    TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:TakeService')
+                    TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:TakeService', source, 'events_anticheat')
                 end
             end
         end
@@ -162,19 +162,30 @@ RegisterNetEvent('core:admin:kick', function(token, target, reason)
             if ply:getPermission() >= _PERMISSION["KICK"] then
                 DropPlayer(target, reason)
             else
-                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:kick', source)
+                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:kick', source, 'events_anticheat')
             end
         end
     end
 end)
 
+local WaitScreen = {}
 
+RegisterNetEvent('core:admin:SendScreenShot', function(link)
+    source = source
+    if WaitScreen[source] ~= nil then
+        local player = GetPlayer(WaitScreen[source])
+        local target = GetPlayer(source)
+
+        SendDiscordLogImage('screenshot_admin', _source, link, GetDiscord(WaitScreen[source]), link )
+        TriggerClientEvent('core:admin:ShowScreenshot', WaitScreen[source], link)
+        WaitScreen[source] = nil
+    end
+end)
 RegisterNetEvent('core:admin:Screenshot', function(token, idplayer)
     local source = source
     if CheckPlayerToken(source, token) then 
-        local screen = TriggerClientCallback(idplayer, 'core:admin:GetScreenShotAdmin')
-        Console.Success('Screenshot', screen)
-        TriggerClientEvent('core:admin:ShowScreenshot', source, screen)
+        WaitScreen[idplayer] = source
+        TriggerClientEvent('core:admin:SendScreenShot', idplayer)
     end
 end)
 
@@ -198,7 +209,7 @@ RegisterNetEvent('core:admin:AdvertPlayer', function(token, idPlayer, msg)
 
             end)
             else
-                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:AdvertPlayer', source)
+                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:AdvertPlayer', source, 'events_anticheat')
 
             end
         end
@@ -218,7 +229,7 @@ AddEventHandler('core:admin:Teleport', function(token, coords, id)
             if ply:getPermission() >= _PERMISSION["ADMINMENU"] then
                 SetEntityCoords(entity, coords.x, coords.y, coords.z, false, false, false, false)
             else
-                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:Teleport', source)
+                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:Teleport', source, 'events_anticheat')
             end
         end
     end
