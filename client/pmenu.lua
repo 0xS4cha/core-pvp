@@ -123,12 +123,16 @@ function PMenu:GetButtons(customMenu)
 		return {}, 0
 	end
 
-	if self.Events and self.Events["onLoadButtons"] then allButtons = self.Events["onLoadButtons"](self, menu, allButtons) or
-		allButtons end
+	if self.Events and self.Events["onLoadButtons"] then
+		allButtons = self.Events["onLoadButtons"](self, menu, allButtons) or
+			allButtons
+	end
 	for _, v in pairs(allButtons) do
 		if v and type(v) == "table" and (v.canSee and (type(v.canSee) == "function" and v.canSee() or v.canSee == true) or v.canSee == nil) and (not menuData.filter or v.bypassFilter or string.find(string.lower(v.name), menuData.filter)) then
-			if v.customSlidenum then v.slidenum = type(v.customSlidenum) == "function" and v.customSlidenum() or
-				v.customSlidenum end
+			if v.customSlidenum then
+				v.slidenum = type(v.customSlidenum) == "function" and v.customSlidenum() or
+					v.customSlidenum
+			end
 
 			local max = type(v.slidemax) == "function" and v.slidemax(v, self) or v.slidemax
 			if type(max) == "number" then
@@ -176,8 +180,10 @@ function PMenu:OpenMenu(stringName, boolBack, selectedButtonIndex)
 	self.Pag = { math.max(1, max - (self.Data.MaxPagination - 1)), max, selectedButtonIndex } -- min, max, current
 	self.Data.currentMenu = stringName
 
-	if self.Events and self.Events["onButtonSelected"] then self.Events["onButtonSelected"](self.Data.currentMenu,
-			self.Pag[3], self.Data.back, newButtons[self.Pag[3]] or {}, self) end
+	if self.Events and self.Events["onButtonSelected"] then
+		self.Events["onButtonSelected"](self.Data.currentMenu,
+			self.Pag[3], self.Data.back, newButtons[self.Pag[3]] or {}, self)
+	end
 end
 
 function PMenu:BackMenu(tblBack)
@@ -265,7 +271,7 @@ function PMenu:ProcessControl()
 
 	local currentButtons, currentButtonsCount = table.unpack(self.tempData)
 	local currentBtn = currentButtons and currentButtons[self.Pag[3]]
-	
+
 	if currentMenu and currentMenu.refresh and (not lastRefresh or GetGameTimer() >= lastRefresh) and not currentMenu.refreshTime then
 		lastRefresh = GetGameTimer() + (currentMenu.refresh == true and 0 or currentMenu.refresh)
 		self:GetButtons()
@@ -290,7 +296,8 @@ function PMenu:ProcessControl()
 				self.Pag[2] = self.Pag[2] + (boolDOWN and 1 or -1)
 			end
 		else
-			self.Pag = { boolUP and currentButtonsCount - (self.Data.MaxPagination - 1) or 1, boolUP and currentButtonsCount or self.Data.MaxPagination, boolDOWN and 1 or
+			self.Pag = { boolUP and currentButtonsCount - (self.Data.MaxPagination - 1) or 1, boolUP and
+			currentButtonsCount or self.Data.MaxPagination, boolDOWN and 1 or
 			currentButtonsCount }
 			if currentButtonsCount > self.Data.MaxPagination and (boolUP and (self.Pag[3] > self.Pag[2]) or (boolDOWN and (self.Pag[3] < self.Pag[1]))) then
 				self.Pag[1] = self.Pag[1] + (boolDOWN and -1 or 1)
@@ -313,7 +320,7 @@ function PMenu:ProcessControl()
 			if changeTo and not changeTo.slidefilter or changeTo and not tableHasValue(changeTo.slidefilter, self.Pag[3]) then
 				currentBtn.slidenum = currentBtn.slidenum or 0
 				local max = type(changeTo.slidemax) == "function" and (changeTo.slidemax(currentBtn, self) or 0) or
-				changeTo.slidemax
+					changeTo.slidemax
 				if type(max) == "number" then
 					local tbl = {}
 					for i = 0, max do
@@ -339,9 +346,11 @@ function PMenu:ProcessControl()
 
 		if currentBtn.parentSlider ~= nil and self:canUseButton(currentBtn) and ((boolLEFT and currentBtn.parentSlider < 1.5 + parentSliderSize) or (boolRIGHT and currentBtn.parentSlider > .5 - parentSliderSize)) then
 			currentBtn.parentSlider = boolLEFT and round(currentBtn.parentSlider + .01, 2) or
-			round(currentBtn.parentSlider - .01, 2)
-			if self.Events["onSlider"] then self.Events["onSlider"](self, self.Data, currentBtn, self.Pag[3],
-					currentButtons, currentBtn.parentSlider - parentSliderSize) end
+				round(currentBtn.parentSlider - .01, 2)
+			if self.Events["onSlider"] then
+				self.Events["onSlider"](self, self.Data, currentBtn, self.Pag[3],
+					currentButtons, currentBtn.parentSlider - parentSliderSize)
+			end
 			Citizen.Wait(10)
 		end
 	end
@@ -506,7 +515,7 @@ end
 
 function PMenu:drawMenuButton(button, stringButton, intX, intY, boolSelected, intW, intH, intID)
 	local tableColor, add, currentMenuData =
-	boolSelected and (button.colorSelected or { 255, 255, 255, 255 }) or (button.colorFree or { 0, 0, 0, 100 }), .0,
+		boolSelected and (button.colorSelected or { 255, 255, 255, 255 }) or (button.colorFree or { 0, 0, 0, 100 }), .0,
 		self.Menu[self.Data.currentMenu]
 	DrawRect(intX, intY, intW, intH, tableColor[1], tableColor[2], tableColor[3], tableColor[4])
 	tableColor = boolSelected and color_black or color_white
@@ -516,7 +525,7 @@ function PMenu:drawMenuButton(button, stringButton, intX, intY, boolSelected, in
 	local unkCheckbox = currentMenuData and currentMenuData.checkbox or button.checkbox ~= nil and button.checkbox
 	local slide = button.slidemax and button or currentMenuData
 	local slideExist = slide and slide.slidemax and
-	(not slide.slidefilter or not tableHasValue(slide.slidefilter, intID))
+		(not slide.slidefilter or not tableHasValue(slide.slidefilter, intID))
 	local canUse, hasRightText = self:canUseButton(button), slideExist or button.ask or button.slidename
 
 	if canUse then
@@ -528,8 +537,8 @@ function PMenu:drawMenuButton(button, stringButton, intX, intY, boolSelected, in
 
 		if unkCheckbox ~= nil and (button.checkbox ~= nil or currentMenuData and currentMenuData.checkbox ~= nil) then
 			local bool = unkCheckbox ~= nil and
-			(type(unkCheckbox) == "function" and unkCheckbox(PlayerPedId(), button, self.Base.currentMenu, self)) or
-			unkCheckbox
+				(type(unkCheckbox) == "function" and unkCheckbox(PlayerPedId(), button, self.Base.currentMenu, self)) or
+				unkCheckbox
 			if (button.locked) then
 				bool = bool and bool == true and 2 or 0
 			else
@@ -547,12 +556,12 @@ function PMenu:drawMenuButton(button, stringButton, intX, intY, boolSelected, in
 			end
 		elseif slideExist or button.ask or button.slidename then
 			local max = slideExist and slide and
-			(type(slide.slidemax) == "function" and slide.slidemax(button, self) or slide.slidemax)
+				(type(slide.slidemax) == "function" and slide.slidemax(button, self) or slide.slidemax)
 			if (max and type(max) == "number" and max > 0 or type(max) == "table" and #max > 0) or not slideExist then
 				local defaultIndex = slideExist and button.slidenum or 1
 				local slideText = button.ask and
-				(type(button.ask) == "function" and button.ask(self) or button.askValue or button.ask) or
-				(button.slidename or (type(max) == "number" and (defaultIndex - 1) or type(max[defaultIndex]) == "table" and max[defaultIndex].name or tostring(max[defaultIndex])))
+					(type(button.ask) == "function" and button.ask(self) or button.askValue or button.ask) or
+					(button.slidename or (type(max) == "number" and (defaultIndex - 1) or type(max[defaultIndex]) == "table" and max[defaultIndex].name or tostring(max[defaultIndex])))
 				slideText = tostring(slideText)
 
 				local displayedText = tonumber(slideText) and slideText or GetPhrase(slideText)
@@ -589,7 +598,7 @@ function PMenu:drawMenuButton(button, stringButton, intX, intY, boolSelected, in
 		end
 
 		local textBonus = (self.Events["setBonus"] and self.Events["setBonus"](button, self.Data.currentMenu, self)) or
-		(button.amount and button.amount) or (button.price and "~g~" .. PrettyMoneyFormat(button.price) .. "$")
+			(button.amount and button.amount) or (button.price and "~g~" .. PrettyMoneyFormat(button.price) .. "$")
 		if textBonus and string.len(textBonus) > 0 then
 			DrawText2(defaultFont, GetPhrase(textBonus), .275, intX + (intW / 2) - .005 - add, intY - intH / 2 + .00375,
 				tableColor, true, 2)
@@ -631,9 +640,9 @@ function PMenu:DrawButtons(tableButtons)
 			local buttonHeight = _intH - 0.005
 
 			local stringPrefix = (((data.r and (((GM and GM.State.JobRank < data.r) or (data.rfunc and not data.rfunc())) and "~r~" or "")) or "") .. (self.Events["setPrefix"] and self.Events["setPrefix"](data, self.Data) or "")) or
-			""
+				""
 			local stringButton = (data.label and firstToUpper(GetPhrase(data.label))) or
-			((data.price and "" or "") .. stringPrefix .. (firstToUpper(GetPhrase(data.name)) or ""))
+				((data.price and "" or "") .. stringPrefix .. (firstToUpper(GetPhrase(data.name)) or ""))
 
 			if data.multiline then
 				stringButton = MultilineFormat(GetPhrase(stringButton), buttonTextScale)
@@ -679,7 +688,6 @@ function PMenu:DrawButtons(tableButtons)
 							if UpdateOnscreenKeyboard() == 1 and GetOnscreenKeyboardResult() and string.len(GetOnscreenKeyboardResult()) >= 1 then
 								data.askValue = GetOnscreenKeyboardResult()
 								data.ask = GetOnscreenKeyboardResult()
-
 							end
 						end
 					end
@@ -702,7 +710,7 @@ function PMenu:DrawHeader(intCount)
 	local boolHeader = parentHeader and string.len(parentHeader) > 0
 	local currentMenu = self.Menu[self.Data.currentMenu]
 	local stringCounter = currentMenu and currentMenu["customSub"] and currentMenu["customSub"]() or
-	string.format("%s/%s", self.Pag[3], intCount)
+		string.format("%s/%s", self.Pag[3], intCount)
 
 	if boolHeader then
 		local intH = self.Base.CustomHeader and 0.1025 or spriteH
@@ -761,7 +769,7 @@ function PMenu:DrawHelpers(tableButtons)
 	local currentButton = tableButtons[self.Pag[3]]
 
 	local strHelp = currentButton and currentButton.Description or
-	self.Menu[currentMenu] and self.Menu[currentMenu].Description or menuBase.Description
+		self.Menu[currentMenu] and self.Menu[currentMenu].Description or menuBase.Description
 
 	if currentButton and (not self:canUseButton(currentButton) or currentButton.level) then
 		local otherHelp = self:getHelpTextForBlockedButton(currentButton)
@@ -782,7 +790,8 @@ function PMenu:DrawHelpers(tableButtons)
 
 		local padding = 0.015
 
-		DrawSprite("commonmenu", "gradient_bgd", self.Width - _intW / 2, self.Height + nwintH / 2 - padding, _intW, nwintH, .0, 255, 255, 255, 255)
+		DrawSprite("commonmenu", "gradient_bgd", self.Width - _intW / 2, self.Height + nwintH / 2 - padding, _intW,
+			nwintH, .0, 255, 255, 255, 255)
 		DrawText2(defaultFont, descText, scale, self.Width - _intW + .005, self.Height - padding + 0.008, color_white)
 	end
 end
@@ -848,7 +857,7 @@ function PMenu:DrawExtra(tableButtons)
 		local sliderW = rectW / (button.advSlider[2] + 1)
 		local sliderWFocus = button.advSlider[2] * (sliderW / 2)
 		local customX = rectX - sliderWFocus +
-		(sliderW * (button.advSlider[3] / button.advSlider[2])) * button.advSlider[2]
+			(sliderW * (button.advSlider[3] / button.advSlider[2])) * button.advSlider[2]
 		DrawRect(customX, rectY, sliderW, rectH, 245, 245, 245, 255)
 
 		self.Data.advSlider = { self.Width, self.Height, proW }
@@ -887,8 +896,10 @@ function PMenu:Draw()
 			end
 		end -- 0.00ms
 	end
-	if self.Events and self.Events["onRender"] then self.Events["onRender"](self, tableButtons, tableButtons
-		[self.Pag[3]], self.Pag[3]) end
+	if self.Events and self.Events["onRender"] then
+		self.Events["onRender"](self, tableButtons, tableButtons
+			[self.Pag[3]], self.Pag[3])
+	end
 end
 
 function CloseMenu(force)
@@ -980,19 +991,18 @@ function CreateProgressBar(stringText, intTime, persistent)
 				progressFloat = 1 - ((startTime - GetGameTimer()) / intTime)
 			end
 
-			if GM.State.CinemaMode == 0 then
-				if not dotsTime or GetGameTimer() >= dotsTime then
-					dotsTime = GetGameTimer() + 500
-					dotStr = dots[string.len(dotStr) + 1] or ""
-				end
 
-				DrawRect(x, y, w, h, 0, 0, 0, 100)
-				local diffW, diffH = w - .0025, h - .005
-				local customW = math.max(0, math.min(diffW, diffW * progressFloat))
-
-				DrawRect((x - diffW / 2) + customW / 2, y, customW, diffH, 0, 163, 90, 100)
-				DrawText2(defaultFont, translatedText .. dotStr, 0.3, x, y - 0.0125, { 255, 255, 255, 255 }, 0, 0, 0)
+			if not dotsTime or GetGameTimer() >= dotsTime then
+				dotsTime = GetGameTimer() + 500
+				dotStr = dots[string.len(dotStr) + 1] or ""
 			end
+
+			DrawRect(x, y, w, h, 0, 0, 0, 100)
+			local diffW, diffH = w - .0025, h - .005
+			local customW = math.max(0, math.min(diffW, diffW * progressFloat))
+			local Timer = (startTime - GetGameTimer()) / 1000
+			DrawRect((x - diffW / 2) + customW / 2, y, customW, diffH, 30, 77, 138, 100)
+			DrawText2(defaultFont, translatedText .. dotStr..' ('..Utils.Round(Timer, 2)..'s)', 0.3, x, y - 0.0125, { 255, 255, 255, 255 }, 0, 0, 0)
 		end
 
 		KillProgressBar()
