@@ -8,6 +8,7 @@ end)
 
 AddEventHandler('core:onPlayerDeath', function(data)
     isDead = true
+    SetPedToRagdollWithFall(p:ped(), 0, 0, 0, -GetEntityForwardVector(p:ped()), .0, 0.0, .0, .0, .0, .0, .0)
     PlayerInComa(data)
 end)
 
