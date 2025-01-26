@@ -9,11 +9,13 @@ AddEventHandler('core:onPlayerDeath', function(data)
         local target = GetPlayer(data.killerServerId)
         local causeDeath = data.causeDeath
         local posKiller = vector3(data.killerCoords.x, data.killerCoords.y, data.killerCoords.z)
-        SendDiscordLog('kill', source, target:getId(), string.sub(GetDiscord(target:getSource()), 9, -1), target:getPlayerName(), causeDeath..' - '..weapon, src:getId(), string.sub(GetDiscord(source), 9, -1), src:getPlayerName())
         GiveItemToPlayer(target:getSource(), 'money', 2500)
-        --#TODO: fais la logs 
-       --SendDiscordLog("killPlayer", source, string.sub(GetDiscord(source), 9, -1), src:getLastname() .. " ".. src:getFirstname(), json.encode(causeDeath), posVictime, data.killerServerId, string.sub(GetDiscord(data.killerServerId), 9, -1), target:getLastname() .. " " .. target:getFirstname(), weapon, posKiller, data.distance)
+        MySQL.Async.execute("UPDATE players SET death = death + 1 WHERE license = ? AND id = ?",{src:getLicense(), src:getId()}, function() end)
+        MySQL.Async.execute("UPDATE players SET kills = kills + 1 WHERE license = ? AND id = ?",{target:getLicense(), target:getId()}, function() end)
+        SendDiscordLog('kill', source, src:getId(), string.sub(GetDiscord(src:getSource()), 9, -1), src:getPlayerName(), causeDeath, target:getId(), string.sub(GetDiscord(target:getSource()), 9, -1), target:getPlayerName())
+ 
     else
+        MySQL.Async.execute("UPDATE players SET death = death + 1 WHERE license = ? AND id = ?",{src:getLicense(), src:getId()}, function() end)
         SendDiscordLog('death', source, src:getId(), string.sub(GetDiscord(source), 9, -1), src:getPlayerName(), data.deathCause)
     end
 end)
