@@ -21,7 +21,7 @@ _LOGS = {
         hook = "https://discord.com/api/webhooks/1331341634193068043/iEm4OjCWyQUhpSdqvRWhD7YXN3teiZhD4fu1Oy6qo28imrBYkhehlWYahUzS4BldFlwT", -- OP
         color = 0x03fc20,
         title = "Screen Anticheat | Explosion detection",
-        text = "**TempID**: %s\n**UUID**\n**Punishment Method**: %s\n**Name**: %s\n**Reason**: %s\n**Ban ID**: %s\n**Discord**: <@%s>: %d\n**Image**: \n%s",
+        text = "**TempID**: %s\n**UUID**\n**Punishment Method**: %s\n**Name**: %s\n**Reason**: %s\n**Ban ID**: %s\n**Discord**: <@%s>\n**Image**: \n%s",
     },
     ["object_anticheat"] = {
         hook = "https://discord.com/api/webhooks/1331341435278200873/kcBy7zKXekFRo--gFu55fV6npybAcXgpVJwkDJ8rOV5WXNVJ9E_eaPIOgJaX1UT1MuVz", -- OP
