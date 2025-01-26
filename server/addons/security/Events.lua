@@ -53,7 +53,34 @@ function _ANTICHEAT.isWhitelisted(event_name)
     return false
 end
 
+local function isWhitelisted(event_name)
+    if not _SECURITY or not _SECURITY.EventWhitelist or type(_SECURITY.EventWhitelist) ~= "table" then
+        -- print("Error: EventWhitelist is missing or not a table.")
+        return false
+    end
 
-exports('IsEventWhitelisted', LPH_NO_VIRTUALIZE(function(event_name)
-    return _ANTICHEAT.isWhitelisted(event_name)
+    if not event_name or type(event_name) ~= "string" or event_name == "" then
+        -- print("Error: event_name is invalid or empty.")
+        return false
+    end    
+
+    for _, whitelisted_event in ipairs(_SECURITY.EventWhitelist) do
+        if type(whitelisted_event) == "string" then
+            if event_name == whitelisted_event or event_name == encryptEventName(whitelisted_event, encryption_key) then
+                return true
+            end
+        else
+            -- print("Warning: Non-string value found in EventWhitelist. Skipping.")
+        end
+    end
+
+    return false
+end
+exports('IsEventWhitelisted', LPH_NO_VIRTUALIZE(function(event_name, src)
+    if not _ANTICHEAT.isWhitelisted(event_name) then
+        if src and GetPlayerPing(src) > 0 then
+            _ANTICHEAT.punish_player(src, "Triggerd server event via excutor: " .. event_name, 'Ban','events_anticheat')
+
+        end
+    end
 end))
