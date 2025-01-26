@@ -15,6 +15,7 @@ import Screenshot from "./Screenshot";
 import Cardealer from "./Cardealer";
 import Rental from "./Rental";
 import PinComponent from "./Pin";
+import ShopComponent from "./Shop"
 import PromptComponent from "./Prompt";
 import Death from "./Death";
 
@@ -52,7 +53,7 @@ const App: React.FC = () => {
       <CharCreator/>
       <Rental />
       <Cardealer />
-
+      <ShopComponent/>
       <ClothingStore />
       <SpawnSelector/>
       <Redzoneui />
