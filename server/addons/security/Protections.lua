@@ -400,18 +400,18 @@ end
 initialize_protections_damage = LPH_JIT_MAX(function ()
     AddEventHandler("weaponDamageEvent", function(source, data)
         if true and data.weaponType == 3452007600 and data.weaponDamage == 512 then
-            TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (3452007600, 512)', source)
+            TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (3452007600, 512)', source, 'events_anticheat')
             CancelEvent()
         elseif true and data.weaponType == 133987706 and data.damageTime > 200000 and data.weaponDamage > 200 then
-            TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (133987706)', source)
+            TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (133987706)', source, 'events_anticheat')
             CancelEvent()
         end
     
         if true then
             if data.silenced and data.weaponDamage == 0 and data.weaponType == 2725352035 then
-                TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (2725352035)', source)
+                TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (2725352035)', source, 'events_anticheat')
             elseif data.silenced and data.weaponDamage == 0 and data.weaponType == 3452007600 then
-                TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (3452007600)', source)
+                TriggerEvent('core:admin:anticheat', 'Tried to kill player using cheats (3452007600)', source, 'events_anticheat')
 
             end
         end
@@ -599,16 +599,14 @@ initialize_protections_explosions = LPH_JIT_MAX(function()
         local explosionDamage = ev.damageScale or "Unknown"
         local explosionOwner = GetPlayerName(sender) or "Unknown"
 
-        print(string.format("Explosion detected! Type: %s | Position: %s | Damage Scale: %s | Owner: %s", 
-            explosionType, explosionPos, explosionDamage, explosionOwner))
+        print(string.format("Explosion detected! Type: %s | Position: %s | Damage Scale: %s | Owner: %s",  explosionType, explosionPos, explosionDamage, explosionOwner))
         local resourceName = GetInvokingResource()
         if GetPlayerPing(sender) > 0  then
             if whitelist[sender] or _SECURITY.ExplosionsWhitelist[resourceName] then
                 whitelist[sender] = false
             else
-
-                    _ANTICHEAT.punish_player(sender, string.format("Explosion Details: Type: %s, Position: %s, Damage Scale: %s",  explosionType, explosionPos, explosionDamage), 'Ban', 'explosion_anticheat')
-                    CancelEvent()
+                _ANTICHEAT.punish_player(sender, string.format("Explosion Details: Type: %s, Position: %s, Damage Scale: %s",  explosionType, explosionPos, explosionDamage), 'Ban', 'explosion_anticheat')
+                CancelEvent()
             end
         end
 
@@ -939,16 +937,18 @@ AddEventHandler('entityCreating', function(entity)
         local currentTime = GetGameTimer()
 
         if currentTime - playerData.lastSpawnTime < cooldownPeriod then
-            CancelEvent()
+
             Console.Warn(tostring(ownerPlayerId), "Entity spawning too quickly near players", 'this is a beta funciton please update us if its not working corretely')
+            CancelEvent()
             return
         end
 
         local proximitySpawnCount = updateProximitySpawns(ownerPlayerId, currentTime)
 
         if proximitySpawnCount > maxProximitySpawns then
-            CancelEvent()
+           
             Console.Warn(tostring(ownerPlayerId), "Excessive entity spawning near players detected: " .. proximitySpawnCount .. " spawns in " .. timeWindow/1000 .. " seconds", 'this is a beta funciton please update us if its not working corretely')
+            CancelEvent()
             return
         end
 
