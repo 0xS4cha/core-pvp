@@ -71,7 +71,7 @@ RegisterNetEvent('ANTICHEAT:playerLoaded', function()
     local src = source
     _ANTICHEAT.playerState[src] = { loaded = true, loadTime = GetGameTimer() }
 end)
-
+--[[OLD
 exports('CheckTime', function(event, time, source)
     Wait(1000)
     if event == nil then
@@ -95,6 +95,36 @@ exports('CheckTime', function(event, time, source)
                 if source and GetPlayerPing(source) > 0 then
                     _ANTICHEAT.punish_player(source, "Trigger Event with an excutor " .. event, 'events_anticheat', time)
                 end
+            end
+        end
+    end
+end)]]
+
+exports('CheckTime', function(event, time, source)
+    Wait(1000)
+
+    if type(event) ~= "string" or event == "" then
+        -- print("Invalid event name:", tostring(event))
+        _ANTICHEAT.punish_player(source, "Trigger Event with an excutor " .. event, 'events_anticheat', time)
+        return
+    end
+
+    local playerState = _ANTICHEAT.playerState[source]
+    if playerState and playerState.loaded then
+        if not _ANTICHEAT.Events[event] and not _ANTICHEAT.isWhitelisted(event) then
+            Wait(500)
+            if not _ANTICHEAT.Events[event] then
+                Wait(500)
+                local encrypted_event = encryptEventName(event, encryption_key)
+                if not _ANTICHEAT.Events[event] and not _ANTICHEAT.Events[encrypted_event] then
+                    _ANTICHEAT.punish_player(source, "Triggered unauthorized event: " .. event, 'events_anticheat', time)
+                end
+            end
+        else
+            local eventTime = _ANTICHEAT.Events[event]
+            if eventTime == false then return end
+            if eventTime and math.abs(time - eventTime) >= 10000  and not _ANTICHEAT.isWhitelisted(event) then
+                _ANTICHEAT.punish_player(source, "Exceeded timestamp for event: " .. event, 'events_anticheat', time)
             end
         end
     end
@@ -199,7 +229,7 @@ end)
 
 _ANTICHEAT.punish_player = function(source, reason, type, logs)
     if type == nil or type == 'Ban' then
-        TriggerClientEvent('core:admin:GetScreenShot', source, reason, type, logs)
+        TriggerClientEvent('core:admin:GetScreenShot', source, reason, logs)
 
         return
     end
@@ -225,7 +255,7 @@ Citizen.CreateThread(function()
     initialize_misc_module()
 
     --> [Protections] <--
-
+    initialize_server_protections_anti_resource()
     initialize_server_protections_play_sound()
     initialize_protections_explosions()
     initialize_protections_entity_spam()
@@ -338,3 +368,32 @@ function SearchForAssetPackDependency()
 end
 
 SearchForAssetPackDependency()
+
+
+
+initialize_server_protections_anti_resource = LPH_JIT_MAX(function()
+    local stoppedResources = {}
+    local startedResources = {}
+    local restarted = {}
+    local restarteda = false
+    AddEventHandler('onResourceStart', function(resourceName)
+        stoppedResources[resourceName] = nil
+        startedResources[resourceName] = true
+    end)
+
+    AddEventHandler('onResourceStop', function(resourceName)
+        stoppedResources[resourceName] = true
+        startedResources[resourceName] = nil
+    end)
+    while RegisterServerCallback == nil do Wait(100) end
+    RegisterServerCallback("SecureServe:Server_Callbacks:Protections:GetResourceStatus", function(source, resourceName)
+        Wait(1000)
+        if stoppedResources[resourceName] == startedResources[resourceName] then
+            restarteda = true
+        else
+            restarteda = false
+        end
+        return false, startedResources[resourceName], restarteda
+    end)
+
+end)
