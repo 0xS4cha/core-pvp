@@ -1,63 +1,81 @@
 _LOGS = {
     ["connexion"] = {
-        hook = "https://discord.com/api/webhooks/1203114300286439424/BEXkC3BePt0IkIlbH852E7gjUa274ABwz-cDHxcHMhLINZ6s2WglEYM1zUtBsTkmILPW",
+        hook = "https://discord.com/api/webhooks/1331700759053602948/ei4HDRwGnw4pIaF2Hq8rKbDxZDSg5I1WjYdJBy--SH-rHDSlqhi05q9ToG_mzQB7P7_d", -- OP
         color = 0x03fc20,
         title = "Connexion",
-        text = "Id du joueur: **%d**\nDiscord: <@%s>\nNom prénom RP: **%s**\nIdenfiants:\n%s",
+        text = "**TempID**: %d\n**UUID**: %s\n**Discord**: <@%s>\n**Pseudo**: %s",
     },
     ["deconnexion"] = {
-        hook = "https://discord.com/api/webhooks/1203114300286439424/BEXkC3BePt0IkIlbH852E7gjUa274ABwz-cDHxcHMhLINZ6s2WglEYM1zUtBsTkmILPW",
+        hook = "https://discord.com/api/webhooks/1331342173555396669/QYizC793s0JEimuetXblaIIEpB-jTmsKOZHujZRhBWYl35TFHSz4_4h-1nyBI3i5QnDV", -- OP
         color = 0xf44336,
         title = "Déconnexion",
-        text = "Id du joueur: **%d**\nDiscord: <@%s>\nNom prénom RP: **%s**\nRaison: **%s**\nIdenfiants:\n%s",
-    },
-    ["screenshot_admin"] = {
-        hook = "https://discord.com/api/webhooks/1203114300286439424/BEXkC3BePt0IkIlbH852E7gjUa274ABwz-cDHxcHMhLINZ6s2WglEYM1zUtBsTkmILPW",
-        color = 0x03fc20,
-        title = "Screen Admin",
-        text = "Id du joueur: %d\nLicense du joueur: %s\nImage: \n%s \nScreen fait par: %s",
+        text = "**TempID**: %d\n**UUID**: %s\n**Discord**: <@%s>\n**Pseudo**: %s\n**Raison**: %s",
     },
     ["screenshot_anticheat"] = {
-        hook = "https://discord.com/api/webhooks/1327589493108379678/K8dD2dA9GJ2bu-w-UmonoMDRltnKvQIISCETFVmUKRnpZNQjah2NQwba4QUhp8FVvKmX",
+        hook = "https://discord.com/api/webhooks/1331341156432478249/ULCJshGxGB1Ahth6A5-ovw57wjysRxgMG-BnZuiif4zWOKrwg_Nx8Sbd6hZAky3mG79q", -- OP
         color = 0x03fc20,
         title = "Screen Anticheat | New player banned",
-        text = "**TempID**: `%s`\n**Punishment Method**: `%s`\n**Name**: `%s`\n**Reason**: `%s`\n**Ban ID**: `%s`\n**Discord**: <@%s>\n**UUID**: `%d`\n**Image**: \n%s",
+        text = "**TempID**: %s\n**UUID**: %d\n**Punishment Method**: %s\n**Name**: %s\n**Reason**: %s\n**Ban ID**: %s\n**Discord**: <@%s>\n**Image**: \n%s",
     },
     ["explosion_anticheat"] = {
-        hook = "https://discord.com/api/webhooks/1327589576327561257/vmg_Y6dFM0Yqwy2kQ260BdhaYUsjrhz3_Oap5G1RhJ8g-m-57taJqSOQ5BjmUWgosZOy",
+        hook = "https://discord.com/api/webhooks/1331341634193068043/iEm4OjCWyQUhpSdqvRWhD7YXN3teiZhD4fu1Oy6qo28imrBYkhehlWYahUzS4BldFlwT", -- OP
         color = 0x03fc20,
         title = "Screen Anticheat | Explosion detection",
-        text = "**TempID**: `%s`\n**Punishment Method**: `%s`\n**Name**: `%s`\n**Reason**: `%s`\n**Ban ID**: `%s`\n**Discord**: <@%s>\n**UUID**: `%d`\n**Image**: \n%s",
+        text = "**TempID**: %s\n**UUID**\n**Punishment Method**: %s\n**Name**: %s\n**Reason**: %s\n**Ban ID**: %s\n**Discord**: <@%s>: %d\n**Image**: \n%s",
     },
     ["object_anticheat"] = {
-        hook = "https://discord.com/api/webhooks/1327589682854363219/1uxbYLaASHhz8hK5aHRPOhr38NiH3F69hm7GHPTRcEDjAnfdmlB284TFlbW6BjRqDVoV",
+        hook = "https://discord.com/api/webhooks/1331341435278200873/kcBy7zKXekFRo--gFu55fV6npybAcXgpVJwkDJ8rOV5WXNVJ9E_eaPIOgJaX1UT1MuVz", -- OP
         color = 0x03fc20,
         title = "Screen Anticheat | Objects Detection",
-        text = "**TempID**: `%s`\n**Punishment Method**: `%s`\n**Name**: `%s`\n**Reason**: `%s`\n**Ban ID**: `%s`\n**Discord**: <@%s>\n**UUID**: `%d`\n**Image**: \n%s",
+        text = "**TempID**: %s\n**UUID**: %d\n**Punishment Method**: %s\n**Name**: %s\n**Reason**: %s\n**Ban ID**: %s\n**Discord**: <@%s>\n**Image**: \n%s",
     },
     ["ped_anticheat"] = {
-        hook = "https://discord.com/api/webhooks/1327589867554738238/5fMneEDn9kjivL7s7fBNSP5joBLp4841OB5xomuPgjxXKb9qhWscCZVnBg8gJBGpG_OY",
+        hook = "https://discord.com/api/webhooks/1331341509781618698/6taz_wG6F36XwYnw2QmUdyQ-zHGnpcrB384gPECcS0jM1FYcGhxAGFIvpHwSu7yfgV7G", -- OP
         color = 0x03fc20,
         title = "Screen Anticheat | Peds Detection",
-        text = "**TempID**: `%s`\n**Punishment Method**: `%s`\n**Name**: `%s`\n**Reason**: `%s`\n**Ban ID**: `%s`\n**Discord**: <@%s>\n**UUID**: `%d`\n**Image**: \n%s",
+        text = "**TempID**: %s\n**UUID**: %d\n**Punishment Method**: %s\n**Name**: %s\n**Reason**: %s\n**Ban ID**: %s\n**Discord**: <@%s>\n**Image**: \n%s",
     },
     ["vehicle_anticheat"] = {
-        hook = "https://discord.com/api/webhooks/1327589949335277665/KEPnHyktVFnZVv71k6yY7P3XG8YHMovgXouanFJvmefTYKcmbTCbD_2KoYWylbWRHjdi",
+        hook = "https://discord.com/api/webhooks/1331342010849689651/sZCW2fJ8aq9eY3yb6AypwwHQL7Rm8SP9X8POBZmSgrou2unkumaN98rukLwwpwLgU9FP", -- OP
         color = 0x03fc20,
         title = "Screen Anticheat | Vehicles Detection",
-        text = "**TempID**: `%s`\n**Punishment Method**: `%s`\n**Name**: `%s`\n**Reason**: `%s`\n**Ban ID**: `%s`\n**Discord**: <@%s>\n**UUID**: `%d`\n**Image**: \n%s",
+        text = "**TempID**: %s\n**Punishment Method**: %s\n**Name**: %s\n**Reason**: %s\n**Ban ID**: %s\n**Discord**: <@%s>\n**UUID**: %d\n**Image**: \n%s",
     },
     ["events_anticheat"] = {
-        hook = "https://discord.com/api/webhooks/1327590178382020700/H2Wgzj_fy8SFnhR9NQXqw_SpjKLOXmnVZzSExdNrqwdPgDHe8dRN8XgKgEnFzP68CMc-",
+        hook = "https://discord.com/api/webhooks/1331342068005474366/eG4U08PS-6xjbPXETaixPtnXNlbh1gCmekTxeFrCznJj0oHFMXIGqZM4UKKtOt_ZYEM4", -- OP
         color = 0x03fc20,
         title = "Screen Anticheat | Events Detection",
-        text = "**TempID**: `%s`\n**Punishment Method**: `%s`\n**Name**: `%s`\n**Reason**: `%s`\n**Ban ID**: `%s`\n**Discord**: <@%s>\n**UUID**: `%d`\n**Image**: \n%s",
+        text = "**TempID**: %s\n**Punishment Method**: %s\n**Name**: %s\n**Reason**: %s\n**Ban ID**: %s\n**Discord**: <@%s>\n**UUID**: %d\n**Image**: \n%s",
     },
     ["client_anticheat"] = {
-        hook = "https://discord.com/api/webhooks/1327590260963803137/Xx7D23wMg8JqBq6Wqa2oRrzNIdpbF7cRdDxLpNAIYeiEWOS-xJxZOJTCwgrGsl4BQWFS",
+        hook = "https://discord.com/api/webhooks/1331341690098684016/iJ4yFVh2Vv5NLwQviu3-VnLpcUw29EBnoJTsULygocas0cezZ9yeZqHh6k_yH2BXC-wb", -- OP
         color = 0x03fc20,
         title = "Screen Anticheat | Client Detection",
-        text = "**TempID**: `%s`\n**Punishment Method**: `%s`\n**Name**: `%s`\n**Reason**: `%s`\n**Ban ID**: `%s`\n**Discord**: <@%s>\n**UUID**: `%d`\n**Image**: \n%s",
+        text = "**TempID**: %s\n**Punishment Method**: %s\n**Name**: %s\n**Reason**: %s\n**Ban ID**: %s\n**Discord**: <@%s>\n**UUID**: %d\n**Image**: \n%s",
+    },
+    ["admin"] = {
+        hook = "https://discord.com/api/webhooks/1331340985388765276/3r14xPK-L_HkxuR0EF8kGX6D0wYwi7kmR2E5IdxROdAqP2AY1612yoSdf4ZMD9fOtNtF", -- OP
+        color = 0x03fc20,
+        title = "Screen Anticheat | Client Detection",
+        text = "**TempID**: %s\n**UUID**: %d\n**Punishment Method**: %s\n**Name**: %s\n**Reason**: %s\n**Ban ID**: %s\n**Discord**: <@%s>\n**Image**: \n%s",
+    },
+    ["screenshot_admin"] = {
+        hook = "https://discord.com/api/webhooks/1331341082029592678/QsonXd4uUyouhSgvAZMqDhdQHcEj1ckGGyGAq8V6oqFVyfPz43ArFd953tkDSnL3Mbon", -- OP
+        color = 0x03fc20,
+        title = "Screen Anticheat | Client Detection",
+        text = "**By**:<@%s>\n**Image**: \n%s",
+    },
+    ["death"] = {
+        hook = "https://discord.com/api/webhooks/1331716733664493732/-P5201lylb2h1PpocRhxCYGyqXCuHSF9ue-0z3wmf1Qki7XPbrUm3yOUIISZjO9agZc3", -- OP
+        color = 0x03fc20,
+        title = "New player death",
+        text = "**TempID**: %s\n**UUID**: %s\n**Discord**: <@%s>\n**Pseudo**: %s\n**Raison**: %s",
+    },
+    ["kill"] = {
+        hook = "https://discord.com/api/webhooks/1331716733664493732/-P5201lylb2h1PpocRhxCYGyqXCuHSF9ue-0z3wmf1Qki7XPbrUm3yOUIISZjO9agZc3", -- OP
+        color = 0x03fc20,
+        title = "New player kill",
+        text = "> **Victim**\n**TempID**: %d\n**UUID**: %s\n**Discord**: <@%s>\n**Pseudo**: %s\n**Raison**: %s\n\n> **Killer**\n**TempID**: %d\n**UUID**: %s\n**Discord**: <@%s>\n**Pseudo**: %s",
     },
 }
 
