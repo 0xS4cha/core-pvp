@@ -9,13 +9,32 @@ AddEventHandler('core:onPlayerDeath', function(data)
         local target = GetPlayer(data.killerServerId)
         local causeDeath = data.causeDeath
         local posKiller = vector3(data.killerCoords.x, data.killerCoords.y, data.killerCoords.z)
-
-       --#TODO: fais la logs 
+        SendDiscordLog('kill', source, target:getId(), string.sub(GetDiscord(target:getSource()), 9, -1), target:getPlayerName(), causeDeath..' - '..weapon, src:getId(), string.sub(GetDiscord(source), 9, -1), src:getPlayerName())
+        GiveItemToPlayer(target:getSource(), 'money', 2500)
+        --#TODO: fais la logs 
        --SendDiscordLog("killPlayer", source, string.sub(GetDiscord(source), 9, -1), src:getLastname() .. " ".. src:getFirstname(), json.encode(causeDeath), posVictime, data.killerServerId, string.sub(GetDiscord(data.killerServerId), 9, -1), target:getLastname() .. " " .. target:getFirstname(), weapon, posKiller, data.distance)
-
+    else
+        SendDiscordLog('death', source, src:getId(), string.sub(GetDiscord(source), 9, -1), src:getPlayerName(), data.deathCause)
     end
 end)
 
+RegisterNetEvent('core:interact:death', function(token, target)
+    local source = source
+    if CheckPlayerToken(source, token) then
+        local p = GetPlayer(source)
+        local t = GetPlayer(target)
+        if p and t then
+            if InteractDeath[target] then
+                local remove = RemoveItemToPlayer(source, 'medikit', 1)
+
+                if remove then
+
+                    TriggerClientEvent('core:StealPlayer', target)
+                end
+            end
+        end
+    end
+end)
 RegisterNetEvent("core:death:RequestUnregister")
 AddEventHandler('core:death:RequestUnregister', function(Token)
     local source = source
