@@ -17,7 +17,6 @@ TriggerClientCallback = function(src, eventName, ...)
 
     RegisterNetEvent('__pmc_callback:server:'..eventName)
     local e = AddEventHandler('__pmc_callback:server:'..eventName, function(...)
-
         local s = source
         if src == s then
             p:resolve({...})
