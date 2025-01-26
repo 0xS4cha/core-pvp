@@ -16,52 +16,7 @@ fastItems = {
 }
 local CreateThread <const> = CreateThread
 
-function OpenStorage()
-    _INVENTORY.InStorage = true
-    local inv = p:getInventaire()
-    local storage = p:getStorage()
-    Items = {}
-    for k,v in pairs(inv) do
 
-        if v.name == 'money' then
-            v.count = Utils.Round(v.count, 0)
-        end
-        if v.type == 'items' or v.type == 'weapons' then
-        
-            table.insert(Items, {
-                name = v.name,
-                count = v.count,
-                label = GetPhrase(v.name),
-                slot = v.slot or k,
-                type = v.type,
-
-            })
-        end
-    end
-    CreateThread(function()
-        start(0.5, 0.8)
-    end)
-
-    CreateThread(function()
-        SetNuiFocus(true, true)
-        p:setInventaire(Items)
-        _NUI.SendNUIMessage('showInventory', {
-            show = true,
-            secondInventory = true,
-            Inventory2 = {
-                canLoot = true,
-                name = 'YOUR STORAGE',
-                Items = storage
-            },
-            inventory = {
-                Items = Items,
-                fastItems = fastItems
-            }
-        })
-        _INVENTORY.open = true
-    end)
-
-end
 function LootPlayer(player)
     local inv = p:getInventaire()
     local inv2 = nil
@@ -246,6 +201,14 @@ end)
 RegisterNUICallback('lootItem', function(data, cb)
     local response = false
     if _INVENTORY.InStorage then
+        if tonumber(data.quantity) == 0 then
+            data.quantity = tonumber(data.item.count)
+        end
+
+
+        response = TriggerServerCallback("inventory:lootStorage", Token, data)
+        
+
     elseif _INVENTORY.TargetLoot then
         if tonumber(data.quantity) == 0 then
             data.quantity = tonumber(data.item.count)
@@ -274,12 +237,31 @@ RegisterNetEvent("core:addExistItemPlayer", function(item, quantity)
     local inv = p:getInventaire()
     for k, v in pairs(inv) do
         if item == v.name then
-            v.count = v.count + quantity
+            v.count += quantity
             break
         end
     end
     p:setInventaire(inv)
     RefreshInventory()
+end)
+
+RegisterNetEvent("core:addItemStorage", function(item)
+    local inv = p:getStorage()
+    table.insert(inv, item)
+    p:setStorage(inv)
+    RefreshInventory2(p:getStorage(), 'YOUR STORAGE')
+end)
+
+RegisterNetEvent('core:addExistItemStorage', function(item, quantity)
+    local inv = p:getStorage()
+    for k, v in pairs(inv) do
+        if item == v.name then
+            v.count += quantity
+            break
+        end
+    end
+    p:setStorage(inv)
+    RefreshInventory2(p:getStorage(), 'YOUR STORAGE')
 end)
 function RefreshInventory()
     local inv = p:getInventaire()
@@ -290,7 +272,6 @@ function RefreshInventory()
             v.count = Utils.Round(v.count, 0)
         end
         if v.type == 'items' or v.type == 'weapons' then
-        
             table.insert(Items, {
                 name = v.name,
                 count = v.count,
@@ -301,9 +282,11 @@ function RefreshInventory()
             })
         end
     end
+
     CreateThread(function()
         p:setInventaire(Items)
         _NUI.SendNUIMessage('updateInventory', {
+            
             inventory = {
                 Items = Items,
                 fastItems = fastItems,
@@ -313,11 +296,13 @@ function RefreshInventory()
     end)
 end
 
-function RefreshInventory2(inv)
+function RefreshInventory2(inv, text)
+    
     _NUI.SendNUIMessage('updateInventory2', {
         inventory = {
             canLoot = true,
-            name = 'LOOT PLAYER',
+            canTrade =  _INVENTORY.InStorage,
+            name = text or 'LOOT PLAYER',
             Items = inv
         },
     })
@@ -346,7 +331,7 @@ RegisterNUICallback('inventory-use-item', function(data, cb)
     if data.item.type ~= 'items' then
         return
     end
-    TriggerServerEvent("core:UseItem", Token, data.item.name)
+    TriggerServerEvent("core:UseItem", Token, data.item.name, data.item.slot)
 end)
 
 
@@ -378,6 +363,3 @@ RegisterNUICallback('closeInventory', function(data, cb)
 end)
 
 
-Keys.Register('TAB', 'TAB', GetPhrase('inventory_menu'), function()
-    OpenInventory()
-end)
