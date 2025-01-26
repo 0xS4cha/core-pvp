@@ -216,6 +216,11 @@ CreateThread(function()
             SetPlayerWantedLevel(PlayerId(), 0, false)
             SetPlayerWantedLevelNow(PlayerId(), false)
         end
+        if GetSelectedPedWeapon(PlayerPedId()) ~= GetHashKey("weapon_unarmed") and GetSelectedPedWeapon(PlayerPedId()) ~= GetHashKey("weapon_pickaxe") and GetSelectedPedWeapon(PlayerPedId()) ~= 0 then 
+            if GetPedAmmoByType(PlayerPedId(), GetPedAmmoType(PlayerPedId(), GetSelectedPedWeapon(PlayerPedId()))) ~= -1 then
+                SetPedInfiniteAmmo(p:ped(), true)
+            end
+        end
         DisablePlayerVehicleRewards(p:ped())
         DisablePlayerVehicleRewards(PlayerId())
         SetEveryoneIgnorePlayer(p:ped(), true)
