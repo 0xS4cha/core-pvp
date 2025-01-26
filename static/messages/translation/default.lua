@@ -193,6 +193,9 @@ local defaultPhrases = {
     respawn = 'RESPAWN',
     unconscious = 'UNCONSCIOUS',
     you_are = 'You are',
+    setup_medic = 'Medic',
+    setup_kevlar = 'Kevlar',
+    Revive = 'Revive'
 
     
 }
