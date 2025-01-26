@@ -237,6 +237,9 @@ local Detect = {
     weapon = nil,
 }
 CreateThread(function()
+    while p == nil do
+        Wait(0)
+    end
     while true do
         Detect.found = false
         if IsPedArmed(PlayerPedId(), 1) or IsPedArmed(PlayerPedId(), 4) or IsPedArmed(PlayerPedId(), 2) then
