@@ -163,6 +163,7 @@ function OpenInventory()
     end
 end
 
+
 RegisterNUICallback('dropFastItem', function(data, cb)
     Items = {}
     local inv = p:getInventaire()
