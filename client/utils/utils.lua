@@ -667,8 +667,7 @@ RegisterClientCallback = function(eventName, fn, ...)
 	end)
 end
 
-RegisterNetEvent('__pmc_callback:client')
-AddEventHandler('__pmc_callback:client', function(eventName, ...)
+RegisterNetEvent('__pmc_callback:client', function(eventName, ...)
 	local p = promise.new()
 
 	TriggerEvent(('c__pmc_callback:%s'):format(eventName), function(...)
@@ -680,7 +679,7 @@ AddEventHandler('__pmc_callback:client', function(eventName, ...)
 	TriggerServerEvent(('__pmc_callback:server:%s'):format(eventName), table.unpack(result))
 end)
 
-function RequestAndWaitDict(dictName)
+function Utils.RequestAndWaitDict(dictName)
 	if dictName and DoesAnimDictExist(dictName) and not HasAnimDictLoaded(dictName) then
 		RequestAnimDict(dictName)
 		while not HasAnimDictLoaded(dictName) do Citizen.Wait(100) end
@@ -1352,12 +1351,7 @@ function Utils.Instructions(instructions, cam) -- Mettre une instruction (scalfo
     return scaleform
 end
 
-function RequestAndWaitDict(dictName)
-	if dictName and DoesAnimDictExist(dictName) and not HasAnimDictLoaded(dictName) then
-		RequestAnimDict(dictName)
-		while not HasAnimDictLoaded(dictName) do Citizen.Wait(100) end
-	end
-end
+
 
 function DrawTexts(x, y, text, center, scale, rgb, font)
 	SetTextFont(font)
