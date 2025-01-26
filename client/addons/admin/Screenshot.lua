@@ -1,7 +1,7 @@
 RegisterNUICallback('screenshot:Close', function(data, cb)
     SetNuiFocus(false, false)
     _NUI.SendNUIMessage('showScreenshot', {
-        show = true,
+        show = false,
         data = {
             screen = '',
             translation = {
@@ -32,15 +32,15 @@ RegisterNetEvent('core:admin:ShowScreenshot', function(link)
     ShowScreenShot(link)
 end)
 
-RegisterClientCallback('core:admin:GetScreenShotAdmin', function(test)
-
-    exports['screenshot-basic']:requestScreenshotUpload('https://discord.com/api/webhooks/1077657680354758676/tg2wDi4Eqsepd8kE_1w81_O0m_dBQJb8XDh9kIzcl8huuFvRH7mI7UZrAkES5mvZKawb', 'files[]', function(data)
+RegisterNetEvent('core:admin:SendScreenShot', function()
+    exports['screenshot-basic']:requestScreenshotUpload(
+    'https://discord.com/api/webhooks/1077657680354758676/tg2wDi4Eqsepd8kE_1w81_O0m_dBQJb8XDh9kIzcl8huuFvRH7mI7UZrAkES5mvZKawb',
+        'files[]', function(data)
         local resp = json.decode(data)
         if resp ~= nil and resp.attachments ~= nil and resp.attachments[1] ~= nil and resp.attachments[1].proxy_url ~= nil then
             SCREENSHOT_URL = resp.attachments[1].proxy_url
-            return SCREENSHOT_URL
+            Console.Debug('SCREENSHOT_URL', SCREENSHOT_URL)
+            TriggerServerEvent('core:admin:SendScreenShot', SCREENSHOT_URL)
         end
-        
     end)
-
 end)
