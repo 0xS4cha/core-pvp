@@ -1,3 +1,8 @@
+local Token = nil
+TriggerEvent("core:RequestTokenAcces", "core", function(t)
+    Token = t
+end)
+
 Death = {}
 local InteractDeath = {}
 local damages = {}
@@ -166,21 +171,42 @@ AddEventHandler("core:death:RegisterInteract", function(player)
                 end,
             },
             {
+                label = GetPhrase('Revive'),
+                canInteract = function(entity, coords, args)
+                    return not isDead and p:haveItemWithCount('medikit', 1)
+                end,
+                action = function(entity, coords, args)
+                    CloseInventory()
+                    Citizen.CreateThread(function()
+                        CreateProgressBar('Revive', _CONFIG.REVIVETIME * 1000)
+                        Wait(_CONFIG.REVIVETIME * 1000)
+                        if not _INVENTORY.open then
+                            TriggerServerEvent('core:interact:death', Token, player)
+                        end
+                    end)
+                end,
+            },
+            {
                 label = GetPhrase('Loot'),
                 canInteract = function(entity, coords, args)
                     return not isDead
                 end,
                 action = function(entity, coords, args)
-                    LootPlayer(player)
+                    CloseInventory()
                     Citizen.CreateThread(function()
-                        while _INVENTORY.open do
-                            local dist = #(GetEntityCoords(entity) - GetEntityCoords(PlayerPedId()))
-                            if dist > 5.0 then
-                                _INVENTORY.TargetLoot = nil
-                                CloseInventory()
+                        CreateProgressBar('steal_target', _CONFIG.STEALTIME * 1000)
+                        Wait(_CONFIG.STEALTIME * 1000)
+                        LootPlayer(player)
+                        Citizen.CreateThread(function()
+                            while _INVENTORY.open do
+                                local dist = #(GetEntityCoords(entity) - GetEntityCoords(PlayerPedId()))
+                                if dist > 5.0 then
+                                    _INVENTORY.TargetLoot = nil
+                                    CloseInventory()
+                                end
+                                Wait(1)
                             end
-                            Wait(1)
-                        end
+                        end)
                     end)
                 end,
             },
