@@ -7,14 +7,27 @@ function GiveItemToPlayer(source, item, count, slot)
     end
     return added
 end
-
+function GiveItemToStorage(source, item, count, slot)
+    local added = AddItemToStorage(source, item, count, slot)
+    if added then
+        MarkPlayerDataAsNonSaved(source)
+    end
+end
 exports("GiveItemToPlayer", function(source, item, count)
     return GiveItemToPlayer(source, item, count)
 end)
 
+function RemoveItemToStorage(source, item, count, slot)
+    local removed = RemoveItemFromStorage(source, item, count, slot)
 
+    if removed then
+        MarkPlayerDataAsNonSaved(source)
+    end
+    return removed
+end
 
 function RemoveItemToPlayer(source, item, count, slot)
+
     -- print(json.encode(item))
     local removed = RemoveItemFromInventory(source, item, count, slot)
 
@@ -26,7 +39,21 @@ function RemoveItemToPlayer(source, item, count, slot)
 end
 
 
-
+function DoesStorageHaveItemCount(source, item, count, slot)
+    if not GetPlayer(source) then 
+        return false
+    end
+    for key, value in pairs(GetPlayer(source):getStorage()) do
+        if value.name == item and tonumber(value.slot) == tonumber(slot) then
+            if tonumber(value.count) >= tonumber(count) then
+                return true
+            else
+                return false
+            end
+        end
+    end
+    return false
+end
 function DoesPlayerHaveItemCount(source, item, count, slot)
     if not GetPlayer(source) then 
         return false
@@ -60,15 +87,6 @@ end
 exports("GetItemCount", function(source, item)
     return GetItemCount(source, item)
 end)
--- Events
-local countTriggerMoney = {}
-
-CreateThread(function()
-    while true do 
-        Wait(10000)
-        countTriggerMoney = {}
-    end
-end)
 
 
 
@@ -86,7 +104,7 @@ RegisterNetEvent('core:RemoveItemToInventory', function(token, item, count, meta
 end)
 
 RegisterNetEvent("core:UseItem")
-AddEventHandler("core:UseItem", function(token, item)
+AddEventHandler("core:UseItem", function(token, item, slot)
     local source = source
     if CheckPlayerToken(source, token) then
 
@@ -97,23 +115,14 @@ AddEventHandler("core:UseItem", function(token, item)
 
         if IsItemUsable(item) then
 
-            if UseItemIfCan(source, item) then
+            if UseItemIfCan(source, item, slot) then
 
                 local itemName = getItemLabel(item)
 
-                if item == "can" then
-                    return
-                end
                 
-                if item == "water" or item == "banana" or item == "saladeco" or item == "saladece" or
-                    item == "bread" or item == "tapas" or item == "litchi" or item == "maki" or
-                    item == "sushic" or item == "donutc" or item == "donutn" or item == "wrapb" or item == "wrapp" or item == "fishburger" or
-                    item == "juice" or item == "soda" or item == "coffee" or item == "tea" or
-                    item == "caprisun" or item == "sprunk" or item == "ecola" then
-                    itemName = " " .. getItemLabel(item)
-                end
 
-                TriggerClientEvent("core:ShowNotification", source,"Vous avez utilisé ~b~ <C>" .. itemName..'</C>')
+
+                TriggerClientEvent("core:ShowNotification", source,"Vous avez utilisé ~b~<C>" .. itemName..'</C>')
 
                 --RefreshPlayerData(source)
                 MarkPlayerDataAsNonSaved(source)
@@ -298,12 +307,45 @@ Citizen.CreateThread(function()
         end
         return resp, player:getInventaire()
     end)
+
+    RegisterServerCallback('inventory:dropStorage', function(source, token, data)
+        local resp = false
+        if CheckPlayerToken(source, token) then
+            local p = GetPlayer(source)
+            if p then
+                if DoesPlayerHaveItemCount(source, data.item.name, data.quantity, data.item.slot) then
+                    local remove = RemoveItemToPlayer(source, data.item.name, tonumber(data.quantity), tonumber(data.item.slot))
+                    if remove then
+                        GiveItemToStorage(source, data.item.name, data.quantity, data.slot)
+                    end
+                end
+            end
+        end
+        return resp
+    end)
+    RegisterServerCallback('inventory:lootStorage', function(source, token, data)
+        if CheckPlayerToken(source, token) then
+            local p = GetPlayer(source)
+            if p then
+                if tonumber(data.quantity) > tonumber(data.item.count) then
+                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor : inventory:lootItem (Quantity > count)", 'events_anticheat', 'Ban')
+                    return
+                end
+                if DoesStorageHaveItemCount(source, data.item.name, data.quantity, data.item.slot) then
+                    local remove = RemoveItemToStorage(source, data.item.name, tonumber(data.quantity), tonumber(data.item.slot))
+                    if remove then
+                        GiveItemToPlayer(source, data.item.name, data.quantity, data.slot)
+                    end
+                end
+            end
+        end
+    end)
     RegisterServerCallback("inventory:lootItem", function(source, token, data, target)
         local resp = false
         if CheckPlayerToken(source, token) then
-            local inventory = player:getInventaire()
             local p = GetPlayer(source)
             local t = GetPlayer(target)
+            
             if tonumber(data.quantity) == 0 then
                 data.quantity = tonumber(data.item.count)
             end
@@ -321,10 +363,7 @@ Citizen.CreateThread(function()
                     if remove then
                         TriggerClientEvent('core:inventory:refreshInv2', source, GetPlayer(target):getInventaire())
                         GiveItemToPlayer(source, data.item.name, data.quantity, data.slot)
-
                     end
-
-                    
                 end
             end
         end
