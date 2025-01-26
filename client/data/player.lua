@@ -22,7 +22,6 @@ RegisterCommand('debug', function()
     TriggerEvent('playerSpawned')
 end, false)
 AddEventHandler("playerSpawned", function()
-
     while p == nil do Wait(1000) end
     DisableIdleCamera(true)
     FreezeEntityPosition(p:ped(), true)
@@ -37,7 +36,7 @@ AddEventHandler("playerSpawned", function()
 
         TriggerEvent("skinchanger:loadSkin", p:getCloths().skin)
         -- TriggerEvent('rcore_tattoos:applyOwnedTattoos')
-        
+
         FreezeEntityPosition(p:ped(), false)
     end
     TriggerScreenblurFadeOut(10)
@@ -46,7 +45,6 @@ end)
 function LoadPlayerData(fromCharCreator) -- Tout les init irons ici
     InitPositionHandler(_CONFIG.Lobby, fromCharCreator)
 end
-
 
 TriggerServerEvent("core:InitPlayer")
 
@@ -88,7 +86,7 @@ end)
 
 RegisterNetEvent("core:addClothPlayer")
 AddEventHandler("core:addClothPlayer", function(name, data)
-    table.insert(p:getCloths().cloths, {name = name, data = data})
+    table.insert(p:getCloths().cloths, { name = name, data = data })
 end)
 
 RegisterNetEvent("core:removeClothPlayer")
@@ -111,10 +109,7 @@ AddEventHandler("core:setSkinPlayer", function(skin)
     p:setSkin(skin)
 end)
 
-RegisterNetEvent("core:setIdentityPlayer")
-AddEventHandler("core:setIdentityPlayer", function(nom, prenom, age, sexe, taille, birthplaces)
-    p:updateIdentity(nom, prenom, age, sexe, taille, birthplaces)
-end)
+
 
 RegisterNetEvent("core:addItemPlayer")
 AddEventHandler("core:addItemPlayer", function(item)
@@ -124,46 +119,6 @@ AddEventHandler("core:addItemPlayer", function(item)
     RefreshInventory()
 end)
 
-RegisterNetEvent("core:addExistItemPlayer")
-AddEventHandler("core:addExistItemPlayer", function(item, quantity)
-    local inv = p:getInventaire()
-    for k, v in pairs(inv) do
-        if item == v.name then
-            v.count = v.count + quantity
-            break
-        end
-    end
-    p:setInventaire(inv)
-    RefreshInventory()
-end)
-
-RegisterNetEvent("core:renameItemPlayer")
-AddEventHandler("core:renameItemPlayer", function(item, name, metadatas)
-    local inv = p:getInventaire()
-    for k, v in pairs(inv) do
-        if item == v.name then
-            if v.metadatas == nil then
-                v.metadatas = {}
-            end
-            if CompareMetadatas(v.metadatas, metadatas) then
-                v.metadatas["renamed"] = name
-            end
-        end
-    end
-    p:setInventaire(inv)
-end)
-
-RegisterNetEvent("core:renameClothPlayer")
-AddEventHandler("core:renameClothPlayer", function(item, name, metadatas)
-    local inv = p:getInventaire()
-    for k, v in pairs(inv) do
-        if item == v.name and v.metadatas["drawableId"] == metadatas["drawableId"] and v.metadatas["renamed"] == metadatas["renamed"] then
-            if v.metadatas == nil then v.metadatas = {} end
-            v.metadatas["renamed"] = name
-        end
-    end
-    p:setInventaire(inv)
-end)
 
 RegisterNetEvent("core:RemoveItemFromInventoryNil")
 AddEventHandler("core:RemoveItemFromInventoryNil", function(name, quantity, metadatas)
@@ -173,8 +128,11 @@ AddEventHandler("core:RemoveItemFromInventoryNil", function(name, quantity, meta
             if inv[i] ~= nil then
                 if inv[i].name ~= nil and inv[i].metadatas == nil then
                     if inv[i].name == "money" and inv[i].metadatas == nil then
-                        if inv[i].count - quantity <= 0 then table.remove(inv, i)
-                        else inv[i].count = inv[i].count - quantity end
+                        if inv[i].count - quantity <= 0 then
+                            table.remove(inv, i)
+                        else
+                            inv[i].count = inv[i].count - quantity
+                        end
                         p:setInventaire(inv)
                         break
                     end
@@ -187,15 +145,16 @@ RegisterNetEvent("core:RemoveItemInventory")
 AddEventHandler("core:RemoveItemInventory", function(name, quantity, slot)
     local inv = p:getInventaire()
     if inv ~= nil then
-
         for i = 1, #inv do
             if inv[i] ~= nil then
 
-                if inv[i].name ~= nil and inv[i].name == name and slot == inv[i].slot == slot then
+                if inv[i].name ~= nil and inv[i].name == name and inv[i].slot == slot then
+                    if inv[i].count - quantity <= 0 then
 
-                    if inv[i].count - quantity <= 0 then table.remove(inv, i)
-                    else inv[i].count = inv[i].count - quantity end
-
+                        table.remove(inv, i)
+                    else
+                        inv[i].count = inv[i].count - quantity
+                    end
                     p:setInventaire(inv)
                     break
                 end
@@ -203,5 +162,25 @@ AddEventHandler("core:RemoveItemInventory", function(name, quantity, slot)
         end
         RefreshInventory()
     end
-    
+end)
+RegisterNetEvent("core:RemoveItemStorage", function(name, quantity, slot)
+    local inv = p:getStorage()
+    if inv ~= nil then
+        for i = 1, #inv do
+            if inv[i] ~= nil then
+
+                if inv[i].name ~= nil and inv[i].name == name and inv[i].slot == slot then
+                    if inv[i].count - quantity <= 0 then
+
+                        table.remove(inv, i)
+                    else
+                        inv[i].count = inv[i].count - quantity
+                    end
+                    p:setStorage(inv)
+                    break
+                end
+            end
+        end
+        RefreshInventory2(p:getStorage(), 'YOUR STORAGE')
+    end
 end)
