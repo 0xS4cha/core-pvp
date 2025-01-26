@@ -6,7 +6,7 @@ local function LoadAllVehicle() -- done
         for k, v in pairs(result) do
             local veh = vehicle:new(v)
             --vehicles[v.plate] = veh
-            --print(json.encode(veh))
+
         end
     end)
     Console.Success("All the vehicles of the BDD were load.")
