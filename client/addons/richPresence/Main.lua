@@ -14,5 +14,5 @@ end)
 
 RegisterNetEvent("core:UpdateRichPresence")
 AddEventHandler("core:UpdateRichPresence", function (number)
-    SetRichPresence(_CONFIG.ServerName.." - "..number.. " joueurs connectés - "..p:getPlayerName()..' ['..p:getId()..']')
+    SetRichPresence(_CONFIG.ServerName.." - "..number.. " "..GetPhrase('Player_Connected'))
 end)
