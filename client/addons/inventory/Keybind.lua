@@ -1,5 +1,8 @@
 local weaponOut = false
-
+local Token = nil
+TriggerEvent("core:RequestTokenAcces", "core", function(t)
+    Token = t
+end)
 
 Keys.Register('1', '1', GetPhrase('inventory_keybind1'), function()
     useitem(1)
@@ -14,6 +17,9 @@ Keys.Register('4', '4', GetPhrase('inventory_keybind4'), function()
     useitem(4)
 end)
 
+Keys.Register('TAB', 'TAB', GetPhrase('inventory_menu'), function()
+    OpenInventory()
+end)
 
 function useitem(index) 
     local item = fastItems[index]
@@ -49,6 +55,7 @@ function useitem(index)
             SetCurrentPedWeapon(p:ped(), item.name, true)
             TriggerSecurEvent("core:RefreshInventory", nil, p:getInventaire())
         end
-
+    else
+        TriggerServerEvent("core:UseItem", Token, item.name, item.slot)
     end
 end
