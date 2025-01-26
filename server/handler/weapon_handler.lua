@@ -7,7 +7,7 @@ createThread(function()
             if GetPlayer(source) == nil then return end
             return GetPlayer(source):getWeapons()
         else
-            TriggerEvent('core:admin:anticheat', 'Execute trigger: core:GetWeaponSave', source)
+            TriggerEvent('core:admin:anticheat', 'Execute trigger: core:GetWeaponSave', source, 'events_anticheat')
         end
     end)
 end)
