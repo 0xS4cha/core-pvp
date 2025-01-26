@@ -148,13 +148,7 @@ local function funcRestartBoucle()
     StoreSunWise = false
 end
 
-AddEventHandler('onResourceStop', function(resourceName)
-    if resourceName == "SunWise" then
-        print("Stored resource SunWise has whitelisted for stop checks")
-        StoreSunWise = true
-        funcRestartBoucle()
-    end
-end)
+
 
 local Images = {}
 
