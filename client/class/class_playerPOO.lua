@@ -469,6 +469,9 @@ function player:isInVeh()
     return IsPedInAnyVehicle(self:ped(), false)
 end
 
+function player:getPlayerName()
+    return self:playerName()
+end
 -- banks fct
 
 function player:haveEnoughMoney(number)
