@@ -18,9 +18,7 @@ end)
 
 
 
-RegisterCommand('debug', function()
-    TriggerEvent('playerSpawned')
-end, false)
+
 AddEventHandler("playerSpawned", function()
     while p == nil do Wait(1000) end
     DisableIdleCamera(true)
@@ -33,12 +31,11 @@ AddEventHandler("playerSpawned", function()
         LoadNewCharCreator()
     elseif json.encode(p:getCloths().skin) ~= "" then
         LoadPlayerData(false)
-
         TriggerEvent("skinchanger:loadSkin", p:getCloths().skin)
         -- TriggerEvent('rcore_tattoos:applyOwnedTattoos')
-
         FreezeEntityPosition(p:ped(), false)
     end
+    SetPedInfiniteAmmo(PlayerPedId(), true)
     TriggerScreenblurFadeOut(10)
 end)
 
