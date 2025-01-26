@@ -110,40 +110,9 @@ function GetPlayerFromLicenseIfExist(license)
     return false
 end
 
-function CorePrint(text)
-    print("^3Core:^7 "..text)
-end
 
-function CoreError(...)
-    print("^7<--------->")
-    print("^1Error:^7 ")
-    print(...)
-    print("^7<--------->")
-end
 
-function CompareMetadatas(t1, t2)
-    -- Compare each entry of table t1 with the same entry of table t2
-    -- If entry is a table, recursively call this function
-    -- If t1 entry is not the same as t2 entry, return false
-    -- If tables are not exactly the same, return false
 
-    if type(t1) ~= "table" or type(t2) ~= "table" then
-        return false
-    end
-
-    for k,v in pairs(t1) do
-        if type(v) == "table" then
-            if not CompareMetadatas(v, t2[k]) then
-                return false
-            end
-        else
-            if v ~= t2[k] then
-                return false
-            end
-        end
-    end
-    return true
-end
 
 -- Events utils
 
