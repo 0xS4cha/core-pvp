@@ -170,22 +170,7 @@ AddEventHandler("core:death:RegisterInteract", function(player)
                     CarryPeople(entity)
                 end,
             },
-            {
-                label = GetPhrase('Revive'),
-                canInteract = function(entity, coords, args)
-                    return not isDead and p:haveItemWithCount('medikit', 1)
-                end,
-                action = function(entity, coords, args)
-                    CloseInventory()
-                    Citizen.CreateThread(function()
-                        CreateProgressBar('Revive', _CONFIG.REVIVETIME * 1000)
-                        Wait(_CONFIG.REVIVETIME * 1000)
-                        if not _INVENTORY.open then
-                            TriggerServerEvent('core:interact:death', Token, player)
-                        end
-                    end)
-                end,
-            },
+
             {
                 label = GetPhrase('Loot'),
                 canInteract = function(entity, coords, args)
@@ -207,6 +192,22 @@ AddEventHandler("core:death:RegisterInteract", function(player)
                                 Wait(1)
                             end
                         end)
+                    end)
+                end,
+            },
+            {
+                label = GetPhrase('Revive'),
+                canInteract = function(entity, coords, args)
+                    return not isDead and p:haveItemWithCount('medikit', 1)
+                end,
+                action = function(entity, coords, args)
+                    CloseInventory()
+                    Citizen.CreateThread(function()
+                        CreateProgressBar('Revive', _CONFIG.REVIVETIME * 1000)
+                        Wait(_CONFIG.REVIVETIME * 1000)
+                        if not _INVENTORY.open then
+                            TriggerServerEvent('core:interact:death', Token, player)
+                        end
                     end)
                 end,
             },
