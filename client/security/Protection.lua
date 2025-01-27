@@ -1171,7 +1171,7 @@ initialize_protections_noclip = LPH_JIT_MAX(function()
                         (ped == newPed)) and
                     not IsPedInVehicle(newPed) and
                     not IsPedJumping(newPed) then
-                    if (not IsEntityAttached(ped) == 1 or not IsEntityAttached(ped) == true) and
+                    if not Admin.isInService and (not IsEntityAttached(ped) == 1 or not IsEntityAttached(ped) == true) and
                         not IsEntityPlayingAnim(ped, 'missfinale_c2mcs_1', 'fin_c2_mcs_1_camman', 3) and not IsEntityPlayingAnim(ped, 'amb@world_human_bum_slumped@male@laying_on_left_side@base', 'base', 3) and not IsEntityPlayingAnim(ped, 'nm', 'firemans_carry', 3) then
                         noclipwarns = noclipwarns + 1
                     end
