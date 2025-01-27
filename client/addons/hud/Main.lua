@@ -1,6 +1,11 @@
 Citizen.CreateThread(function()
     while true do 
-        Citizen.Wait(0)
+        Citizen.Wait(1)
+        if IsPedArmed(PlayerPedId(), 6) then
+			DisableControlAction(1, 140, true)
+			   DisableControlAction(1, 141, true)
+			DisableControlAction(1, 142, true)
+		end
         _NUI.SendNUIMessage('showHud', { 
         show = true,
         data = {
