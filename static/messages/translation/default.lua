@@ -201,7 +201,9 @@ local defaultPhrases = {
     setup_kevlar = 'Kevlar',
     Revive = 'Revive',
     Player_Connected = ' players connected',
-    ChoicePlayerMessage = "Press ~g~E~s~ to validate\nPress ~b~L~s~To change target\nPress ~r~X~s~ to cancel"
+    ChoicePlayerMessage = "Press ~g~E~s~ to validate\nPress ~b~L~s~To change target\nPress ~r~X~s~ to cancel",
+    AirDrop = "Airdrop Inbound",
+    AirDrop2 = "An airdrop coming soon"
 
     
 }
