@@ -250,7 +250,7 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 	while inChoice do
 		local pcoords = p:pos()
 		local players = Utils.GetAllPlayersInArea(p:pos(), range)
-		DrawMarker(6, pcoords.x, pcoords.y, pcoords.z - 0.8, 0.0, 0.0, 0.0, 90.0, 0.0, 0.0, range, range, range, 30, 77, 138 , 120, 0, 1, 2, 0, nil, nil, 0)
+		DrawMarker(6, pcoords.x, pcoords.y, pcoords.z - 0.8, 0.0, 0.0, 0.0, 90.0, 0.0, 0.0, range * 2, range * 2, range * 2, 30, 77, 138 , 120, 0, 1, 2, 0, nil, nil, 0)
 
 		if choiceSelfPlayer == false then
 			for k, v in pairs(players) do
