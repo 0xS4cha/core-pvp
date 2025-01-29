@@ -340,6 +340,27 @@ Citizen.CreateThread(function()
             end
         end
     end)
+    RegisterServerCallback('inventory:tradeItem', function(source, token, data, target)
+        local resp = false
+        if CheckPlayerToken(source, token) then
+            local p = GetPlayer(source)
+            local t = GetPlayer(target)
+            if p and t then
+                if tonumber(data.quantity) > tonumber(data.item.count) then
+                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor : inventory:lootItem (Quantity > count)", 'events_anticheat', 'Ban')
+                    return
+                end
+                if DoesPlayerHaveItemCount(source, data.item.name, data.quantity, data.item.slot) then
+
+                    local remove = RemoveItemToPlayer(source, data.item.name, tonumber(data.quantity), tonumber(data.item.slot))
+                    if remove then
+                        GiveItemToPlayer(target, data.item.name, data.quantity, data.slot)
+                    end
+                end
+            end
+        end
+        return resp
+    end)
     RegisterServerCallback("inventory:lootItem", function(source, token, data, target)
         local resp = false
         if CheckPlayerToken(source, token) then
@@ -350,7 +371,7 @@ Citizen.CreateThread(function()
                 data.quantity = tonumber(data.item.count)
             end
             if p and t then
-                if data.item.name == 'money' and data.quantity > _CONFIG.MAXMONEYLOOT then
+                if data.item.name == 'money' and tonumber(data.quantity) > _CONFIG.MAXMONEYLOOT then
                     _ANTICHEAT.punish_player(source, "Trigger Event with an excutor : inventory:lootItem (money > maxloot)", 'events_anticheat', 'Ban')
                     return
                 end
@@ -359,6 +380,7 @@ Citizen.CreateThread(function()
                     return
                 end
                 if DoesPlayerHaveItemCount(target, data.item.name, data.quantity, data.item.slot) then
+                    
                     local remove = RemoveItemToPlayer(target, data.item.name, tonumber(data.quantity), tonumber(data.item.slot))
                     if remove then
                         TriggerClientEvent('core:inventory:refreshInv2', source, GetPlayer(target):getInventaire())
