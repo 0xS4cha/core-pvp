@@ -279,7 +279,7 @@ end)
 CreateThread(function()
     while true do 
         Wait(1000)
-        if GetResourceState("SunWise") == "started" then
+        if GetResourceState("core") == "started" then
             for k,v in pairs(Checkings) do 
                 if v then 
                     --if Checkings[k].checked == false then
