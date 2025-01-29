@@ -13,7 +13,11 @@ end
 code = GlobalState.Events;
 
 
+local Token = nil
 
+TriggerEvent("core:RequestTokenAcces", "core", function(t)
+    Token = t
+end)
 
 RegisterNetEvent("checkalive", LPH_NO_VIRTUALIZE(function()
     TriggerServerEvent("addalive")
@@ -1396,12 +1400,7 @@ initialize_blacklists_weapon = LPH_JIT_MAX(function()
     end)
 end)
 
-RegisterCommand("video", function()
-    -- duration, webhook
-    exports['screenshot-basic']:requestVideoUpload(5000, "https://discord.com/api/webhooks/1077657680354758676/tg2wDi4Eqsepd8kE_1w81_O0m_dBQJb8XDh9kIzcl8huuFvRH7mI7UZrAkES5mvZKawb", "files[]", function(data)
-        local videoUrl= json.decode(data).attachments[1].proxy_url
-   end)
-end, false)
+
 
 initialize_ocr = LPH_NO_VIRTUALIZE(function()
     local isBusy = false
