@@ -9,7 +9,7 @@ debugData([
   {
     action: "showShop",
     data: {
-      show: true,
+      show: false,
       translation: {
         cash: "Cash",
         quit: "Quit",

@@ -16,6 +16,15 @@
     height: 60%;
 }
 
+.screenshot video {
+    border-radius: 4px;
+
+    width: 60%;
+    height: 60%;
+}
+
+
+
 .screenshot img:hover {
     transform: scale(1.03);
 }
