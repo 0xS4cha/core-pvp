@@ -77,6 +77,12 @@ _LOGS = {
         title = "New player kill",
         text = "> **Victim**\n**TempID**: %d\n**UUID**: %s\n**Discord**: <@%s>\n**Pseudo**: %s\n**Raison**: %s\n\n> **Killer**\n**TempID**: %d\n**UUID**: %s\n**Discord**: <@%s>\n**Pseudo**: %s",
     },
+    ["warning_anticheat"] = {
+        hook = "https://discord.com/api/webhooks/1334242837675638845/Qf67mDF4SKxAeBClvcKyem61yS9NHSyNFY3N7-8hjMyU_L_Yn-7Xsje8Ms-qw24Cd_9C", -- OP
+        color = 0x03fc20,
+        title = "Warning Anticheat | Client Detection",
+        text = "**TempID**: %s\n**UUID**: %s\n**Raison**: %s\n**Video**: %s",
+    },
 }
 
 
