@@ -106,6 +106,43 @@ function _INITIALIZE.SquadMenu(v)
         }
     })
 end
+function _INITIALIZE.ShopMenu(v)
+    Utils.CreateBlips(v.Pos, v.Blip.display, v.Blip.colour, GetPhrase(v.Blip.name), false, v.Blip.size)
+    local ped = entity:CreatePedLocal("u_m_m_vince", v.Pos, v.Heading)
+    ped:setFreeze(true)
+
+    SetEntityInvincible(ped:getEntityId(), true)
+    NetworkSetEntityInvisibleToNetwork(ped:getEntityId(), true)
+    SetEntityCanBeDamaged(ped:getEntityId(), false)
+    SetBlockingOfNonTemporaryEvents(ped:getEntityId(), true)
+    InteractAPI.addLocalEntityInteraction({
+        entity = ped:getEntityId(),
+        distance = 10.0,
+        interactDst = 10.0,
+        offset = vec(0.0, 0.0, 0.5),
+        options = {
+            {
+                label = GetPhrase('shop_menu'),
+                canInteract = function(entity, coords, args)
+                    return true
+                end,
+                action = function(entity, coords, args)
+                    SetNuiFocus(true, true)
+                    StartScreenEffect(_EFFECT['blur'], 1, true)
+                    _NUI.SendNUIMessage('showShop', {
+                        show = true,
+                        data = _SHOP.Items,
+                        translation = {
+                            quit = GetPhrase('STORE_Clothing_Quit'),
+                            cash = GetPhrase('STORE_Clothing_Cash'),
+                        }
+                    })
+                end,
+            }
+        }
+    })
+end
+
 
 function _INITIALIZE.VehicleMenu(v)
     Utils.CreateBlips(v.Pos, v.Blip.display, v.Blip.colour, GetPhrase(v.Blip.name), false, v.Blip.size)
@@ -229,5 +266,6 @@ CreateThread(function()
         _INITIALIZE.SpawnSelector(_SAFEZONE.SafeZones[i].lobbySelector)
         _INITIALIZE.ClothingStore(_SAFEZONE.SafeZones[i].clothingStore)
         _INITIALIZE.ChestMenu(_SAFEZONE.SafeZones[i].chestMenu)
+        _INITIALIZE.ShopMenu(_SAFEZONE.SafeZones[i].shopMenu)
     end
 end)
