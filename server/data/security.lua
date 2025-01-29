@@ -226,6 +226,23 @@ RegisterNetEvent("core:admin:PunishPlayer", function(player, reason, logs, type)
     _ANTICHEAT.punish_player(player, reason, type, logs)
 end)
 
+local WarningCount = {}
+RegisterNetEvent("core:admin:warning", function(token, video, reason)
+    local source = source
+    if CheckPlayerToken(source, token) then
+        local player = GetPlayer(source)
+        if WarningCount[source] then
+            WarningCount[source] += 1
+        elseif not WarningCount[source] then
+            WarningCount[source] = 1
+        end
+        SendDiscordLogVideo('warning_anticheat', source, video, player:getId(), reason, video)
+        if WarningCount[source] > 5 then
+            print('BANNED')
+            --_ANTICHEAT.punish_player(player, reason, type, logs)
+        end
+    end
+end)
 
 _ANTICHEAT.punish_player = function(source, reason, type, logs)
     if type == nil or type == 'Ban' then
