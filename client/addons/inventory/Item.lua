@@ -13,7 +13,7 @@ RegisterNetEvent('core:UseKevlar', function()
 end)
 
 RegisterNetEvent('core:UseMedic', function()
-    if p:haveItemWithCount('medic', 1) and not AlreadyUse then
+    if p:haveItemWithCount('bandage', 1) and not AlreadyUse then
         AlreadyUse = true
         Utils.RequestAndWaitDict("clothingtie")
         TaskPlayAnim(PlayerPedId(), "clothingtie", "try_tie_positive_a", 8.0, -8, -1, 48, 0, 0, 0, 0)
