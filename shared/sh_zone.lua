@@ -40,44 +40,12 @@ _SAFEZONE.SafeZones = {
             Pos = vector3(-118.70900726318, -1586.0874023438, 34.212963104248 - 1.02),
             Heading = 48.500534057617,
             Blip = { display = 850, colour = 32, size = 0.6, name = 'chestMenu' },
-        }
-    },
-    {
-        Description = 'Lobby of Sandy Shore',
-        Name = 'Sandy Shore',
-        Image = 'sandy_shore.png',
-        clothingStore = {
-            Pos = vector3(1536.7463378906, 3581.2878417969, 35.491580963135 - 1.02),
-            Heading = 209.46199035645,
-            Blip = { display = 73, colour = 32, size = 0.6, name = 'STORE_Clothing' },
-
         },
-        safezone = {
-            coords = vector3(1549.1363525391, 3566.251953125, 35.36291885376),
-            radius = 100.0,
-            radiusblip = 100.0
+        shopMenu = {
+            Pos = vector3(-139.80618286133, -1587.5706787109, 34.243644714355 - 1.02),
+            Heading = 237.16999816895,
+            Blip = { display = 52, colour = 32, size = 0.6, name = 'shopMenu' },
         },
-        lobbySelector = {
-            Pos = vector3(1549.0236816406, 3516.1254882812, 35.993576049805 - 1.02),
-            Heading = 7.2120108604431,
-            Blip = { display = 459, colour = 32, size = 0.6, name = 'STORE_LobbySelector' },
-        },
-        squadMenu = {
-            Pos = vector3(0.0, 0.0, 0.0),
-            Heading = 232.22766113281,
-            Blip = { display = 378, colour = 32, size = 0.6, name = 'SquandAndCrew' },
-        },
-        vehicleMenu = {
-            Pos = vector3(0.0, 0.0, 0.0),
-            Heading = 68.537330627441,
-            Blip = { display = 225, colour = 32, size = 0.6, name = 'GaragePNJ' },
-        },
-        chestMenu = {
-            Pos = vector3(0.0, 0.0, 0.0),
-            Heading = 68.537330627441,
-            Blip = { display = 850, colour = 32, size = 0.6, name = 'chestMenu' },
-        }
-
     },
 }
 
@@ -89,6 +57,5 @@ _REDZONE.ZoneLocations = {
 }
 _REDZONE.ChangeZonesInterval = 20
 _REDZONE.Reward = {
-    Quantity = 5,
-    Items = 'pistol50'
+    [1] = {{item = 'weapon_pistol50', count = 1}}
 }
