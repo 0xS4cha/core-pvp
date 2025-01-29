@@ -17,7 +17,7 @@ debugData([
   {
     action: "showInventory",
     data: {
-      show: true,
+      show: false,
       maximumCase: 30,
       secondInventory: true,
       Inventory2: {

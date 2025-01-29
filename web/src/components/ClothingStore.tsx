@@ -15,13 +15,13 @@ const clotheTypeIndex: { [key: string]: number } = {
   shoes: 6,
   arms: 3,
 };
-/*
+
 debugData([
   {
     action: "Clothing:SendData",
     data: {
       gender: "male",
-      show: true,
+      show: false,
       clothesData: {
         torso: {
           label: "Torse",
@@ -77,7 +77,7 @@ debugData([
       },
     },
   },
-]);*/
+]);
 const ClothingStore = () => {
   const [opened, setOpened] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("torso");
@@ -136,7 +136,7 @@ const ClothingStore = () => {
 
     useEffect(() => {
         const handleKeyPress = (event: any) => {
-          console.log(event)
+
           if (event.key === "ArrowLeft" && opened) {
             fetchNui("clothingStoreChangeVariation", 1);
           } else if (event.key === "ArrowRight" && opened) {
@@ -163,7 +163,7 @@ const ClothingStore = () => {
 
           return;
         }
-        if (opened) {
+
           if (event.deltaY > 0) {
 
             fetchNui("clothingStoreZoom", 1);
@@ -171,7 +171,7 @@ const ClothingStore = () => {
 
             fetchNui("clothingStoreZoom", 2);
           }
-        }
+        
       };
     
       window.addEventListener("wheel", handleKeyDown, { capture: true });
