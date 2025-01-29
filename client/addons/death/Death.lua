@@ -54,7 +54,6 @@ function PlayerInComa(data)
                 you_are = GetPhrase('you_are')
             }
         })
-        TriggerScreenblurFadeIn(10)
 
     end
 end
@@ -62,7 +61,6 @@ end
 RegisterNUICallback('death:respawn', function(data, cb)
     if canRespawn then
 
-        TriggerScreenblurFadeOut(10)
         SetNuiFocus(false, false)
         TriggerEvent('core:RevivePlayer')
 
@@ -85,7 +83,6 @@ AddEventHandler("core:RevivePlayer", function()
         killedByPlayer = false
     })
     ForceStopCarry()
-    TriggerScreenblurFadeOut(10)
     local pos = _SAFEZONE.SafeZones[1].safezone.coords
     SetEntityCoordsNoOffset(p:ped(), pos.x, pos.y, pos.z, false, false, false, true)
     NetworkResurrectLocalPlayer(pos, 0.0, true, false)
@@ -105,7 +102,6 @@ AddEventHandler("core:StealPlayer", function()
     })
     SetNuiFocus(false, false)
     ForceStopCarry()
-    TriggerScreenblurFadeOut(10)
     local pos = GetEntityCoords(p:ped())
     SetEntityCoordsNoOffset(p:ped(), pos.x, pos.y, pos.z, false, false, false, true)
     NetworkResurrectLocalPlayer(pos, 0.0, true, false)
@@ -123,7 +119,7 @@ RegisterCommand('revive', function()
     })
     SetNuiFocus(false, false)
     ForceStopCarry()
-    TriggerScreenblurFadeOut(10)
+
     local pos = GetEntityCoords(p:ped())
     SetEntityCoordsNoOffset(p:ped(), pos.x, pos.y, pos.z, false, false, false, true)
     NetworkResurrectLocalPlayer(pos, 0.0, true, false)
