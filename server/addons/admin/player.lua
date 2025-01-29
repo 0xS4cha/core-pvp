@@ -169,16 +169,22 @@ RegisterNetEvent('core:admin:kick', function(token, target, reason)
 end)
 
 local WaitScreen = {}
-
+local WaitVideo = {}
 RegisterNetEvent('core:admin:SendScreenShot', function(link)
-    source = source
+    local source = source
     if WaitScreen[source] ~= nil then
         local player = GetPlayer(WaitScreen[source])
         local target = GetPlayer(source)
-
-        TriggerClientEvent('core:admin:ShowScreenshot', WaitScreen[source], link)
+        TriggerClientEvent('core:admin:ShowScreenshot', WaitScreen[source], link, 'image')
         SendDiscordLogImage('screenshot_admin', source, link, string.sub(GetDiscord(WaitScreen[source]), 9, -1), link )
         WaitScreen[source] = nil
+    end
+    if WaitVideo[source] ~= nil then
+        local player = GetPlayer(WaitVideo[source])
+        local target = GetPlayer(source)
+        TriggerClientEvent('core:admin:ShowScreenshot', WaitVideo[source], link, 'video')
+        --SendDiscordLogImage('screenshot_admin', source, link, string.sub(GetDiscord(WaitScreen[source]), 9, -1), link )
+        WaitVideo[source] = nil
     end
 end)
 RegisterNetEvent('core:admin:Screenshot', function(token, idplayer)
@@ -186,6 +192,18 @@ RegisterNetEvent('core:admin:Screenshot', function(token, idplayer)
     if CheckPlayerToken(source, token) then 
         WaitScreen[idplayer] = source
         TriggerClientEvent('core:admin:SendScreenShot', idplayer)
+    end
+end)
+
+RegisterNetEvent('core:admin:Video', function(token, idplayer, time)
+    local source = source
+    if CheckPlayerToken(source, token) then 
+        if WaitVideo[idplayer] then
+            TriggerClientEvent('core:ShowNotification', source, '~r~<C>Impossible</C>')
+            return 
+        end
+        WaitVideo[idplayer] = source
+        TriggerClientEvent('core:admin:SendVideo', idplayer, (time * 1000))
     end
 end)
 
