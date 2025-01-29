@@ -652,6 +652,8 @@ local SelectedMenu = {
             end, GetPhrase("admin_ban_reason"), 255)
         elseif btnName == 'admin_playermenu_screenshot' then
             TriggerServerEvent('core:admin:Screenshot', Token, idPlayer)
+        elseif btnName == 'admin_playermenu_clip' then
+            TriggerServerEvent('core:admin:Video', Token, idPlayer, tonumber(self.slidename))
         elseif btnName == 'admin_givevehicle' then
             TriggerServerEvent('core:admin:GiveVehicle', Token, idPlayer, self.slidename, GetDisplayNameFromVehicleModel(self.slidename))
         elseif btnName == 'admin_playermenu_advertmenu' then
@@ -925,7 +927,7 @@ Admin.Menu = {
         Header = {"commonmenu", "interaction_bgd"},
         Title = "ADMIN_TITLE",
         intX = 0.95,
-        HeaderColor = { 40, 40, 40, 255 },
+        HeaderColor = { 255, 0, 0, 255 },
         Checkbox = { Icon =  { [0] = { "commonmenu", "shop_box_blank" }, [1] = { "commonmenu", "shop_box_tickb" }, [2] = { "commonmenu", "shop_box_tick" } } }
     },
     Data = {
@@ -1024,7 +1026,7 @@ Admin.Menu = {
         },
         ['admin_playermenu'] = {
             refresh = true, 
-            refreshTime = 2000,
+            refreshTime = 5000,
             b = function()
                 return {
                     {name = ("~r~[%s]~s~ %s"):format(Admin.IdTarget, Admin.NameTarget)}, 
@@ -1035,6 +1037,7 @@ Admin.Menu = {
                     {name = "admin_playermenu_bringback", cantUse = not Admin.BringCoords},
                     {name = "admin_playermenu_showinformation"},
                     {name = "admin_playermenu_screenshot"},
+                    {name = "admin_playermenu_clip", Description = 'Seconds', slidemax = {5, 10, 15}},
                     {name = "admin_playermenu_advertplayer"},
                     {name = "admin_playermenu_advertmenu"},
                     {name = "admin_givevehicle", canSee = function()
