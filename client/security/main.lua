@@ -249,7 +249,7 @@ CreateThread(function()
         Detect.found = false
         if IsPedArmed(PlayerPedId(), 1) or IsPedArmed(PlayerPedId(), 4) or IsPedArmed(PlayerPedId(), 2) then
             for k, v in pairs(p:getInventaire()) do
-                if v.name and string.find(v.name, "weapon_") then 
+                if v.name and string.find(v.name, "WEAPON_") then 
                     if GetSelectedPedWeapon(PlayerPedId()) == GetHashKey(v.name) then 
                         Detect.found = true
                     end
@@ -261,8 +261,7 @@ CreateThread(function()
                 else
                     Detect.weapon = GetSelectedPedWeapon(PlayerPedId()).." (Hash)"
                 end
-                TriggerServerEvent("core:admin:PunishPlayer" , nil, "Suppression de l'arme en main du joueur car il ne l'a pas en inventaire : " ..Detect.weapon, 'client_anticheat', 'Ban')
-                SetCurrentPedWeapon(PlayerPedId(), GetHashKey('WEAPON_UNARMED'), true)
+               SetCurrentPedWeapon(PlayerPedId(), GetHashKey('WEAPON_UNARMED'), true)
             end
         end
         Wait(3000)
