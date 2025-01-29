@@ -102,6 +102,7 @@ Preference = {
   
         ["settings"] = {
             refresh = true,
+            refreshTime = 2000,
             b = function()
                 return {
                 {name = "RedZoneBigMenu", checkbox = RedZoneMenu},
