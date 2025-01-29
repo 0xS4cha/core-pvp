@@ -203,7 +203,18 @@ local defaultPhrases = {
     Player_Connected = ' players connected',
     ChoicePlayerMessage = "Press ~g~E~s~ to validate\nPress ~b~L~s~To change target\nPress ~r~X~s~ to cancel",
     AirDrop = "Airdrop Inbound",
-    AirDrop2 = "An airdrop coming soon"
+    AirDrop2 = "An airdrop coming soon",
+    shop_menu = 'Shop',
+
+
+    -- ITEMS
+    money = 'Money',
+    kevlar = 'Kevlar',
+    bandage = 'Bandage',
+    medikit = 'Medkit',
+    WEAPON_PISTOL = 'Pistol',
+    WEAPON_PISTOL50 = 'Pistol50',
+    WEAPON_COMBATPISTOL = 'Combat Pistol'
 
     
 }
