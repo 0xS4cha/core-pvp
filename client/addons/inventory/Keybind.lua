@@ -23,7 +23,7 @@ end)
 
 function useitem(index) 
     local item = fastItems[index]
-    if item.type == 'weapons' and string.find(item.name, "weapon_") then
+    if item.type == 'weapons' and string.find(item.name, "WEAPON_") then
         if weaponOut then
             TaskPlayAnim(p:ped(), "reaction@intimidation@1h", "outro", 8.0, 3.0, -1, 50, 0, 0, 0.125, 0)
             local timer = GetGameTimer() + 1500
