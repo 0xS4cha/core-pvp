@@ -5,7 +5,7 @@ local itemsUsage = {
             TriggerClientEvent('core:UseKevlar', source)
         end,
     },
-    ["medic"] = {
+    ["bandage"] = {
         removeOnUse = true,
         action = function(source)
             TriggerClientEvent('core:UseMedic', source)
@@ -15,10 +15,10 @@ local itemsUsage = {
 items = {
     ['money'] = {type = 'items', label = 'Money', notStackable = false},
     ['kevlar'] = {type = 'items', label = 'Kevlar', notStackable = false},
-    ['medic'] = {type = 'items', label = 'Medic', notStackable = false},
+    ['bandage'] = {type = 'items', label = 'Medic', notStackable = false},
     ['medikit'] = {type = 'items', label = 'Medkit', notStackable = false},
-    ['weapon_pistol'] = {type = 'weapons', label = 'Pistol', notStackable = true},
-    ['weapon_pistol50'] = {type = 'weapons', label = 'Pistol50', notStackable = true},
+    ['WEAPON_PISTOL'] = {type = 'weapons', label = 'Pistol', notStackable = true},
+    ['WEAPON_PISTOL50'] = {type = 'weapons', label = 'Pistol50', notStackable = true},
 
 }
 
