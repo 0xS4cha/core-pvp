@@ -1,4 +1,5 @@
 
+--[[
 CreateThread(function()
     local wait = _DROP.Global.Time * 60000
     while true do
@@ -16,5 +17,5 @@ function InitializeAirDrop()
     local pos = _DROP.Global.Positions[poschance]
 
     TriggerClientEvent('core:airdrop:create:client', -1, Reward, pos)
-end
+end]]
 
