@@ -76,7 +76,7 @@ local function addModel(model, options, data)
             resource = data.resource,
         }
     else
-        Console.Log('Updating model %s in interactions', model)
+        Console.Log(('Updating model %s in interactions'):format(model))
         for _, option in pairs(options) do
             MODELS[model].options[#MODELS[model].options + 1] = option
         end
@@ -142,7 +142,7 @@ function InteractAPI.addLocalEntityInteraction(data)
     local id = #interactions + 1
     -- If then entity not registered yet, add it
     if not ENTITIES[entity] then
-        Console.Debug('Adding entity %s to interactions', entity)
+        Console.Debug(('Adding entity %s to interactions'):format(entity))
         
         interactions[id] = {
             id = id,
@@ -166,7 +166,7 @@ function InteractAPI.addLocalEntityInteraction(data)
     Console.Log('Updating entity %s in interactions', entity)
     for index, option in pairs(data.options) do
         if option.name and ENTITIES[entity].options[index]?.name == option.name then
-            Console.Log('Option with name: ( %s ) already exists, updating', option.name)
+            Console.Log(('Option with name: ( %s ) already exists, updating'):format(option.name))
             ENTITIES[entity].options[index] = option
         else
             ENTITIES[entity].options[#ENTITIES[entity].options + 1] = option
@@ -224,7 +224,7 @@ function InteractAPI.addEntityInteraction(data)
 
     -- If the entity is not networked, add it as a local entity
     if not NetworkGetEntityIsNetworked(entity) then
-        Console.Log('Entity %s is not networked, adding as a local entity', entity)
+        Console.Log(('Entity %s is not networked, adding as a local entity'):format(entity))
         data.entity = entity
         return InteractAPI.addLocalEntityInteraction(data)
     end
@@ -232,7 +232,7 @@ function InteractAPI.addEntityInteraction(data)
     -- If then netId not registered yet, add it
     --if not NETWORKED_ENTITIES[netId] then #TODO: REMETTRE
     if true then
-        Console.Log('Adding networkID %s to interactions', netId)
+        Console.Log(('Adding networkID %s to interactions'):format(netId))
 
         
         interactions[id] = {
@@ -254,10 +254,10 @@ function InteractAPI.addEntityInteraction(data)
     end
 
     -- If the networkID is already registered, update it
-    Console.Log('Updating networkID %s in interactions', netId)
+    Console.Log(('Updating networkID %s in interactions'):format(netId))
     for index, option in pairs(data.options) do
         if option.name and NETWORKED_ENTITIES[netId].options[index]?.name == option.name then
-            Console.Log('Option with name: ( %s ) already exists, updating', option.name)
+            Console.Log(('Option with name: ( %s ) already exists, updating'):format(option.name))
             NETWORKED_ENTITIES[netId].options[index] = option
         else
             NETWORKED_ENTITIES[netId].options[#NETWORKED_ENTITIES[netId].options + 1] = option
@@ -316,7 +316,7 @@ function InteractAPI.addEntityBoneInteraction(data)
     -- temp workaround until table refactoring.
     local key = string.format('%s:%s', data.entity, data.bone)
     if not ENTITY_BONES[key] then
-        Console.Log('Added new entity bone interaction: %s', key)
+        Console.Log(('Added new entity bone interaction: %s'):format(key))
         ENTITY_BONES[key] = {
             entity = data.entity,
             bone = data.bone,
@@ -327,11 +327,11 @@ function InteractAPI.addEntityBoneInteraction(data)
             groups = data.groups or nil,
         }
     else
-        Console.Log('Updating %s in bone interactions', key)
+        Console.Log(('Updating %s in bone interactions'):format(key))
 
         for index, option in pairs(data.options) do
             if option.name and NETWORKED_ENTITIES[netId].options[index]?.name == option.name then
-                Console.Log('Option with name: ( %s ) already exists, updating', option.name)
+                Console.Log(('Option with name: ( %s ) already exists, updating'):format(option.name))
                 ENTITY_BONES[key].options[index] = option
             else
                 ENTITY_BONES[key].options[#ENTITY_BONES[key].options + 1] = option
@@ -352,7 +352,7 @@ function InteractAPI.addEntityBoneInteraction(data)
             ENTITY_BONES[key].offset = data.offset
         end
 
-        Console.Log('Updated entity bone interaction: %s', key)
+        Console.Log(('Updated entity bone interaction: %s'):format(key))
         ENTITY_BONES[key] = {
             entity = data.entity,
             bone = data.bone,
@@ -391,7 +391,7 @@ end exports('AddModelInteraction', InteractAPI.addModelInteraction)
 -- Remove an interaction point by id.
 function InteractAPI.removeInteraction(id)
     interactions[id] = nil
-    Console.Log('Removed interaction %s', id)
+    Console.Log(('Removed interaction %s'):format(id))
     filterInteractions()
 end 
 exports('RemoveInteraction', InteractAPI.removeInteraction)
@@ -413,7 +413,7 @@ end exports('RemoveInteractionByEntity', InteractAPI.removeInteractionByEntity)
 -- Remove an option from an interaction point by id.
 function InteractAPI.removeInteractionOption(id, name)
     if not interactions[id] then
-        Console.Error('Interaction with id: ( %s ) does not exist', id)
+        Console.Error(('Interaction with id: ( %s ) does not exist'):format(id))
         return
     end
 
@@ -425,7 +425,7 @@ function InteractAPI.removeInteractionOption(id, name)
     local options = interactions[id].options
 
     if not options then
-        Console.Error('Interaction with id: ( %s ) does not have any options', id)
+        Console.Error(('Interaction with id: ( %s ) does not have any options'):format(id))
         InteractAPI.removeInteraction(id)
         return
     end
@@ -435,7 +435,7 @@ function InteractAPI.removeInteractionOption(id, name)
 
         if option.name == name then
             options[i] = nil
-            Console.Log('Removed option %s from interaction %s', name, id)
+            Console.Log(('Removed option %s from interaction %s'):format(name, id))
         end
     end
 end exports('RemoveInteractionOption', InteractAPI.removeInteractionOption)
@@ -450,7 +450,7 @@ function InteractAPI.updateInteraction(id, options)
     end
 
     if not interactions[id] then
-        Console.Error('Interaction with id: ( %s ) does not exist', id)
+        Console.Error(('Interaction with id: ( %s ) does not exist'):format(id))
         return
     end
 
