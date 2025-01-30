@@ -1356,8 +1356,7 @@ initialize_blacklists_commands = LPH_JIT_MAX(function()
             for _, k in pairs(_ANTICHEAT.Protection.BlacklistedCommands) do
                 for _, v in pairs(registered_commands) do
                     if k.command == v.name then
-                        TriggerServerEvent("core:admin:PunishPlayer", nil, "Blacklisted Command (" .. k.command .. ")",
-                            'client_anticheat', time)
+                        TriggerServerEvent("core:admin:PunishPlayer", nil, "Blacklisted Command (" .. k.command .. ")", 'client_anticheat', time)
                     end
                 end
             end
