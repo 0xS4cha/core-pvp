@@ -59,12 +59,21 @@ function DoesPlayerHaveItemCount(source, item, count, slot)
         return false
     end
     for key, value in pairs(GetPlayer(source):getInventaire()) do
-        if value.name == item and tonumber(value.slot) == tonumber(slot) then
-            if tonumber(value.count) >= tonumber(count) then
-                return true
+        if value.name == item then
+            if not slot then
+                if tonumber(value.count) >= tonumber(count) then
+                    return true
+                else
+                    return false
+                end
             else
-                return false
+                if tonumber(value.count) >= tonumber(count) and  tonumber(value.slot) == slot  then
+                    return true
+                else
+                    return false
+                end
             end
+
         end
     end
     return false
@@ -361,6 +370,39 @@ Citizen.CreateThread(function()
         end
         return resp
     end)
+
+    RegisterServerCallback('core:shop:valid', function(source, token, data, price)
+        local resp = false
+        if CheckPlayerToken(source, token) then
+            local p = GetPlayer(source)
+            if p then
+                local TotalPrice = 0
+                for k, v in pairs(data) do
+                    for k2, v2 in pairs(_SHOP.Items[v.type].list) do
+                        if v2.item == v.item then
+                            TotalPrice += (v2.price * v.quantity)
+                            break
+                        end
+                    end
+                end
+                if TotalPrice ~= price then
+                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor : core:shop:valid", 'events_anticheat', 'Ban')
+                    return
+                end
+                if DoesPlayerHaveItemCount(source, 'money', TotalPrice) then
+                    local remove = RemoveItemToPlayer(source, 'money', TotalPrice)
+                    if remove then
+                        for k,v in pairs(data) do
+                            GiveItemToPlayer(source, v.item, v.quantity)
+                            resp = true
+                        end
+                    end
+                end
+            end
+        end
+        return resp
+    end)
+
     RegisterServerCallback("inventory:lootItem", function(source, token, data, target)
         local resp = false
         if CheckPlayerToken(source, token) then
