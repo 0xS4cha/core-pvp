@@ -16,6 +16,5 @@ _SHOP.Items = {
             { item =  "kevlar", label =  GetPhrase('kevlar'), price =  10 },
             { item =  "medikit", label =  GetPhrase('medikit'), price =  10 },
         }
-
     },
 }
