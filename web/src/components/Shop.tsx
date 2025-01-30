@@ -93,6 +93,7 @@ const Shop = () => {
     });
     setPrice(total);
   }, [purshasedItems]);
+
   const removeItem = (name: string) => {
     setPurshasedItems((prevState) => {
       return prevState.filter((item) => item.item !== name);
@@ -108,7 +109,7 @@ const Shop = () => {
       )
     );
   };
-  const pushased = (data: any) => {
+  const pushased = (data: any, type: string) => {
     setPurshasedItems((prevState) => {
       const exists = prevState.some((item) => item.item === data.item);
 
@@ -118,7 +119,7 @@ const Shop = () => {
 
       return [
         ...prevState,
-        { label: data.label, item: data.item, price: data.price, quantity: 1 },
+        { label: data.label, item: data.item, price: data.price, quantity: 1, type: type },
       ];
     });
   };
@@ -213,7 +214,7 @@ const Shop = () => {
                                 ? ShopCSS["itemslt"]
                                 : ShopCSS["item"]
                             }
-                            onClick={() => pushased(value)}
+                            onClick={() => pushased(value, subMenu)}
                           >
                             <p>
                               {
