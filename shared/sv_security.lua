@@ -373,6 +373,7 @@ _SECURITY.Protection.BlacklistedWeapons = { -- Weapons Names can be found here: 
 	{ name = "weapon_railgun",         time = "Ban", webhook = "" },
 	{ name = "weapon_firework",        time = "Ban", webhook = "" },
 	{ name = "weapon_hominglauncher",  time = "Ban", webhook = "" },
+	{ name = "weapon_hammer", time = "Ban", webhook = "" },
 	{ name = "weapon_compactlauncher", time = "Ban", webhook = "" },
 }
 
