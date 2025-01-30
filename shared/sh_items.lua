@@ -19,7 +19,7 @@ items = {
     ['medikit'] = {type = 'items', label = 'Medkit', notStackable = false},
     ['WEAPON_PISTOL'] = {type = 'weapons', label = 'Pistol', notStackable = true},
     ['WEAPON_PISTOL50'] = {type = 'weapons', label = 'Pistol50', notStackable = true},
-
+    ['WEAPON_COMBATPISTOL'] = {type = 'weapons', label = 'Combat Pistol', notStackable = true},
 }
 
 function IsItemUsable(item)
