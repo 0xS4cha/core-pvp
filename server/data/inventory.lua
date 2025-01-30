@@ -429,6 +429,7 @@ function RemoveItemFromInventory(source, item, count, slot)
                                                     .name, count, slot)
                                                 table.remove(inv, i)
                                                 GetPlayer(source):setInventaire(inv)
+                                                TriggerClientEvent('core:ShowNotification', source, ('~r~<C>-%s %s</C>'):format(count, itemInventory.label))
                                                 return true
                                             end
                                         else
@@ -445,7 +446,7 @@ function RemoveItemFromInventory(source, item, count, slot)
                         end
                     end
                 end
-
+                TriggerClientEvent('core:ShowNotification', source, ('~r~<C>-%s %s</C>'):format(count, itemInventory.label))
                 triggerEventPlayer("core:RemoveItemInventory", source, itemInventory.name, count, slot)
                 return true
             else
