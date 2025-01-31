@@ -160,7 +160,7 @@ RegisterServerEvent('core:vehicle:buy', function(token, tab, id)
                             name = data.vehicle,
                             props = json.encode(props),
                         })
-                        TriggerClientEvent('core:ShowNotification', source, ('You have bought a vehicle (~b~<C>%s</C>~s~)'):format(data.name))
+                        TriggerClientEvent('core:ShowNotification', source, GetPhrase('bought_vehicle', data.name))
                     end
                     end)
                 end
@@ -201,7 +201,7 @@ RegisterServerEvent("core:admin:GiveVehicle", function(token, target, vehicleMod
                 name = vehicleModel,
                 props = json.encode(props),
             })
-            TriggerClientEvent('core:ShowNotification', target, ('You have received a vehicle (~b~<C>%s</C>~s~) from an administrator.'):format(vehicleName))
+            TriggerClientEvent('core:ShowNotification', source, GetPhrase('bought_vehicle_admin', vehicleName))
         end
         end)
 
