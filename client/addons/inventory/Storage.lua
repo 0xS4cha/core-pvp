@@ -35,10 +35,13 @@ function OpenStorage()
         _NUI.SendNUIMessage('showInventory', {
             show = true,
             secondInventory = true,
+            translation = {
+                backpack = GetPhrase('inventory_backpack')
+            },
             Inventory2 = {
                 canLoot = true,
                 canTrade = true,
-                name = 'YOUR STORAGE',
+                name = GetPhrase('your_storage'),
                 Items = storage
             },
             inventory = {
@@ -62,7 +65,7 @@ RegisterNuiCallback('dropStorage', function(data, cb)
         end
         response = TriggerServerCallback("inventory:dropStorage", Token, data, _INVENTORY.TargetLoot)
     end
-    if cb and response then
-        cb({})
+    if cb then
+        cb(response)
     end
 end)
