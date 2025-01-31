@@ -3,16 +3,17 @@ function GiveItemToPlayer(source, item, count, slot)
     if added then
         --RefreshPlayerData(source)
         MarkPlayerDataAsNonSaved(source)
-
     end
     return added
 end
+
 function GiveItemToStorage(source, item, count, slot)
     local added = AddItemToStorage(source, item, count, slot)
     if added then
         MarkPlayerDataAsNonSaved(source)
     end
 end
+
 exports("GiveItemToPlayer", function(source, item, count)
     return GiveItemToPlayer(source, item, count)
 end)
@@ -27,7 +28,6 @@ function RemoveItemToStorage(source, item, count, slot)
 end
 
 function RemoveItemToPlayer(source, item, count, slot)
-
     -- print(json.encode(item))
     local removed = RemoveItemFromInventory(source, item, count, slot)
 
@@ -38,9 +38,8 @@ function RemoveItemToPlayer(source, item, count, slot)
     return removed
 end
 
-
 function DoesStorageHaveItemCount(source, item, count, slot)
-    if not GetPlayer(source) then 
+    if not GetPlayer(source) then
         return false
     end
     for key, value in pairs(GetPlayer(source):getStorage()) do
@@ -54,8 +53,9 @@ function DoesStorageHaveItemCount(source, item, count, slot)
     end
     return false
 end
+
 function DoesPlayerHaveItemCount(source, item, count, slot)
-    if not GetPlayer(source) then 
+    if not GetPlayer(source) then
         return false
     end
     for key, value in pairs(GetPlayer(source):getInventaire()) do
@@ -67,20 +67,19 @@ function DoesPlayerHaveItemCount(source, item, count, slot)
                     return false
                 end
             else
-                if tonumber(value.count) >= tonumber(count) and  tonumber(value.slot) == slot  then
+                if tonumber(value.count) >= tonumber(count) and tonumber(value.slot) == slot then
                     return true
                 else
                     return false
                 end
             end
-
         end
     end
     return false
 end
 
 function GetItemCount(source, item)
-    if not GetPlayer(source) then 
+    if not GetPlayer(source) then
         return false
     end
     for key, value in pairs(GetPlayer(source):getInventaire()) do
@@ -90,8 +89,6 @@ function GetItemCount(source, item)
     end
     return 0
 end
-
-
 
 exports("GetItemCount", function(source, item)
     return GetItemCount(source, item)
@@ -116,22 +113,18 @@ RegisterNetEvent("core:UseItem")
 AddEventHandler("core:UseItem", function(token, item, slot)
     local source = source
     if CheckPlayerToken(source, token) then
-
-
         if item == "money" then
             return
         end
 
         if IsItemUsable(item) then
-
             if UseItemIfCan(source, item, slot) then
-
                 local itemName = getItemLabel(item)
 
-                
 
 
-                TriggerClientEvent("core:ShowNotification", source,"Vous avez utilisé ~b~<C>" .. itemName..'</C>')
+
+                TriggerClientEvent("core:ShowNotification", source, GetPhrase('inventory_use', itemName))
 
                 --RefreshPlayerData(source)
                 MarkPlayerDataAsNonSaved(source)
@@ -143,7 +136,7 @@ end)
 RegisterNetEvent("core:GiveItemToPlayer")
 AddEventHandler("core:GiveItemToPlayer", function(time, secu, item, metadatas, count, target)
     local src = source
-    if CheckTrigger(source, time, secu, "core:GiveItemToPlayer - Item : "..item.." "..count) then
+    if CheckTrigger(source, time, secu, "core:GiveItemToPlayer - Item : " .. item .. " " .. count) then
         local itemWeight = GetItemWeightWithCount(item, count)
         if getInventoryWeight(target) + itemWeight <= items.maxWeight then
             local removed = RemoveItemToPlayer(src, item, count, metadatas)
@@ -154,10 +147,12 @@ AddEventHandler("core:GiveItemToPlayer", function(time, secu, item, metadatas, c
                         TriggerClientEvent("core:playeTakeAnim", target)
 
 
-                        TriggerClientEvent('core:ShowNotification', src, "Vous avez donné ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
-                        TriggerClientEvent('core:ShowNotification', target, "Vous avez reçu ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
+                        TriggerClientEvent('core:ShowNotification', src,
+                            "Vous avez donné ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
+                        TriggerClientEvent('core:ShowNotification', target,
+                            "Vous avez reçu ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
 
-                        
+
                         --RefreshPlayerData(src)
                         MarkPlayerDataAsNonSaved(src)
                         --RefreshPlayerData(target)
@@ -173,8 +168,10 @@ AddEventHandler("core:GiveItemToPlayer", function(time, secu, item, metadatas, c
                         TriggerClientEvent("core:playeTakeAnim", target)
 
                         -- New notification
-                        TriggerClientEvent('core:ShowNotification', src, "Vous avez donné ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
-                        TriggerClientEvent('core:ShowNotification', target, "Vous avez reçu ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
+                        TriggerClientEvent('core:ShowNotification', src,
+                            "Vous avez donné ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
+                        TriggerClientEvent('core:ShowNotification', target,
+                            "Vous avez reçu ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
 
                         --RefreshPlayerData(src)
                         MarkPlayerDataAsNonSaved(src)
@@ -186,14 +183,15 @@ AddEventHandler("core:GiveItemToPlayer", function(time, secu, item, metadatas, c
                             GetPlayer(target):getLastname() .. " " .. GetPlayer(target):getFirstname(), item,
                             count)
                         return
-                    
                     elseif v.name == "money" and v.name == item then
                         GiveItemToPlayer(target, item, count, v.metadatas)
                         TriggerClientEvent("core:playeTakeAnim", target)
 
                         -- New notification
-                        TriggerClientEvent('core:ShowNotification', src, "Vous avez donné ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
-                        TriggerClientEvent('core:ShowNotification', target, "Vous avez reçu ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
+                        TriggerClientEvent('core:ShowNotification', src,
+                            "Vous avez donné ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
+                        TriggerClientEvent('core:ShowNotification', target,
+                            "Vous avez reçu ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
 
                         --RefreshPlayerData(src)
                         MarkPlayerDataAsNonSaved(src)
@@ -209,9 +207,11 @@ AddEventHandler("core:GiveItemToPlayer", function(time, secu, item, metadatas, c
                         GiveItemToPlayer(target, item, count, v.metadatas)
                         TriggerClientEvent("core:playeTakeAnim", target)
 
-                     
-                        TriggerClientEvent('core:ShowNotification', src, "Vous avez donné ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
-                        TriggerClientEvent('core:ShowNotification', target, "Vous avez reçu ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
+
+                        TriggerClientEvent('core:ShowNotification', src,
+                            "Vous avez donné ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
+                        TriggerClientEvent('core:ShowNotification', target,
+                            "Vous avez reçu ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
 
                         --RefreshPlayerData(src)
                         MarkPlayerDataAsNonSaved(src)
@@ -231,8 +231,10 @@ AddEventHandler("core:GiveItemToPlayer", function(time, secu, item, metadatas, c
                         TriggerClientEvent("core:playeTakeAnim", target)
 
                         -- New notification
-                        TriggerClientEvent('core:ShowNotification', src, "Vous avez donné ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
-                        TriggerClientEvent('core:ShowNotification', target, "Vous avez reçu ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
+                        TriggerClientEvent('core:ShowNotification', src,
+                            "Vous avez donné ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
+                        TriggerClientEvent('core:ShowNotification', target,
+                            "Vous avez reçu ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
 
                         --RefreshPlayerData(src)
                         MarkPlayerDataAsNonSaved(src)
@@ -252,8 +254,10 @@ AddEventHandler("core:GiveItemToPlayer", function(time, secu, item, metadatas, c
                         TriggerClientEvent("core:playeTakeAnim", target)
 
                         -- New notification
-                        TriggerClientEvent('core:ShowNotification', src, "Vous avez donné ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
-                        TriggerClientEvent('core:ShowNotification', target, "Vous avez reçu ~b~<C> x"  .. count .. " " .. getItemLabel(item)..'</C>')
+                        TriggerClientEvent('core:ShowNotification', src,
+                            "Vous avez donné ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
+                        TriggerClientEvent('core:ShowNotification', target,
+                            "Vous avez reçu ~b~<C> x" .. count .. " " .. getItemLabel(item) .. '</C>')
 
                         --RefreshPlayerData(src)
                         MarkPlayerDataAsNonSaved(src)
@@ -288,25 +292,25 @@ Citizen.CreateThread(function()
         local resp = false
         if data.slot and data.item.slot then
             Items = {}
-            for k,v in pairs(inventory) do
+            for k, v in pairs(inventory) do
                 if v.slot == data.slot then
                     v.slot = data.item.slot
                     goto continue
                 end
-          
+
                 if v.slot == data.item.slot then
                     v.slot = data.slot
                 end
-            
+
                 ::continue::
                 if v.type == 'items' or v.type == 'weapons' then
                     table.insert(Items, {
                         name = v.name,
                         count = v.count,
                         label = v.label,
-                        slot =  tonumber(v.slot) or k,
+                        slot = tonumber(v.slot) or k,
                         type = v.type,
-        
+
                     })
                 end
             end
@@ -323,7 +327,8 @@ Citizen.CreateThread(function()
             local p = GetPlayer(source)
             if p then
                 if DoesPlayerHaveItemCount(source, data.item.name, data.quantity, data.item.slot) then
-                    local remove = RemoveItemToPlayer(source, data.item.name, tonumber(data.quantity), tonumber(data.item.slot))
+                    local remove = RemoveItemToPlayer(source, data.item.name, tonumber(data.quantity),
+                        tonumber(data.item.slot))
                     if remove then
                         GiveItemToStorage(source, data.item.name, data.quantity, data.slot)
                     end
@@ -337,11 +342,14 @@ Citizen.CreateThread(function()
             local p = GetPlayer(source)
             if p then
                 if tonumber(data.quantity) > tonumber(data.item.count) then
-                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor : inventory:lootItem (Quantity > count)", 'events_anticheat', 'Ban')
+                    _ANTICHEAT.punish_player(source,
+                        "Trigger Event with an excutor : inventory:lootItem (Quantity > count)", 'events_anticheat',
+                        'Ban')
                     return
                 end
                 if DoesStorageHaveItemCount(source, data.item.name, data.quantity, data.item.slot) then
-                    local remove = RemoveItemToStorage(source, data.item.name, tonumber(data.quantity), tonumber(data.item.slot))
+                    local remove = RemoveItemToStorage(source, data.item.name, tonumber(data.quantity),
+                        tonumber(data.item.slot))
                     if remove then
                         GiveItemToPlayer(source, data.item.name, data.quantity, data.slot)
                     end
@@ -356,12 +364,14 @@ Citizen.CreateThread(function()
             local t = GetPlayer(target)
             if p and t then
                 if tonumber(data.quantity) > tonumber(data.item.count) then
-                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor : inventory:lootItem (Quantity > count)", 'events_anticheat', 'Ban')
+                    _ANTICHEAT.punish_player(source,
+                        "Trigger Event with an excutor : inventory:lootItem (Quantity > count)", 'events_anticheat',
+                        'Ban')
                     return
                 end
                 if DoesPlayerHaveItemCount(source, data.item.name, data.quantity, data.item.slot) then
-
-                    local remove = RemoveItemToPlayer(source, data.item.name, tonumber(data.quantity), tonumber(data.item.slot))
+                    local remove = RemoveItemToPlayer(source, data.item.name, tonumber(data.quantity),
+                        tonumber(data.item.slot))
                     if remove then
                         GiveItemToPlayer(target, data.item.name, data.quantity, data.slot)
                     end
@@ -386,13 +396,14 @@ Citizen.CreateThread(function()
                     end
                 end
                 if TotalPrice ~= price then
-                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor : core:shop:valid", 'events_anticheat', 'Ban')
+                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor : core:shop:valid",
+                        'events_anticheat', 'Ban')
                     return
                 end
                 if DoesPlayerHaveItemCount(source, 'money', TotalPrice) then
                     local remove = RemoveItemToPlayer(source, 'money', TotalPrice)
                     if remove then
-                        for k,v in pairs(data) do
+                        for k, v in pairs(data) do
                             GiveItemToPlayer(source, v.item, v.quantity)
                             resp = true
                         end
@@ -408,22 +419,25 @@ Citizen.CreateThread(function()
         if CheckPlayerToken(source, token) then
             local p = GetPlayer(source)
             local t = GetPlayer(target)
-            
+
             if tonumber(data.quantity) == 0 then
                 data.quantity = tonumber(data.item.count)
             end
             if p and t then
                 if data.item.name == 'money' and tonumber(data.quantity) > _CONFIG.MAXMONEYLOOT then
-                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor : inventory:lootItem (money > maxloot)", 'events_anticheat', 'Ban')
+                    _ANTICHEAT.punish_player(source,
+                        "Trigger Event with an excutor : inventory:lootItem (money > maxloot)", 'events_anticheat', 'Ban')
                     return
                 end
                 if tonumber(data.quantity) > tonumber(data.item.count) then
-                    _ANTICHEAT.punish_player(source, "Trigger Event with an excutor : inventory:lootItem (Quantity > count)", 'events_anticheat', 'Ban')
+                    _ANTICHEAT.punish_player(source,
+                        "Trigger Event with an excutor : inventory:lootItem (Quantity > count)", 'events_anticheat',
+                        'Ban')
                     return
                 end
                 if DoesPlayerHaveItemCount(target, data.item.name, data.quantity, data.item.slot) then
-                    
-                    local remove = RemoveItemToPlayer(target, data.item.name, tonumber(data.quantity), tonumber(data.item.slot))
+                    local remove = RemoveItemToPlayer(target, data.item.name, tonumber(data.quantity),
+                        tonumber(data.item.slot))
                     if remove then
                         TriggerClientEvent('core:inventory:refreshInv2', source, GetPlayer(target):getInventaire())
                         GiveItemToPlayer(source, data.item.name, data.quantity, data.slot)
@@ -437,13 +451,11 @@ Citizen.CreateThread(function()
 
 
     RegisterServerCallback("core:GetInventory", function(source, token)
-
         if CheckPlayerToken(source, token) then
             return GetPlayer(source):getInventaire()
         end
     end)
     RegisterServerCallback("core:RefreshInventory", function(source, token, inv)
-
         if CheckPlayerToken(source, token) then
             if inv ~= nil then
                 GetPlayer(source):setInventaire(inv)
@@ -453,14 +465,14 @@ Citizen.CreateThread(function()
         return false
     end)
 
-    RegisterNetEvent("core:RefreshInventory", function(time, secu, token, inv)     
-        local src = source   
+    RegisterNetEvent("core:RefreshInventory", function(time, secu, token, inv)
+        local src = source
         --if CheckPlayerToken(src, token) then
-            if CheckTrigger(src, time, secu, "core:RefreshInventory") then
-                if inv ~= nil then
-                    GetPlayer(src):setInventaire(inv)
-                end
+        if CheckTrigger(src, time, secu, "core:RefreshInventory") then
+            if inv ~= nil then
+                GetPlayer(src):setInventaire(inv)
             end
+        end
         --end
     end)
 
@@ -516,4 +528,3 @@ end)
 -- RegisterCommand("Secret", function(source)
 --     DropPlayer(source, "Coucou j'espère tu vas bien je te fais plein de bisous")
 -- end)
-
