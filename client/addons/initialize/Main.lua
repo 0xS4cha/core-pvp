@@ -177,7 +177,7 @@ function _INITIALIZE.VehicleMenu(v)
                     for k,v in pairs(paid) do 
                         table.insert(vehListSelector, {
                             name = v.label,
-                            type = "PAID",
+                            type = GetPhrase('paid'),
                             image = v.name,
                             vehicle = v.name,
                             plate = v.plate
@@ -186,7 +186,7 @@ function _INITIALIZE.VehicleMenu(v)
                     for k,v in pairs(_VEHICLE.LIST.FREE) do 
                         table.insert(vehListSelector, {
                             name = v.name,
-                            type = "FREE",
+                            type = GetPhrase('free'),
                             image = v.image,
                             vehicle = v.vehicle
                         })
