@@ -83,9 +83,9 @@ AddEventHandler('playerConnecting', function(name, skr, data)
             type = "AdaptiveCard",
             version = "1.2",
             body = {
-                { type = "TextBlock", text = "You are not on our Discord !",           wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large", weight = "Bolder", color = "Orange" },
-                { type = "ActionSet", horizontalAlignment = "Center",                  actions = { { type = "Action.OpenUrl", title = "Join Discord", url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
-                { type = "TextBlock", text = "This server protected by SxProtection®", wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small", weight = "Bolder", color = "Light" },
+                { type = "TextBlock", text = GetPhrase('not_in_discord'),              wrap = true,                                                                                                                                                                  horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large", weight = "Bolder", color = "Orange" },
+                { type = "ActionSet", horizontalAlignment = "Center",                  actions = { { type = "Action.OpenUrl", title = GetPhrase('join_discord'), url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
+                { type = "TextBlock", text = "This server protected by SxProtection®", wrap = true,                                                                                                                                                                  horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small", weight = "Bolder", color = "Light" },
             }
         }
         data.presentCard(card, "XD")
@@ -103,9 +103,9 @@ AddEventHandler('playerConnecting', function(name, skr, data)
                 type = "AdaptiveCard",
                 version = "1.2",
                 body = {
-                    { type = "TextBlock", text = "You are not whitelisted from our Discord !", wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large", weight = "Bolder", color = "Orange" },
-                    { type = "ActionSet", horizontalAlignment = "Center",                      actions = { { type = "Action.OpenUrl", title = "Join Discord", url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
-                    { type = "TextBlock", text = "This server protected by SxProtection®",     wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small", weight = "Bolder", color = "Light" },
+                    { type = "TextBlock", text = GetPhrase('not_whitelist'),               wrap = true,                                                                                                                                                                  horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large", weight = "Bolder", color = "Orange" },
+                    { type = "ActionSet", horizontalAlignment = "Center",                  actions = { { type = "Action.OpenUrl", title = GetPhrase('join_discord'), url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
+                    { type = "TextBlock", text = "This server protected by SxProtection®", wrap = true,                                                                                                                                                                  horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small", weight = "Bolder", color = "Light" },
                 }
             }
             data.presentCard(card, "XD")
@@ -146,7 +146,7 @@ AddEventHandler('playerConnecting', function(name, skr, data)
             nameBanner = BanList[i].bannerName
             ProofBan = BanList[i].image
             BanId = BanList[i].ID
-            timeRimaing = ('%s Days %s Hours %s Minutes'):format(d, h, m)
+            timeRimaing = ('%s Jours %s Heures %s Minutes'):format(d, h, m)
             MySQL.Async.execute(
                 'UPDATE blacklist SET Token = @Token, GameLicense = @license, DiscordUID = @discord WHERE id = @id', {
                     ["@Token"] = json.encode(PlayerTokens[ip]),
@@ -180,7 +180,7 @@ AddEventHandler('playerConnecting', function(name, skr, data)
                                     BanId = BanList[i].ID
                                     ProofBan = BanList[i].image
 
-                                    timeRimaing = ('%s Days %s Hours %s Minutes'):format(d, h, m)
+                                    timeRimaing = ('%s Jours %s Heures %s Minutes'):format(d, h, m)
                                     MySQL.Async.execute(
                                         'UPDATE blacklist SET Token = @Token, GameLicense = @license, DiscordUID = @discord WHERE id = @id',
                                         {
@@ -207,10 +207,10 @@ AddEventHandler('playerConnecting', function(name, skr, data)
                 type = "AdaptiveCard",
                 version = "1.2",
                 body = {
-                    { type = "TextBlock", text = "You are blacklisted from our server !",                                                                                                   wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large",  weight = "Bolder", color = "Orange" },
-                    { type = "TextBlock", text = "Ban Information :\nReason: " .. reason .. "\nBan ID: #" .. BanId .. "\nBy: " .. nameBanner .. "\nTime remaining: " .. timeRimaing .. ".", wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Medium", weight = "Bolder", color = "Light" },
+                    { type = "TextBlock", text = GetPhrase('ADMIN_BANNED'),                                                                                                   wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large",  weight = "Bolder", color = "Orange" },   
+                    { type = "TextBlock", text =GetPhrase('ADMIN_BANNED_REASON', reason, BanId, nameBanner, timeRimaing), wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Medium", weight = "Bolder", color = "Light" },
                     { type = 'Image',     url = ProofBan },
-                    { type = "ActionSet", horizontalAlignment = "Center",                                                                                                                   actions = { { type = "Action.OpenUrl", title = "Join Discord", url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
+                    { type = "ActionSet", horizontalAlignment = "Center",                                                                                                                   actions = { { type = "Action.OpenUrl", GetPhrase('join_discord'), url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
                     { type = "TextBlock", text = "This server protected by SxProtection®",                                                                                                  wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small",  weight = "Bolder", color = "Light" },
                 }
             }
@@ -219,7 +219,7 @@ AddEventHandler('playerConnecting', function(name, skr, data)
                 data.presentCard(card, "XD")
             end
         else
-            data.done("\nPlease reconnect, if the problem persists, contact FrancePVP Support")
+            data.done("\nReconnectez vous, si le problème persiste contacter le support SxProtect ou du serveur")
         end
         CancelEvent()
     else
