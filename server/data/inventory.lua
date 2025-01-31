@@ -222,11 +222,11 @@ function AddItemToInventory(source, item, count, slot)
                 table.insert(inv, itemData)
                 triggerEventPlayer("core:addItemPlayer", source, itemData)
                 GetPlayer(source):setInventaire(inv)
-                triggerEventPlayer('core:ShowNotification', source, ('~g~<C>+%s %s</C>'):format(count, itemInventory.label))
+                triggerEventPlayer('core:ShowNotification', source, GetPhrase('inventory_receive', count, itemInventory.label))
             else
                 itemInventory.count = (itemInventory.count + count)
                 triggerEventPlayer("core:addExistItemPlayer", source, item, count)
-                triggerEventPlayer('core:ShowNotification', source, ('~g~<C>+%s %s</C>'):format(count, itemInventory.label))
+                triggerEventPlayer('core:ShowNotification', source, GetPhrase('inventory_receive', count, itemInventory.label))
             end
 
             return true
@@ -252,7 +252,7 @@ function AddItemToInventory(source, item, count, slot)
             table.insert(inv, itemData)
             triggerEventPlayer("core:addItemPlayer", source, itemData)
             GetPlayer(source):setInventaire(inv)
-            triggerEventPlayer('core:ShowNotification', source, ('~g~<C>+%s %s</C>'):format(count, itemData.label))
+            triggerEventPlayer('core:ShowNotification', source, GetPhrase('inventory_receive',count, itemData.label))
             return true
         end
     else
@@ -429,7 +429,7 @@ function RemoveItemFromInventory(source, item, count, slot)
                                                     .name, count, slot)
                                                 table.remove(inv, i)
                                                 GetPlayer(source):setInventaire(inv)
-                                                TriggerClientEvent('core:ShowNotification', source, ('~r~<C>-%s %s</C>'):format(count, itemInventory.label))
+                                                TriggerClientEvent('core:ShowNotification', source, GetPhrase('inventory_loose', count, itemInventory.label))
                                                 return true
                                             end
                                         else
@@ -437,7 +437,7 @@ function RemoveItemFromInventory(source, item, count, slot)
                                             triggerEventPlayer("core:RemoveItemInventory", source, itemInventory.name, count)
                                             table.remove(inv, i)
                                             GetPlayer(source):setInventaire(inv)
-                                            TriggerClientEvent('core:ShowNotification', source, ('~r~<C>-%s %s</C>'):format(count, itemInventory.label))
+                                            TriggerClientEvent('core:ShowNotification', source, GetPhrase('inventory_loose', count, itemInventory.label))
                                             return true
                                         end
                                     end
@@ -446,8 +446,9 @@ function RemoveItemFromInventory(source, item, count, slot)
                         end
                     end
                 end
-                TriggerClientEvent('core:ShowNotification', source, ('~r~<C>-%s %s</C>'):format(count, itemInventory.label))
+
                 triggerEventPlayer("core:RemoveItemInventory", source, itemInventory.name, count, slot)
+                TriggerClientEvent('core:ShowNotification', source, GetPhrase('inventory_loose', count, itemInventory.label))
                 return true
             else
                 return false
