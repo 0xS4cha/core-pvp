@@ -31,12 +31,8 @@ const SpawnSelector = () => {
   const [tab, setTab] = useState<number>(1);
   const handleTabNext = () => {
     setTab((prevTab) => (prevTab + 1 > dataSelector.length ? 1 : prevTab + 1));
-    console.log(tab);
   };
-  const handleTabBefore = () => {
-    console.log(dataSelector.length)
-    setTab((prevTab) => (prevTab - 1 < 1 ? dataSelector.length : prevTab - 1));
-    console.log(tab);
+  const handleTabBefore = () => {    setTab((prevTab) => (prevTab - 1 < 1 ? dataSelector.length : prevTab - 1));
   }
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
+
+
+
 import DraggableSlot from "./DraggableSlot";
 import DroppableSlot from "./DroppableSlot";
 import DroppableSlotFast from "./DroppableSlotFast";
@@ -17,9 +20,12 @@ debugData([
   {
     action: "showInventory",
     data: {
-      show: false,
+      show: true,
       maximumCase: 30,
       secondInventory: true,
+      translation: {
+        backpack: '2',
+      },
       Inventory2: {
         name: "Trunk",
         canLoot: true,
@@ -55,6 +61,7 @@ const Inventory = () => {
   const [openedInventory, setOpenedInventory] = useState(false);
   const [secondInventory, setSecondInventory] = useState(false);
   const [Quantity, setQuantity] = useState<string>("0");
+  const [Translation, setTranslation] = useState<any>({});
   const [dataInventory, setDataInventory] = useState<any>({
     Items: {},
     fastItems: {},
@@ -81,7 +88,7 @@ const Inventory = () => {
       if (event.data.action === "showInventory") {
         setSecondInventory(event.data.data.secondInventory);
         setDataInventory2(event.data.data.Inventory2);
-
+        setTranslation(event.data.data.translation);
         setDataInventory(event.data.data.inventory);
         setOpenedInventory(event.data.data.show);
       }
@@ -154,7 +161,9 @@ const Inventory = () => {
 
   return (
     openedInventory && (
-      <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
+      
+      <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true}}>
+       
         <div className={InventorySCSS["ui"]}>
           <div className={InventorySCSS["inventory"]}>
             <div id={InventorySCSS["playerInventory"]}>
@@ -163,12 +172,16 @@ const Inventory = () => {
                   (value: any) => value.slot === index
                 );
                 return matchingItem ? (
-                  <DraggableSlot
-                    key={index}
-                    itemType="ITEM"
-                    item={matchingItem}
-                    onContextMenu={handleUse}
-                  />
+
+                    <DraggableSlot
+                      key={index}
+                      itemType="ITEM"
+                      item={matchingItem}
+                      onContextMenu={handleUse}
+                    />
+
+
+                    
                 ) : (
                   <DroppableSlot
                     key={index}
@@ -263,7 +276,7 @@ const Inventory = () => {
           </div>
 
           <div className={InventorySCSS["raccourci2"]}>
-            <div className={InventorySCSS["raccours10"]}>Backpack</div>
+            <div className={InventorySCSS["raccours10"]}>{Translation.backpack}</div>
           </div>
         </div>
       </DndProvider>

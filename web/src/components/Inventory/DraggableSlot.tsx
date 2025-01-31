@@ -1,14 +1,18 @@
 import React from "react";
 import { useDrag } from "react-dnd";
 import InventorySCSS from "./Inventory.module.scss";
-
 const DraggableSlot: React.FC<{ item: any; itemType: any; onContextMenu?: (slotKey: string, droppedItem: any) => void;}> = ({ item, itemType, onContextMenu }) => {
+  
   const [{ isDragging }, dragRef] = useDrag(() => ({
     type: itemType,
     item,
     itemType: itemType,
     collect: (monitor) => ({ isDragging: monitor.isDragging()  }),
   }));
+
+
+
+  
 
   return (
     <div

@@ -51,7 +51,7 @@ debugData([
 const Redzonesb = () => {
   const [openedRedzone, setOpenedRedzone] = useState(false);
   const [dataRedzone, setDataRedzone] = useState<any>({});
-  const [bigMenu, setBigMenu] = useState(false);
+  const [bigMenu, setBigMenu] = useState(true);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
