@@ -58,6 +58,9 @@ function LootPlayer(player)
         _NUI.SendNUIMessage('showInventory', {
             show = true,
             secondInventory = true,
+            translation = {
+                backpack = GetPhrase('inventory_backpack')
+            },
             Inventory2 = {
                 canLoot = true,
                 name = 'LOOT PLAYER',
@@ -139,6 +142,9 @@ function OpenInventory()
             _NUI.SendNUIMessage('showInventory', {
                 show = true,
                 secondInventory = false,
+                translation = {
+                    backpack = GetPhrase('inventory_backpack')
+                },
                 inventory = {
                     Items = Items,
                     fastItems = fastItems
@@ -218,8 +224,8 @@ RegisterNUICallback('lootItem', function(data, cb)
     end
 
 
-    if cb and response then
-        cb('ok')
+    if cb then
+        cb(response)
     end
 end)
 
@@ -242,7 +248,7 @@ RegisterNetEvent("core:addItemStorage", function(item)
     local inv = p:getStorage()
     table.insert(inv, item)
     p:setStorage(inv)
-    RefreshInventory2(p:getStorage(), 'YOUR STORAGE')
+    RefreshInventory2(p:getStorage(), GetPhrase('your_storage'))
 end)
 
 RegisterNetEvent('core:addExistItemStorage', function(item, quantity)
@@ -254,7 +260,7 @@ RegisterNetEvent('core:addExistItemStorage', function(item, quantity)
         end
     end
     p:setStorage(inv)
-    RefreshInventory2(p:getStorage(), 'YOUR STORAGE')
+    RefreshInventory2(p:getStorage(), GetPhrase('your_storage'))
 end)
 function RefreshInventory()
     local inv = p:getInventaire()
@@ -293,7 +299,7 @@ function RefreshInventory2(inv, text)
         inventory = {
             canLoot = true,
             canTrade = _INVENTORY.InStorage,
-            name = text or 'LOOT PLAYER',
+            name = text or GetPhrase('loot_player'),
             Items = inv
         },
     })
