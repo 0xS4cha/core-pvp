@@ -37,24 +37,24 @@ _SAFEZONE.inSafeZone = false
 
 CreateThread(function()
     local wait = 0
-    while p == nil do Wait(1000) end
-    local playerPed = p:ped()
     while true do
         wait = 1000
-
         if _SAFEZONE.inSafeZone or leavingsafezone then
             wait = 0
-            SetEntityInvincible(playerPed, true)
+            SetEntityInvincible(PlayerPedId(), true)
             SetCanAttackFriendly(GetPlayerPed(-1), false, false)
             NetworkSetFriendlyFireOption(false)
-            local vehicle = GetVehiclePedIsIn(playerPed, false)
-            local vehiclePool = GetGamePool('CVehicle') -- Get the list of vehicles (entities) from the pool
-            for i = 1, #vehiclePool do -- loop through each vehicle (entity)
-                SetEntityNoCollisionEntity(playerPed, vehiclePool[i], true)
+            local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+            local vehiclePool = GetGamePool('CVehicle') 
+            for i = 1, #vehiclePool do 
+                SetEntityNoCollisionEntity(GetPlayerPed(-1), vehiclePool[i], true)
+                if vehicle then
+                    SetEntityNoCollisionEntity(vehicle, vehiclePool[i], true)
+                end
             end
 
         else
-            SetEntityInvincible(playerPed, false)
+            SetEntityInvincible(PlayerPedId(), false)
 
             SetCanAttackFriendly(GetPlayerPed(-1), true, true)
             NetworkSetFriendlyFireOption(true)
