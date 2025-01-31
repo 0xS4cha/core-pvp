@@ -211,7 +211,7 @@ CreateThread(function()
     while true do
         HudWeaponWheelIgnoreSelection()
         HideHudComponentThisFrame(19)
-
+        NetworkOverrideClockTime(_CONFIG.TIME, 00, 0)
         if GetPlayerWantedLevel(PlayerId()) ~= 0 then
             SetPlayerWantedLevel(PlayerId(), 0, false)
             SetPlayerWantedLevelNow(PlayerId(), false)
