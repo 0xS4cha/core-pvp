@@ -68,7 +68,7 @@ RegisterNetEvent('core:admin:banoffline', function(token, uuid, raison, time, ty
             end
 
             if GetPlayerFromId(uuid) ~= nil then
-                TriggerClientEvent('core:ShowNotification', source, "You can't ban this player, he is online, go on playerlist.")
+                TriggerClientEvent('core:ShowNotification', source, GetPhrase('cant_is_online'))
                 return
             end
             local TargetInformation = GetPlayerBddFromId(uuid)
@@ -108,8 +108,7 @@ RegisterNetEvent('core:admin:banoffline', function(token, uuid, raison, time, ty
                     json.encode({})
                 }, function(affectedRows)
                     
-                    TriggerClientEvent('core:ShowNotification', source, "You have just banned ~g~<C>" .. TargetInformation.playerName .. "</C>~s~ for ~g~<C>" .. raison .. "~s~</C>.")
-
+                   TriggerClientEvent('core:ShowNotification', source, GetPhrase('ADMIN_BANNED_ADMIN', TargetInformation.playerName, raison))
                     Console.Success("Ban " .. TargetInformation.playerName .. " for " .. raison)
                     ActualizeAllBanList()
                 end)
@@ -145,7 +144,7 @@ AddEventHandler('core:admin:ban', function(token, target, raison, time, type)
                 raison = 'Aucune raison'
             end
             if xPlayer:getPermission() <= xTarget:getPermission() and not _CONFIG.Debug then
-                TriggerClientEvent('core:ShowNotification', source, "You can't ban this player.")
+                TriggerClientEvent('core:ShowNotification', source, GetPhrase('ADMIN_CANT_BAN'))
                 return
             end
             local dataOfBan = os.date("%d/%m/%Y %X")
@@ -173,7 +172,7 @@ AddEventHandler('core:admin:ban', function(token, target, raison, time, type)
                     _PERMISSION_ROLE[xPlayer:getPermission()].prefix..' - '..xPlayer:getPlayerName(),
                     json.encode(token)
                 }, function(affectedRows)
-                    TriggerClientEvent('core:ShowNotification', source, "You have just banned ~g~<C>" .. GetPlayerTag(target) .. "</C>~s~ for ~g~<C>" .. raison .. "~s~</C>.")
+                    TriggerClientEvent('core:ShowNotification', source, GetPhrase('ADMIN_BANNED_ADMIN', GetPlayerTag(target), raison))
                     local targetName = xTarget:getPlayerName() 
                     DropPlayer(target,"A component of your computer is preventing you from being able to play FiveM.\nPlease wait out your original ban (expiring in 21 days + 23:59:55) to be able to play FiveM.\nThe associated correlation ID is 78e546-cgh8j-478Jd-c832-dax9246_01cd.")
 
@@ -252,7 +251,7 @@ AddEventHandler('core:admin:unban', function(token, banId, name)
                 MySQL.Async.fetchAll("SELECT * FROM blacklist WHERE id = ?", {banId}, function(result)
                     result = result[1]
                     MySQL.Async.execute('DELETE FROM blacklist WHERE id = ?', { banId })
-                    TriggerClientEvent('core:ShowNotification', source, "You have just revoked the ban of: ~g~<C>" .. name .. "</C>~s~.")
+                    TriggerClientEvent('core:ShowNotification', source, GetPhrase('ADMIN_REVOKE_BAN', name))
                     SendDiscordLog('unban_admin', source)
                     ActualizeAllBanList()
                 end)
