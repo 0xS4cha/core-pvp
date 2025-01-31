@@ -654,6 +654,7 @@ local SelectedMenu = {
             TriggerServerEvent('core:admin:Screenshot', Token, idPlayer)
         elseif btnName == 'admin_playermenu_clip' then
             TriggerServerEvent('core:admin:Video', Token, idPlayer, tonumber(self.slidename))
+            Utils.ShowNotification(GetPhrase('WaitClip'))
         elseif btnName == 'admin_givevehicle' then
             TriggerServerEvent('core:admin:GiveVehicle', Token, idPlayer, self.slidename, GetDisplayNameFromVehicleModel(self.slidename))
         elseif btnName == 'admin_playermenu_advertmenu' then
@@ -1014,7 +1015,7 @@ Admin.Menu = {
                 return {
                     {name = ("~r~[%s]~s~ %s"):format(Admin.rptSlt['tempId'], Admin.rptSlt['playerName']), Description = ('UUID: %s\nReason: %s'):format(Admin.rptSlt['uuid'], Admin.rptSlt['reason'])}, 
                     {name = 'admin_report_claim'},
-                    {name = 'admin_report_delete', colorFree = {205, 45, 45, 165}, Description = 'Are you sure ?'},
+                    {name = 'admin_report_delete', colorFree = {205, 45, 45, 165}, Description = 'Tu es sûr ?'},
                 }
             end,
         },
@@ -1047,9 +1048,9 @@ Admin.Menu = {
                             return false
                         end
                     end, slidemax = _VEHICLE.LIST.ADMIN, colorFree = {238, 255, 93, 165}},
-                    {name = "admin_playermenu_wipe", colorFree = {205, 45, 45, 165}, Description = 'Are you sure ?'},
-                    {name = "admin_playermenu_kick", colorFree = {205, 45, 45, 165}, Description = 'Are you sure ?'},
-                    {name = "admin_playermenu_ban", colorFree = {205, 45, 45, 165}, slidemax = {'perm', 'days', 'hours'}, Description = 'Are you sure ?'},
+                    {name = "admin_playermenu_wipe", colorFree = {205, 45, 45, 165}, Description = 'Tu es sûr ?'},
+                    {name = "admin_playermenu_kick", colorFree = {205, 45, 45, 165}, Description = 'Tu es sûr ?'},
+                    {name = "admin_playermenu_ban", colorFree = {205, 45, 45, 165}, slidemax = {'perm', 'days', 'hours'}, Description = 'Tu es sûr ?'},
                     
                 }
             end
@@ -1078,10 +1079,10 @@ Admin.Menu = {
                         if perm then
                             return 'PERMANENT'
                         else
-                            return ('%s days %s hours %s minutes'):format(d, h, m)
+                            return ('%s jours %s heures %s minutes'):format(d, h, m)
                         end
                      end, askX = true}, 
-                    {name = "admin_ban_revok", colorFree = {205, 45, 45, 165}, Description = 'Are you sure ?'}
+                    {name = "admin_ban_revok", colorFree = {205, 45, 45, 165}, Description = 'Tu es sûr ?'}
                 }
             end
         },
