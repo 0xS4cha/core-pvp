@@ -66,10 +66,9 @@ Preference = {
             SetWeatherTypeNowPersist(weather)
         elseif btn.name == "Time" then
             local time  = btn.slidename
-            NetworkOverrideClockTime(tonumber(time), 00, 0)
+            _CONFIG.TIME = tonumber(time)
         elseif btn.name == 'RedZoneBigMenu' then
             RedZoneMenu = not RedZoneMenu
-
             _NUI.SendNUIMessage('RedZone:AllInformation', RedZoneMenu)
         end
 
@@ -83,15 +82,15 @@ Preference = {
             refresh = true,
             b = function()
                 return {
-                {name = "World", ask = "→", askX = true},
-                {name = "Settings", ask = "→", askX = true},
+                {name = "Monde", ask = "→", askX = true},
+                {name = "Parametre", ask = "→", askX = true},
                 {name = "Lobby", colorFree = {45, 119, 205, 165}, cantUse =  not _SAFEZONE.inSafeZone}
             }
         end
         },
 
 
-        ["world"] = {
+        ["monde"] = {
             b = {
                 {name = "Time", slidemax = Time},
                 {name = "Weather", slidemax = Weather},
@@ -100,7 +99,7 @@ Preference = {
 
   
   
-        ["settings"] = {
+        ["parametre"] = {
             refresh = true,
             refreshTime = 2000,
             b = function()
