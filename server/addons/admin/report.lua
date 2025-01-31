@@ -27,7 +27,7 @@ RegisterCommand('report', function(source, args, rawCommand)
                 Reports[source] = data
                 if StaffInStaffMode ~= nil then
                     for k,v in pairs(StaffInStaffMode) do
-                        TriggerClientEvent('core:ShowNotification', v,  "New report of ~b~<C>" .. data["playerName"] .. "</C>~s~ #"..data['id'])
+                        TriggerClientEvent('core:ShowNotification', v,  GetPhrase('ADMIN_NEW_REPORT', data["playerName"], data['id']))
                     end
                 end
             end
@@ -46,8 +46,8 @@ AddEventHandler('core:admin:closeReport', function(token, reportId, time)
                 if Reports[reportId]['time'] == time then
                     local old = Reports[reportId]
                     Reports[reportId] = nil
-                    TriggerClientEvent('core:ShowNotification', reportId,  "Your report has been close")
-                    TriggerClientEvent('core:ShowNotification', source,  "You have been close the report #"..old['id'])
+                    TriggerClientEvent('core:ShowNotification', reportId,  GetPhrase('ADMIN_CLOSE_REPORT'))
+                    TriggerClientEvent('core:ShowNotification', source,  GetPhrase('ADMIN_CLOSE_REPORT_STAFF', old['id']))
                 end
            end
         end
