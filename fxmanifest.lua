@@ -21,7 +21,6 @@ shared_scripts {
     'static/messages/orcus.lua',
     'static/messages/main.lua',
     'static/messages/translation/*.lua',
-
     'shared/sh_*.lua',
     'module.lua'
 }
@@ -78,9 +77,7 @@ client_scripts {
     'client/utils/*.lua',
     'client/data/*.lua',
     'client/handler/*.lua',
-
     "client/addons/**/*.lua",
-
 }
 
 files {
