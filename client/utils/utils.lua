@@ -260,7 +260,7 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 			end
 		end
 		if #players == 0 then
-			Utils.ShowNotification("~r~No player in the area")
+			Utils.ShowNotification("~r~Pas de joueur dans la zone")
 
 
 			inChoice = false
@@ -269,7 +269,7 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 		local mCoors = GetEntityCoords(GetPlayerPed(players[selectedPlayer]))
 		DrawMarker(20, mCoors.x, mCoors.y, mCoors.z + 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255 , 120, 0, 1, 2, 0, nil, nil, 0)
 		if GetGameTimer() > timer then
-			Utils.ShowNotification("~r~The deadline is exceeded")
+			Utils.ShowNotification("~r~Temps limite dépassé")
 
 
 			inChoice = false
@@ -282,7 +282,7 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 			selectedPlayer = selectedPlayer + 1
 		elseif IsControlJustPressed(0, 73) then -- X
 
-			Utils.ShowNotification("~r~You have canceled")
+			Utils.ShowNotification("~r~Vous avez annulé")
 			
 
 
@@ -590,44 +590,6 @@ Citizen.CreateThread(function()
 	OnEnterMp()
 end)
 
-local islandVec = vector3(4840.571, -5174.425, 2.0)
-local isOnIsland = false
-Citizen.CreateThread(function()
-	while true do
-		local pCoords = GetEntityCoords(GetPlayerPed(-1))
-		local distance1 = #(pCoords - islandVec)
-		if distance1 < 2000.0 then
-			Citizen.InvokeNative("0x9A9D1BA639675CF1", "HeistIsland", true) -- load the map and removes the city
-			Citizen.InvokeNative("0x5E1460624D194A38", true) -- load the minimap/pause map and removes the city minimap/pause map
-
-			Citizen.InvokeNative(0xF74B1FFA4A15FBEA, true)
-			Citizen.InvokeNative(0x53797676AD34A9AA, false)
-			SetScenarioGroupEnabled('Heist_Island_Peds', true)
-
-			SetAudioFlag('PlayerOnDLCHeist4Island', true)
-			SetAmbientZoneListStatePersistent('AZL_DLC_Hei4_Island_Zones', true, true)
-			SetAmbientZoneListStatePersistent('AZL_DLC_Hei4_Island_Disabled_Zones', false, true)
-			SetZoneEnabled(59, false)
-			isOnIsland = true
-
-		else
-			--if isOnIsland then
-			Citizen.InvokeNative("0x9A9D1BA639675CF1", "HeistIsland", false)
-			Citizen.InvokeNative("0x5E1460624D194A38", false)
-
-			Citizen.InvokeNative(0xF74B1FFA4A15FBEA, false)
-			Citizen.InvokeNative(0x53797676AD34A9AA, true)
-			SetScenarioGroupEnabled('Heist_Island_Peds', false)
-
-			SetAudioFlag('PlayerOnDLCHeist4Island', false)
-			SetAmbientZoneListStatePersistent('AZL_DLC_Hei4_Island_Zones', false, false)
-			SetAmbientZoneListStatePersistent('AZL_DLC_Hei4_Island_Disabled_Zones', true, false)
-			isOnIsland = false
-			--end
-		end
-		Citizen.Wait(1000)
-	end
-end)
 
 CreateThread(function()
 	while p == nil do Wait(100) end
@@ -801,30 +763,6 @@ function Utils.RealRandom(x, y)
 	return math.random(x, y)
 end
 
-function Utils.CompareMetadatas(t1, t2)
-    -- Compare each entry of table t1 with the same entry of table t2
-    -- If entry is a table, recursively call this function
-    -- If t1 entry is not the same as t2 entry, return false
-    -- If tables are not exactly the same, return false
-
-    if type(t1) ~= "table" or type(t2) ~= "table" then
-        return false
-    end
-
-    for k,v in pairs(t1) do
-        if type(v) == "table" then
-            if not CompareMetadatas(v, t2[k]) then
-                return false
-            end
-        else
-			print(v, t2[k])
-            if v ~= t2[k] then
-                return false
-            end
-        end
-    end
-	return true
-end
 
 local function DrawTextScreen(Text,Text3,Taille,Text2,Font,Justi,havetext) -- Créer un text 2D a l'écran
     SetTextFont(Font)
@@ -844,38 +782,6 @@ function ProgressBarExists() -- Si une barre de progression existe
     return HaveProgress 
 end
 
-local petitpoint = {".","..","...",""}
-function ProgressBar(Text, r, g, b, a, Timing, NoTiming) -- Créer une progress bar
-    if not Timing then 
-        return 
-    end
-    RemoveProgressBar()
-    HaveProgress = true
-    Citizen.CreateThread(function()
-        local Timing1, Timing2 = .0, GetGameTimer() + Timing
-        local E, Timing3 = ""
-        while HaveProgress and (not NoTiming and Timing1 < 1) do
-            Citizen.Wait(0)
-            if not NoTiming or Timing1 < 1 then 
-                Timing1 = 1-((Timing2 - GetGameTimer())/Timing)
-            end
-            if not Timing3 or GetGameTimer() >= Timing3 then
-                Timing3 = GetGameTimer()+500;
-                E = petitpoint[string.len(E)+1] or ""
-            end;
-            DrawRect(.5,.875,.15,.03,0,0,0,100)
-            local y, endroit=.15-.0025,.03-.005;
-            local chance = math.max(0,math.min(y,y*Timing1))
-            DrawRect((.5-y/2)+chance/2,.875,chance,endroit,r,g,b,a) -- 0,155,255,125
-            DrawTextScreen(.5,.875-.0125,.3,(Text or"Action en cours")..E,0,0,false)
-        end;
-        RemoveProgressBar()
-    end)
-end
-
-function RemoveProgressBar() -- Delete les progress bar
-    HaveProgress = nil 
-end
 
 
 function SetScaleformParams(scaleform, data) -- Set des éléments dans un scalform
