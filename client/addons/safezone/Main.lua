@@ -44,23 +44,29 @@ CreateThread(function()
             SetEntityInvincible(PlayerPedId(), true)
             SetCanAttackFriendly(GetPlayerPed(-1), false, false)
             NetworkSetFriendlyFireOption(false)
-            local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-            local vehiclePool = GetGamePool('CVehicle') 
-            for i = 1, #vehiclePool do 
-                SetEntityNoCollisionEntity(GetPlayerPed(-1), vehiclePool[i], true)
-                if vehicle then
-                    SetEntityNoCollisionEntity(vehicle, vehiclePool[i], true)
+            local carros = GetGamePool("CVehicle")
+            for i = 1,#carros ,1 do
+                local veh = GetVehiclePedIsIn(PlayerPedId(), false)
+
+                if veh ~= 0 then
+                    SetEntityNoCollisionEntity(carros[i], veh, true)
+                else
+                    SetEntityNoCollisionEntity(carros[i], PlayerPedId(), true)
                 end
             end
 
+            for _, i in ipairs(GetActivePlayers()) do
+                if i ~= PlayerId() then
+                      local closestPlayerPed = GetPlayerPed(i)
+
+                      SetEntityNoCollisionEntity(closestPlayerPed, PlayerPedId(), true)
+
+                end
+            end
         else
             SetEntityInvincible(PlayerPedId(), false)
-
             SetCanAttackFriendly(GetPlayerPed(-1), true, true)
             NetworkSetFriendlyFireOption(true)
-
-
-
         end
 
         Wait(wait)
