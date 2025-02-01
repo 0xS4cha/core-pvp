@@ -206,17 +206,6 @@ function player:getSubscription()
     return self.subscription
 end
 
-function player:getJob()
-    return self.job
-end
-
-function player:setJobGrade(job_grade)
-    self.job_grade = job_grade
-end
-
-function player:getJobGrade()
-    return self.job_grade
-end
 
 function player:setGroup(group)
     self.group = group
@@ -224,6 +213,15 @@ end
 
 function player:getGroup()
     return self.group
+end
+
+function player:setGroup(group)
+    self.group = group
+end
+
+
+function player:setGroupID(groupID)
+    self.groupID = groupID
 end
 
 function player:setVip(vip)
