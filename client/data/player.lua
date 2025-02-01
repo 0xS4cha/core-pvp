@@ -97,8 +97,9 @@ AddEventHandler("core:renameClothPlayer", function(key, name)
 end)
 
 RegisterNetEvent("core:setGroupPlayer")
-AddEventHandler("core:setGroupPlayer", function(crew)
+AddEventHandler("core:setGroupPlayer", function(crew, id)
     p:setGroup(crew)
+    p:setGroupID(id)
 end)
 
 RegisterNetEvent("core:setSkinPlayer")
@@ -144,16 +145,26 @@ AddEventHandler("core:RemoveItemInventory", function(name, quantity, slot)
     if inv ~= nil then
         for i = 1, #inv do
             if inv[i] ~= nil then
-
-                if inv[i].name ~= nil and inv[i].name == name and inv[i].slot == slot then
-                    if inv[i].count - quantity <= 0 then
-
-                        table.remove(inv, i)
+                if inv[i].name ~= nil and inv[i].name == name then
+                    if slot then
+                        if inv[i].slot == slot then
+                            if inv[i].count - quantity <= 0 then
+                                table.remove(inv, i)
+                            else
+                                inv[i].count = inv[i].count - quantity
+                            end
+                            p:setInventaire(inv)
+                            break
+                        end
                     else
-                        inv[i].count = inv[i].count - quantity
+                        if inv[i].count - quantity <= 0 then
+                            table.remove(inv, i)
+                        else
+                            inv[i].count = inv[i].count - quantity
+                        end
+                        p:setInventaire(inv)
+                        break
                     end
-                    p:setInventaire(inv)
-                    break
                 end
             end
         end
@@ -165,10 +176,8 @@ RegisterNetEvent("core:RemoveItemStorage", function(name, quantity, slot)
     if inv ~= nil then
         for i = 1, #inv do
             if inv[i] ~= nil then
-
                 if inv[i].name ~= nil and inv[i].name == name and inv[i].slot == slot then
                     if inv[i].count - quantity <= 0 then
-
                         table.remove(inv, i)
                     else
                         inv[i].count = inv[i].count - quantity
@@ -178,6 +187,6 @@ RegisterNetEvent("core:RemoveItemStorage", function(name, quantity, slot)
                 end
             end
         end
-        RefreshInventory2(p:getStorage(), 'YOUR STORAGE')
+        RefreshInventory2(p:getStorage(), GetPhrase('your_storage'))
     end
 end)
