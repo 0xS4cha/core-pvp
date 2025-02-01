@@ -222,7 +222,7 @@ RegisterNetEvent('core:admin:AdvertPlayer', function(token, idPlayer, msg)
                     _PERMISSION_ROLE[ply:getPermission()].prefix..' - '..ply:getPlayerName(),
                     dataOfBan
                 }, function(result)
-                    TriggerClientEvent('core:ShowNotification', source, GetPhrase('ADMIN_ADVERT', target:getPlayerName())"You have just adverted ~g~<C>" .. target:getPlayerName() .. "</C>~s~ for ~g~<C>" .. msg .. "~s~</C>.")
+                    TriggerClientEvent('core:ShowNotification', source, GetPhrase('ADMIN_ADVERT', target:getPlayerName(), msg))
                     TriggerClientEvent('core:admin:SendMessageToPlayer', idPlayer, GetPhrase('ADMIN_NEW_ADVERT', _PERMISSION_ROLE[ply:getPermission()].prefix..' - '..ply:getPlayerName(), msg))
 
             end)
