@@ -5,9 +5,11 @@ AddEventHandler("core:CreateCrew", function(token, data)
     if CheckPlayerToken(source, token) then
         if data ~= nil then
             if data.color then
-                if Group.CreateGroup(src, data.name, data.color, data.description, data.rank) then
+                local create = Group.CreateGroup(src, data.name, data.color, data.description, data.rank)
+                if create then
+                    player:setGroupID(create)
                     player:setGroup(data.name)
-                    TriggerClientEvent('core:setGroupPlayer', src, data.name)
+                    TriggerClientEvent('core:setGroupPlayer', src, data.name, create)
                     TriggerClientEvent("core:ShowNotification", src, "Vous venez de crée le groupe ~b~<C>" .. data.name .. "</C>~s~.")
                 else
                     TriggerClientEvent("core:ShowNotification", src, "~r~Une erreur est survenue lors de la création de votre groupe.")
