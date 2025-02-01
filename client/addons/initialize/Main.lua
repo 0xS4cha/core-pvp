@@ -100,7 +100,7 @@ function _INITIALIZE.SquadMenu(v)
                     return true
                 end,
                 action = function(entity, coords, args)
-
+                    _CREW:Watch()
                 end,
             },
         }
