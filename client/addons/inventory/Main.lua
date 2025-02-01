@@ -16,7 +16,22 @@ fastItems = {
 }
 local CreateThread <const> = CreateThread
 
-
+function searchSlotFree()
+    local preselectedSlot = 0
+    local slotFound = true
+    local inv = p:getInventaire()
+    while slotFound do
+        Wait(1)
+        slotFound = false
+        for _, v in pairs(inv) do
+            if v.slot == preselectedSlot then
+                preselectedSlot = preselectedSlot + 1
+                slotFound = true
+                break
+            end
+        end
+    end
+end
 function LootPlayer(player)
     local inv = p:getInventaire()
     local inv2 = nil
@@ -42,7 +57,7 @@ function LootPlayer(player)
                 name = v.name,
                 count = v.count,
                 label = GetPhrase(v.name),
-                slot = v.slot or k,
+                slot = v.slot or searchSlotFree(),
                 type = v.type,
 
             })
@@ -126,7 +141,7 @@ function OpenInventory()
                     name = v.name,
                     count = v.count,
                     label = GetPhrase(v.name),
-                    slot = v.slot or k,
+                    slot = v.slot or searchSlotFree(),
                     type = v.type,
 
                 })
@@ -180,7 +195,7 @@ RegisterNUICallback('dropFastItem', function(data, cb)
                 name = v.name,
                 count = v.count,
                 label = GetPhrase(v.name),
-                slot = v.slot or k,
+                slot = v.slot or searchSlotFree(),
                 type = v.type,
 
             })
@@ -205,7 +220,6 @@ RegisterNUICallback('lootItem', function(data, cb)
         if tonumber(data.quantity) == 0 then
             data.quantity = tonumber(data.item.count)
         end
-
 
         response = TriggerServerCallback("inventory:lootStorage", Token, data)
     elseif _INVENTORY.TargetLoot then
@@ -274,7 +288,7 @@ function RefreshInventory()
                 name = v.name,
                 count = v.count,
                 label = GetPhrase(v.name),
-                slot = v.slot or k,
+                slot = v.slot or searchSlotFree(),
                 type = v.type,
 
             })
@@ -306,9 +320,40 @@ function RefreshInventory2(inv, text)
 end
 
 RegisterNUICallback('dropItem', function(data, cb)
-    local response, newInv = TriggerServerCallback("inventory:swapItem", data)
+    local response = true
+    --local response, newInv = TriggerServerCallback("inventory:swapItem", data)
+    TriggerServerEvent("inventory:swapItem", data)
+    local inventory = p:getInventaire()
+    
+
+
+    local slotMap = {}  
+    for _, item in pairs(inventory) do
+        slotMap[item.slot] = item
+    end
+
+    local itemToMove = slotMap[data.item.slot]
+    local targetSlot = data.slot  
+
+    if itemToMove then
+        itemToMove.slot = targetSlot
+
+    end
+
+    local Items = {}
+    for _, v in pairs(inventory) do
+        if v.type == 'items' or v.type == 'weapons' then
+            table.insert(Items, {
+                name = v.name,
+                count = v.count,
+                label = v.label,
+                slot = tonumber(v.slot) or v.slot,
+                type = v.type
+            })
+        end
+    end
     if response then
-        p:setInventaire(newInv)
+        p:setInventaire(Items)
         RefreshInventory()
     end
     if cb then
