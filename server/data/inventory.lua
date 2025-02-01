@@ -336,28 +336,6 @@ function ChangeItemNameCloths(source, item, name, metadatas)
     end
 end
 
-function RemoveItemFromInventoryNil(source, item, count, metadatas)
-    local count = tonumber(count)
-    local inv = GetPlayer(source):getInventaire()
-    if DoesItemexist(item) then
-        if inv ~= nil then
-            for i = 1, #inv do
-                if inv[i] ~= nil then
-                    if inv[i].name ~= nil then
-                        if inv[i].name == "money" then
-                            table.remove(inv, i)
-                            triggerEventPlayer("core:RemoveItemFromInventoryNil", source, itemInventory.name, count,
-                                metadatas)
-                            return true
-                        end
-                    end
-                end
-            end
-        end
-    else
-        return false
-    end
-end
 
 function RemoveItemFromStorage(source, item, count, slot)
     local count = tonumber(count)
@@ -410,7 +388,6 @@ end
 function RemoveItemFromInventory(source, item, count, slot)
     local count = tonumber(count)
     local inv = GetPlayer(source):getInventaire()
-
     if DoesItemexist(item) then
         local itemInventory = getItemInventorymetadatas(source, item, slot)
         if itemInventory ~= nil then
@@ -423,7 +400,6 @@ function RemoveItemFromInventory(source, item, count, slot)
                                 if inv[i].name ~= nil then
                                     if inv[i].name == itemInventory.name then
                                         if slot then
-    
                                             if inv[i].slot == slot then
                                                 triggerEventPlayer("core:RemoveItemInventory", source, itemInventory
                                                     .name, count, slot)
@@ -433,7 +409,6 @@ function RemoveItemFromInventory(source, item, count, slot)
                                                 return true
                                             end
                                         else
-                 
                                             triggerEventPlayer("core:RemoveItemInventory", source, itemInventory.name, count)
                                             table.remove(inv, i)
                                             GetPlayer(source):setInventaire(inv)
@@ -446,7 +421,6 @@ function RemoveItemFromInventory(source, item, count, slot)
                         end
                     end
                 end
-
                 triggerEventPlayer("core:RemoveItemInventory", source, itemInventory.name, count, slot)
                 TriggerClientEvent('core:ShowNotification', source, GetPhrase('inventory_loose', count, itemInventory.label))
                 return true
