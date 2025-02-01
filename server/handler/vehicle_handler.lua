@@ -6,7 +6,6 @@ local function LoadAllVehicle() -- done
         for k, v in pairs(result) do
             local veh = vehicle:new(v)
             --vehicles[v.plate] = veh
-
         end
     end)
     Console.Success("All the vehicles of the BDD were load.")
@@ -18,7 +17,8 @@ MySQL.ready(function()
 end)
 
 local function GeneratePlate()
-    return string.upper(Generate.Code({includeLetters = true, length = 4}) .. "" .. Generate.Code({includeLetters = true, length = 4}))
+    return string.upper(Generate.Code({ includeLetters = true, length = 4 }) ..
+    "" .. Generate.Code({ includeLetters = true, length = 4 }))
 end
 
 function GenerateNotOwnedPlate()
@@ -26,26 +26,27 @@ function GenerateNotOwnedPlate()
     local plate = ""
     while not free do
         plate = GeneratePlate()
-        local result = MySQL.Sync.fetchAll('SELECT plate FROM players_vehicles WHERE plate = @plate', { ['@plate'] = plate })
+        local result = MySQL.Sync.fetchAll('SELECT plate FROM players_vehicles WHERE plate = @plate',
+            { ['@plate'] = plate })
         if result[1] == nil then
             free = true
         end
     end
     return tostring(plate)
 end
+
 function MarkVehicleAsNotSaved(source, plate) -- done
     local veh = GetVehicle(plate)
     if veh == nil then return end
     veh:setNeedSave(true)
 end
 
-
-
 function SetVehicleProps(plate, props) -- done
     local veh = GetVehicle(plate)
     if veh == nil then return end
     veh:setVehiclePropsClass(props)
 end
+
 function getAllVehicleFromId(id) -- done replace of GetVehicleIndexFromPlate
     local vehList = {}
     local vehicles = GetAllVehiclesClass()
@@ -70,17 +71,20 @@ RegisterServerEvent("core:vehicle:spawn", function(token, vehicleName, lobbyid, 
         local vehicleDB = nil
         local license = p:getLicense()
         if (not isPaid and not _VEHICLE.Whitelist.Free[vehicleName] or _VEHICLE.Whitelist.Paid[vehicleName]) and (isPaid and not _VEHICLE.Whitelist.Paid[vehicleName] or _VEHICLE.Whitelist.Free[vehicleName]) then
-            _ANTICHEAT.punish_player(source, "Trigger Event with an excutor core:vehicle:spawn", 'events_anticheat', 'Ban')
+            _ANTICHEAT.punish_player(source, "Trigger Event with an excutor core:vehicle:spawn", 'events_anticheat',
+                'Ban')
             return
         end
         if isPaid then
             vehicleDB = GetVehicle(plate)
             if not vehicleDB then
-                _ANTICHEAT.punish_player(source, "Trigger Event with an excutor core:vehicle:spawn", 'events_anticheat', 'Ban')
+                _ANTICHEAT.punish_player(source, "Trigger Event with an excutor core:vehicle:spawn", 'events_anticheat',
+                    'Ban')
                 return
             end
             if vehicleDB:getOwner() ~= p:getId() then
-                _ANTICHEAT.punish_player(source, "Trigger Event with an excutor core:vehicle:spawn", 'events_anticheat', 'Ban')
+                _ANTICHEAT.punish_player(source, "Trigger Event with an excutor core:vehicle:spawn", 'events_anticheat',
+                    'Ban')
                 return
             end
             props = vehicleDB:getprops()
@@ -88,8 +92,9 @@ RegisterServerEvent("core:vehicle:spawn", function(token, vehicleName, lobbyid, 
         local LobbyCoords = _SAFEZONE.SafeZones[lobbyid].vehicle.coords
         local heading = _SAFEZONE.SafeZones[lobbyid].vehicle.heading
         local vehicleModel = joaat(vehicleName)
-        local vehicle = CreateVehicleServerSetter(vehicleModel, 'automobile', LobbyCoords.x, LobbyCoords.y, LobbyCoords.z, heading)
-        while not DoesEntityExist(vehicle) do Wait(0) end 
+        local vehicle = CreateVehicleServerSetter(vehicleModel, 'automobile', LobbyCoords.x, LobbyCoords.y, LobbyCoords
+        .z, heading)
+        while not DoesEntityExist(vehicle) do Wait(0) end
         local tries = 0
 
         while not vehicle or NetworkGetEntityOwner(vehicle) == -1 do
@@ -104,11 +109,10 @@ RegisterServerEvent("core:vehicle:spawn", function(token, vehicleName, lobbyid, 
         end
 
         if _VEHICLE.OUT[license] then
-            for k,v in pairs(_VEHICLE.OUT[license]) do
+            for k, v in pairs(_VEHICLE.OUT[license]) do
                 if not DoesEntityExist(v) then
                     _VEHICLE.OUT[license][k] = nil
                 else
-
                     DeleteEntity(v)
                     _VEHICLE.OUT[license][k] = nil
                 end
@@ -117,7 +121,6 @@ RegisterServerEvent("core:vehicle:spawn", function(token, vehicleName, lobbyid, 
         else
             _VEHICLE.OUT[license] = {}
             _VEHICLE.OUT[license][1] = vehicle
-       
         end
         --SetEntityOrphanMode(vehicle, 2)
 
@@ -127,32 +130,32 @@ RegisterServerEvent("core:vehicle:spawn", function(token, vehicleName, lobbyid, 
             TriggerClientEvent('core:vehicle:loadProps', source, vehicle, props)
         end
     end
-end) 
+end)
 
 RegisterServerEvent('core:vehicle:buy', function(token, tab, id)
     local source = source
     if CheckPlayerToken(source, token) then
         local p = GetPlayer(source)
         local data = _VEHICLE.LIST.CARDEALER[tab][id]
-        for k,v in pairs(p:getInventaire()) do
-            if v.name == 'money' then
-                if RemoveItemFromInventory(source, 'money', data.price) then
-                    local props = {}
-                    local plate = GenerateNotOwnedPlate()
-                    props.plate = plate
+        if DoesPlayerHaveItemCount(source, 'money', data.price) then
+            local remove = RemoveItemToPlayer(source, 'money', data.price)
 
-                    MySQL.Async.execute("INSERT INTO players_vehicles (owner, props, plate, name, label) VALUES (@1, @2, @3, @4, @5)"
-                    , {
-                        ["1"] = p:getId(),
-                        ["2"] = json.encode(props),
-                        ["3"] = props.plate,
-                        ["4"] = data.vehicle,
-                        ["5"] = data.name,
+            if remove then
+                local props = {}
+                local plate = GenerateNotOwnedPlate()
+                props.plate = plate
 
-                    }, function(affectedRows)
+                MySQL.Async.execute(
+                "INSERT INTO players_vehicles (owner, props, plate, name, label) VALUES (@1, @2, @3, @4, @5)"
+                , {
+                    ["1"] = p:getId(),
+                    ["2"] = json.encode(props),
+                    ["3"] = props.plate,
+                    ["4"] = data.vehicle,
+                    ["5"] = data.name,
+
+                }, function(affectedRows)
                     if affectedRows ~= 0 then
-            
-
                         local veh = vehicle:new({
                             plate = props.plate,
                             owner = p:getId(),
@@ -162,8 +165,7 @@ RegisterServerEvent('core:vehicle:buy', function(token, tab, id)
                         })
                         TriggerClientEvent('core:ShowNotification', source, GetPhrase('bought_vehicle', data.name))
                     end
-                    end)
-                end
+                end)
             end
         end
     end
@@ -176,13 +178,15 @@ RegisterServerEvent("core:admin:GiveVehicle", function(token, target, vehicleMod
         local p = GetPlayer(source)
         local t = GetPlayer(target)
         if p:getPermission() < _PERMISSION['GIVE_VEHICLE'] or not _VEHICLE.Whitelist.Paid[vehicleModel] then
-            _ANTICHEAT.punish_player(source, "Trigger Event with an excutor core:admin:GiveVehicle", 'events_anticheat', 'Ban')
+            _ANTICHEAT.punish_player(source, "Trigger Event with an excutor core:admin:GiveVehicle", 'events_anticheat',
+                'Ban')
             return
         end
         local props = {}
         local plate = GenerateNotOwnedPlate()
         props.plate = plate
-        MySQL.Async.execute("INSERT INTO players_vehicles (owner, props, plate, name, label) VALUES (@1, @2, @3, @4, @5)"
+        MySQL.Async.execute(
+        "INSERT INTO players_vehicles (owner, props, plate, name, label) VALUES (@1, @2, @3, @4, @5)"
         , {
             ["1"] = t:getId(),
             ["2"] = json.encode(props),
@@ -191,20 +195,17 @@ RegisterServerEvent("core:admin:GiveVehicle", function(token, target, vehicleMod
             ["5"] = vehicleName,
 
         }, function(affectedRows)
-        if affectedRows ~= 0 then
-  
-
-            local veh = vehicle:new({
-                plate = props.plate,
-                owner = t:getId(),
-                label = vehicleName,
-                name = vehicleModel,
-                props = json.encode(props),
-            })
-            TriggerClientEvent('core:ShowNotification', source, GetPhrase('bought_vehicle_admin', vehicleName))
-        end
+            if affectedRows ~= 0 then
+                local veh = vehicle:new({
+                    plate = props.plate,
+                    owner = t:getId(),
+                    label = vehicleName,
+                    name = vehicleModel,
+                    props = json.encode(props),
+                })
+                TriggerClientEvent('core:ShowNotification', source, GetPhrase('bought_vehicle_admin', vehicleName))
+            end
         end)
-
     end
 end)
 
