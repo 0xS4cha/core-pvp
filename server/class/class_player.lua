@@ -235,10 +235,6 @@ function player:getStatus()
     return self.status
 end
 
-function player:getFullName()
-    return self:getFirstname() .. " " .. self:getLastname()
-end
-
 
 function player:setHunger(hunger)
     self.status.hunger = hunger
