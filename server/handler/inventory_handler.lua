@@ -14,6 +14,26 @@ function GiveItemToStorage(source, item, count, slot)
     end
 end
 
+function searchSlotFree(storage)
+    local preselectedSlot = 0
+    local slotFound = true
+    local inv = p:getInventaire()
+    if storage then
+        inv = p:getStorage()
+    end
+    while slotFound do
+        Wait(1)
+        slotFound = false
+        for _, v in pairs(inv) do
+            if v.slot == preselectedSlot then
+                preselectedSlot = preselectedSlot + 1
+                slotFound = true
+                break
+            end
+        end
+    end
+end
+
 exports("GiveItemToPlayer", function(source, item, count)
     return GiveItemToPlayer(source, item, count)
 end)
@@ -69,8 +89,6 @@ function DoesPlayerHaveItemCount(source, item, count, slot)
             else
                 if tonumber(value.count) >= tonumber(count) and tonumber(value.slot) == slot then
                     return true
-                else
-                    return false
                 end
             end
         end
@@ -97,7 +115,42 @@ end)
 
 
 
+RegisterNetEvent("inventory:swapItem", function(data)
+    local player = GetPlayer(source)
+    local inventory = player:getInventaire()
 
+    if not (data.slot and data.item and data.item.slot) then
+        return
+    end
+
+    local slotMap = {}
+    for _, item in pairs(inventory) do
+        slotMap[item.slot] = item
+    end
+
+    local itemToMove = slotMap[data.item.slot]
+    local targetSlot = data.slot
+
+    if itemToMove then
+        itemToMove.slot = targetSlot
+    end
+
+    local Items = {}
+    for _, v in pairs(inventory) do
+        if v.type == 'items' or v.type == 'weapons' then
+            table.insert(Items, {
+                name = v.name,
+                count = v.count,
+                label = v.label,
+                slot = tonumber(v.slot) or v.slot,
+                type = v.type
+            })
+        end
+    end
+
+    player:setInventaire(Items)
+    MarkPlayerDataAsNonSaved(source)
+end)
 
 
 RegisterNetEvent('core:RemoveItemToInventory', function(token, item, count, metadata)
@@ -289,37 +342,84 @@ Citizen.CreateThread(function()
     RegisterServerCallback("inventory:swapItem", function(source, data)
         local player = GetPlayer(source)
         local inventory = player:getInventaire()
-        local resp = false
-        if data.slot and data.item.slot then
-            Items = {}
-            for k, v in pairs(inventory) do
-                if v.slot == data.slot then
-                    v.slot = data.item.slot
-                    goto continue
-                end
 
-                if v.slot == data.item.slot then
-                    v.slot = data.slot
-                end
-
-                ::continue::
-                if v.type == 'items' or v.type == 'weapons' then
-                    table.insert(Items, {
-                        name = v.name,
-                        count = v.count,
-                        label = v.label,
-                        slot = tonumber(v.slot) or k,
-                        type = v.type,
-
-                    })
-                end
-            end
-            player:setInventaire(Items)
-            MarkPlayerDataAsNonSaved(source)
-            resp = true
+        if not (data.slot and data.item and data.item.slot) then
+            return false, inventory
         end
-        return resp, player:getInventaire()
+
+        local slotMap = {}
+        for _, item in pairs(inventory) do
+            slotMap[item.slot] = item
+        end
+
+        local itemToMove = slotMap[data.item.slot]
+        local targetSlot = data.slot
+
+        if itemToMove then
+            itemToMove.slot = targetSlot
+        else
+            return false, inventory
+        end
+
+        local Items = {}
+        for _, v in pairs(inventory) do
+            if v.type == 'items' or v.type == 'weapons' then
+                table.insert(Items, {
+                    name = v.name,
+                    count = v.count,
+                    label = v.label,
+                    slot = tonumber(v.slot) or v.slot,
+                    type = v.type
+                })
+            end
+        end
+
+        player:setInventaire(Items)
+        MarkPlayerDataAsNonSaved(source)
+
+        return true, player:getInventaire()
     end)
+
+    RegisterServerCallback('inventory:swapItemStorage', function(source, data)
+        local player = GetPlayer(source)
+        local inventory = player:getStorage()
+
+        if not (data.slot and data.item and data.item.slot) then
+            return false, inventory
+        end
+
+        local slotMap = {}
+        for _, item in pairs(inventory) do
+            slotMap[item.slot] = item
+        end
+
+        local itemToMove = slotMap[data.item.slot]
+        local targetSlot = data.slot
+
+        if itemToMove then
+            itemToMove.slot = targetSlot
+        else
+            return false, inventory
+        end
+        local Items = {}
+        for _, v in pairs(inventory) do
+            if v.type == 'items' or v.type == 'weapons' then
+                table.insert(Items, {
+                    name = v.name,
+                    count = v.count,
+                    label = v.label,
+                    slot = tonumber(v.slot) or searchSlotFree(true),
+                    type = v.type
+                })
+            end
+        end
+
+        player:setStorage(Items)
+        MarkPlayerDataAsNonSaved(source)
+
+        return true, player:getStorage()
+    end)
+
 
     RegisterServerCallback('inventory:dropStorage', function(source, token, data)
         local resp = false
