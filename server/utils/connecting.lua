@@ -207,11 +207,12 @@ AddEventHandler('playerConnecting', function(name, skr, data)
                 type = "AdaptiveCard",
                 version = "1.2",
                 body = {
-                    { type = "TextBlock", text = GetPhrase('ADMIN_BANNED'),                                                                                                   wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large",  weight = "Bolder", color = "Orange" },   
-                    { type = "TextBlock", text =GetPhrase('ADMIN_BANNED_REASON', reason, BanId, nameBanner, timeRimaing), wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Medium", weight = "Bolder", color = "Light" },
+                    { type = "TextBlock", text = GetPhrase('ADMIN_BANNED'), wrap = true, horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Large",  weight = "Bolder", color = "Orange" },   
+                    { type = "TextBlock", text = GetPhrase('ADMIN_BANNED_REASON', reason, BanId, nameBanner, timeRimaing), wrap = true, horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Medium", weight = "Bolder", color = "Light" },
                     { type = 'Image',     url = ProofBan },
-                    { type = "ActionSet", horizontalAlignment = "Center",                                                                                                                   actions = { { type = "Action.OpenUrl", GetPhrase('join_discord'), url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
-                    { type = "TextBlock", text = "This server protected by SxProtection®",                                                                                                  wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small",  weight = "Bolder", color = "Light" },
+                    { type = "ActionSet", horizontalAlignment = "Center",   actions = { { type = "Action.OpenUrl", title = GetPhrase('join_discord'), url = _CONFIG.DISCORD.LINK, iconUrl = "https://icons.getbootstrap.com/assets/icons/discord.svg" } } },
+          
+                    { type = "TextBlock", text = "This server protected by SxProtection®",   wrap = true,                                                                                                                                                       horizontalAlignment = "Center", separator = true, height = "stretch", fontType = "Default", size = "Small",  weight = "Bolder", color = "Light" },
                 }
             }
             while true do
