@@ -11,9 +11,6 @@ const DraggableSlot: React.FC<{ item: any; itemType: any; onContextMenu?: (slotK
   }));
 
 
-
-  
-
   return (
     <div
       ref={dragRef}

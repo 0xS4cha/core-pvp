@@ -14,7 +14,8 @@
   /* Menu Wrapper */
   .menu {
     color: var(--white);
-    background: #161616;
+    background: rgba(14, 35, 63, 0.7);
+    border: 1px solid rgba(30, 77, 138, 0.3);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 2rem;
@@ -54,11 +55,11 @@
   .form-group input[type="color"] {
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid #161616;
+    border: 1px solid transparent;
     border-radius: 4px;
     font-size: 0.9rem;
     color: var(--white-70);
-    background-color: #333333;
+    background-color: rgba(14, 35, 63, 0.7);
     outline: none;
   }
   
@@ -140,7 +141,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem;
-    background-color: #333333;
+    background-color: rgba(14, 35, 63, 0.7);
     border-radius: 4px;
   }
   
@@ -193,12 +194,12 @@
 }
 
 .modal-content {
-  background: #161616;
-  border-radius: px;
+  background: rgba(14, 35, 63, 0.9);
+  border-radius: 4px;
   padding: 2rem;
   text-align: center;
-  max-width: 400px;
-  width: 90%;
+  max-width: 350px;
+  width: 50%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -212,9 +213,12 @@
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid transparent;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  color: var(--white-70);
+  background-color: rgba(6, 16, 29, 0.9);
+  outline: none;
 }
 
 .modal-actions {

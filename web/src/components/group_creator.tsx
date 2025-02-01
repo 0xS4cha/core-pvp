@@ -6,13 +6,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
 import groupStyle from "./Group_creator.module.scss";
 
-/*
+import ShinyText from './Utils/ShinyText';
+import GradientText from './Utils/GradientText'
 debugData([
     {
       action: "showGroupCreator",
-      data: true,
+      data: {
+        show: false,
+        translation: {
+          save: 'Save',
+          create: 'Create a group',
+          cancel: 'Cancel',
+          add_grade: 'Add grade',
+          description: 'Description',
+          descriptionText: 'Enter a description of your group',
+          color: 'Color',
+          name: 'Name of group',
+          nameText: 'Enter the name of your group',
+          listgrade: 'Grade list'
+        }
+      },
     },
-]);*/
+]);
 
 
 const Group_creator = () => {
@@ -25,8 +40,22 @@ const Group_creator = () => {
   const [newGradeName, setNewGradeName] = useState<string>("");
   const [currentGradeIndex, setCurrentGradeIndex] = useState<number | null>(null);
   const [isAddGradeModalOpen, setIsAddGradeModalOpen] = useState<boolean>(false);
+  const [Translation, setTranslation] = useState<any>({})
+  
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Escape" && opened) {
+        fetchNui("crew:create:close");
+      }
+    };
 
-  // Open Add Grade Modal
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  });
+
   const handleOpenAddGradeModal = () => {
     setNewGradeName("");
     setIsAddGradeModalOpen(true);
@@ -75,26 +104,14 @@ const Group_creator = () => {
 
     fetchNui("Group:Create", {name: groupName, color: groupColor, description: groupDescription, rank: grades});
   };
+  useNuiEvent("showGroupCreator", (data) => {
+    setTranslation(data.translation)
+    setOpened(data.show)
+  });
 
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      const data = event.data;
-      if (data.action === "showGroupCreator") {
-        console.log("showGroupCreator");
-        setOpened(data.data);
-      }
-      
-  } 
-  window.addEventListener("message", handleMessage);
-
-  return () => {
-    window.removeEventListener("message", handleMessage);
-  };
-    });
-
+ 
   return (opened && (
     <div>
-      {/* Rename Grade Modal */}
       {isModalOpen && (
         <div className={groupStyle["modal-overlay"]}>
           <div className={groupStyle["modal-content"]}>
@@ -107,10 +124,10 @@ const Group_creator = () => {
             />
             <div className={groupStyle["modal-actions"]}>
               <button onClick={handleSaveGradeName} className={groupStyle["save-modal-btn"]}>
-                Sauvegarder
+                {Translation.save}
               </button>
               <button onClick={handleModalClose} className={groupStyle["cancel-modal-btn"]}>
-                Annuler
+              {Translation.cancel}
               </button>
             </div>
           </div>
@@ -121,7 +138,7 @@ const Group_creator = () => {
       {isAddGradeModalOpen && (
         <div className={groupStyle["modal-overlay"]}>
           <div className={groupStyle["modal-content"]}>
-            <h2>Ajouter un grade</h2>
+            <h2>{Translation.add_grade}</h2>
             <input
               type="text"
               value={newGradeName}
@@ -130,10 +147,10 @@ const Group_creator = () => {
             />
             <div className={groupStyle["modal-actions"]}>
               <button onClick={handleSaveNewGrade} className={groupStyle["save-modal-btn"]}>
-                Confirmer
+              {Translation.save}
               </button>
               <button onClick={handleModalClose} className={groupStyle["cancel-modal-btn"]}>
-                Annuler
+              {Translation.cancel}
               </button>
             </div>
           </div>
@@ -143,15 +160,15 @@ const Group_creator = () => {
       {/* Main Form */}
       <div className={groupStyle["container"]}>
         <div className={groupStyle["menu"]}>
-          <h1 className={groupStyle["menu-title"]}>Créer un groupe</h1>
+          <ShinyText text={Translation.create} disabled={false} speed={3} className={groupStyle["menu-title"]} />
           <form className={groupStyle["form"]} onSubmit={(e) => e.preventDefault()}>
             {/* Group Name */}
             <div className={groupStyle["form-group"]}>
-              <label htmlFor="groupName">Nom du groupe</label>
+              <label htmlFor="groupName">{Translation.name}</label>
               <input
                 type="text"
                 id="groupName"
-                placeholder="Entrer le nom du groupe"
+                placeholder={Translation.nameText}
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
                 required
@@ -160,7 +177,7 @@ const Group_creator = () => {
 
             {/* Group Color */}
             <div className={groupStyle["form-group"]}>
-              <label htmlFor="groupColor">Couleur du groupe</label>
+              <label htmlFor="groupColor">{Translation.color}</label>
               <input
                 type="color"
                 id="groupColor"
@@ -172,27 +189,27 @@ const Group_creator = () => {
 
             {/* Group Description */}
             <div className={groupStyle["form-group"]}>
-              <label htmlFor="groupDescription">Description</label>
+              <label htmlFor="groupDescription">{Translation.description}</label>
               <input
                 type="text"
                 id="groupDescription"
-                placeholder="Petite description du groupe"
+                placeholder={Translation.descriptionText}
                 value={groupDescription}
                 onChange={(e) => setGroupDescription(e.target.value)}
                 required
               />
             </div>
 
-            {/* Grades Section */}
+
             <div className={`${groupStyle["form-group"]} ${groupStyle["grades-section"]}`}>
               <div className={groupStyle["grades-header"]}>
-                <label>Liste des grades</label>
+                <label>{Translation.listgrade}</label>
                 <button
                   type="button"
                   className={groupStyle["add-grade-btn"]}
                   onClick={handleOpenAddGradeModal}
                 >
-                  <FontAwesomeIcon icon={faPlus} /> Ajouter un grade
+                  <FontAwesomeIcon icon={faPlus} /> {Translation.add_grade}
                 </button>
               </div>
               <div className={groupStyle["grades-list"]}>
@@ -222,7 +239,7 @@ const Group_creator = () => {
 
             {/* Submit Button */}
             <button className={groupStyle["submit-button"]} onClick={handleSubmit}>
-              Envoyer
+            {Translation.save}
             </button>
           </form>
         </div>

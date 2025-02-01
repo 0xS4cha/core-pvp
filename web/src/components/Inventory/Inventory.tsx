@@ -20,7 +20,7 @@ debugData([
   {
     action: "showInventory",
     data: {
-      show: true,
+      show: false,
       maximumCase: 30,
       secondInventory: true,
       translation: {
@@ -29,7 +29,7 @@ debugData([
       Inventory2: {
         name: "Trunk",
         canLoot: true,
-        canTrade: false,
+        canTrade: true,
         Items: [
           { label: "Pain", name: "bread", count: 5, slot: 1 },
           { label: "Argent", name: "money", count: 2800, slot: 2 },
@@ -138,6 +138,7 @@ const Inventory = () => {
         item: droppedItem,
         slot: slotKey,
         quantity: prevQuantity,
+        type: type
       });
       return prevQuantity; // S'assurer que la dernière valeur est bien utilisée
     });

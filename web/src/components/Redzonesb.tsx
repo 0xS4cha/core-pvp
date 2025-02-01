@@ -15,7 +15,7 @@ debugData([
     {
       action: "showRedzone",
       data: {
-        show: true,
+        show: false,
         scoreboard: {
           identifier: "steam:11000010",
           myRank: 4,

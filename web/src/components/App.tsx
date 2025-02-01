@@ -18,6 +18,7 @@ import PinComponent from "./Pin";
 import ShopComponent from "./Shop"
 import PromptComponent from "./Prompt";
 import Death from "./Death";
+import GroupManagement from "./Crew/Global";
 
 import Copy from "./Copy";
 
@@ -61,7 +62,7 @@ const App: React.FC = () => {
       <Death/>
       <PromptComponent />
       <PinComponent />
-
+      <GroupManagement/>
       <GroupCreaComponent />
       <InputComponent />
 
