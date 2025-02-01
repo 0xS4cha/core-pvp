@@ -63,7 +63,15 @@ RegisterNuiCallback('dropStorage', function(data, cb)
             Utils.ShowNotification(GetPhrase('NotEnoughItem'))
             return
         end
-        response = TriggerServerCallback("inventory:dropStorage", Token, data, _INVENTORY.TargetLoot)
+        if data.type == 'ITEM' then
+            response = TriggerServerCallback("inventory:dropStorage", Token, data)
+        elseif data.type == 'LOOT'  then
+            response, inventory = TriggerServerCallback("inventory:swapItemStorage", data)
+            if response then
+                p:setStorage(inventory)
+                RefreshInventory2(p:getStorage(), GetPhrase('your_storage'))
+            end
+        end
     end
     if cb then
         cb(response)
