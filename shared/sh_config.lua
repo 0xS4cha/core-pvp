@@ -26,3 +26,8 @@ _CONFIG.REVIVETIME = 1 -- SECONDS
 _CONFIG.LOGO_LINK = 'https://sacha-dev.fr/ldo_logo.PNG'
 _CONFIG.TIME = 12 --DEFAULT TIME
 _CONFIG.WEATHER = 'EXTRASUNNY' -- DEFAULT WEATHER
+_CONFIG.CrewPermission = { -- default
+    ['recruit'] = false,
+    ['kick'] = false,
+    ['chest'] = false
+}
