@@ -12,7 +12,8 @@ AddEventHandler('core:onPlayerDeath', function(data)
         GiveItemToPlayer(target:getSource(), 'money', 2500)
         MySQL.Async.execute("UPDATE players SET death = death + 1 WHERE license = ? AND id = ?",{src:getLicense(), src:getId()}, function() end)
         MySQL.Async.execute("UPDATE players SET kills = kills + 1 WHERE license = ? AND id = ?",{target:getLicense(), target:getId()}, function() end)
-        SendDiscordLog('kill', source, src:getId(), string.sub(GetDiscord(src:getSource()), 9, -1), src:getPlayerName(), causeDeath, target:getId(), string.sub(GetDiscord(target:getSource()), 9, -1), target:getPlayerName())
+        TriggerClientEvent('core:ShowAdvancedNotification', target:getSource(), GetPhrase('newkill'), GetPhrase('KillerNotification', src:getId(), source), GetPhrase('KillerMsg', src:getPlayerName()), 'CHAR_ARTHUR', 'CHAR_ARTHUR')
+        SendDiscordLog('kill', source, src:getId(), string.sub(GetDiscord(src:getSource()), 9, -1), src:getPlayerName(), json.encode(causeDeath), target:getSource(), target:getId(), string.sub(GetDiscord(target:getSource()), 9, -1), target:getPlayerName())
  
     else
         MySQL.Async.execute("UPDATE players SET death = death + 1 WHERE license = ? AND id = ?",{src:getLicense(), src:getId()}, function() end)
