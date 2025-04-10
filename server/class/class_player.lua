@@ -8,7 +8,6 @@ player = {
     discord = "", ---@private
     playerip = "", ---@private
     playerName = "", ---@private
-    inventaire = {}, ---@private
     storage = {}, ---@private
     cloths = { skin = {}, cloths = {} }, ---@private
     permission = 0, ---@private
@@ -46,12 +45,9 @@ function player:new(data, default, source, perm)
         self.discord = GetDiscord(source)
         self.playerip = GetIp(source)
         self.playerName = GetPlayerName(source)
-        self.inventaire = json.decode(data.inventaire)
-        self.storage = json.decode(data.storage)
         self.cloths = json.decode(data.cloths)
         self.permission = data.permission
-        self.group = data.group
-        self.groupID = data.groupID
+        self.instance = 0
         self.vip = data.vip
         self.needSave = false
         self.active = data.active or 1
@@ -68,23 +64,17 @@ function player:new(data, default, source, perm)
         self.discord = GetDiscord(source)
         self.playerip = GetIp(source)
         self.playerName = GetPlayerName(source)
-        self.inventaire = {}
-        self.storage = {}
         self.cloths = { skin = {}, cloths = {} }
         self.permission = perm or 0
         self.subscription = data.subscription
-        self.balance = data.balance
-        self.job = "aucun"
-        self.job_grade = 1
-        self.group = "None"
-        self.groupID = 0
         self.vip = 0
+        self.instance = 0
         self.needSave = false
         self.active = 1
 
 
     end
-    Console.Success(GetPlayerName(source)..' joined')
+    Logger:info('CORE', GetPlayerName(source)..' joined')
     p[source] = self
     return self
 end
@@ -97,6 +87,17 @@ end
 
 function player:setId(id)
     self.id = id
+end
+
+function player:setInstance(id)
+    SetPlayerRoutingBucket(self.source, id)
+    self.instance = id
+end
+
+function player:getInstance()
+    local bucket = GetPlayerRoutingBucket(self.source)
+    self.instance = bucket
+    return self.instance
 end
 
 function player:setSource(source)
@@ -113,26 +114,16 @@ function player:setLicense(license)
     self.license = license
 end
 
+function player:ShowNotification(message)
+    TriggerClientEvent('core:ShowNotification', self.source, message)
+end
+
 function player:getLicense()
     return self.license
 end
 
 
 
-function player:setInventaire(inventaire)
-    self.inventaire = inventaire
-end
-
-function player:getInventaire()
-    return self.inventaire
-end
-function player:getStorage()
-    return self.storage
-end
-
-function player:setStorage(storage)
-    self.storage = storage
-end
 function player:GetId()
     return self.id
 end
@@ -276,17 +267,6 @@ function player:getNeedPosSave()
     return self.needPosSave
 end
 
-function player:haveEnoughMoney(num)
-    for k,v in pairs(self:getInventaire()) do
-        if v.name == "money" then
-            if v.count >= tonumber(num) then
-                return true
-            else
-                return false
-            end
-        end
-    end
-end
 
 function player:getStatus()
     return self.status
@@ -466,14 +446,7 @@ function player:AddMoneyAccount(money)
 end
 
 
-function player:GetMoney()
-    for k, v in pairs(player:getInventaire()) do
-        if v.name == money then 
-            return v.count
-        end
-    end
-    return 0
-end
+
 function player:RemoveMoneyAccount(money)
     if self:getBanque() >= money then
         self.banque = self:getBanque() - money

@@ -85,12 +85,9 @@ function Utils.EnumeratePickups()
 	return EnumerateEntities(FindFirstPickup, FindNextPickup, EndFindPickup)
 end
 
-
-
 function Utils.GetAllEnumerators()
-    return { vehicles = EnumerateVehicles, objects = EnumerateObjects, peds = EnumeratePeds, pickups = EnumeratePickups }
+	return { vehicles = EnumerateVehicles, objects = EnumerateObjects, peds = EnumeratePeds, pickups = EnumeratePickups }
 end
-
 
 function Utils.GetVehicles()
 	local vehicles = {}
@@ -204,10 +201,11 @@ function Utils.GetAllVehicleInArea(coords, zone)
 	return playersInArea
 end
 
-function closeUI()
-    SendNuiMessage(json.encode({
-        type = 'closeWebview',
-    }))
+function Utils.TableGetValue(tbl, value, k) -- Si une table a une value précise
+	if not tbl or not value or type(tbl) ~= "table" then return end
+	for _, v in pairs(tbl) do
+		if k and v[k] == value or v == value then return true, _ end
+	end
 end
 
 function Utils.isJson(data)
@@ -244,13 +242,13 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 	else
 		-- New notif
 		Utils.ShowNotification(GetPhrase('ChoicePlayerMessage'))
-		
 	end
 
 	while inChoice do
 		local pcoords = p:pos()
 		local players = Utils.GetAllPlayersInArea(p:pos(), range)
-		DrawMarker(6, pcoords.x, pcoords.y, pcoords.z - 0.8, 0.0, 0.0, 0.0, 90.0, 0.0, 0.0, range * 2, range * 2, range * 2, 30, 77, 138 , 120, 0, 1, 2, 0, nil, nil, 0)
+		DrawMarker(6, pcoords.x, pcoords.y, pcoords.z - 0.8, 0.0, 0.0, 0.0, 90.0, 0.0, 0.0, range * 2, range * 2,
+			range * 2, 30, 77, 138, 120, 0, 1, 2, 0, nil, nil, 0)
 
 		if choiceSelfPlayer == false then
 			for k, v in pairs(players) do
@@ -267,7 +265,8 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 			return nil
 		end
 		local mCoors = GetEntityCoords(GetPlayerPed(players[selectedPlayer]))
-		DrawMarker(20, mCoors.x, mCoors.y, mCoors.z + 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255 , 120, 0, 1, 2, 0, nil, nil, 0)
+		DrawMarker(20, mCoors.x, mCoors.y, mCoors.z + 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255,
+			120, 0, 1, 2, 0, nil, nil, 0)
 		if GetGameTimer() > timer then
 			Utils.ShowNotification("~r~Temps limite dépassé")
 
@@ -281,9 +280,8 @@ function Utils.ChoicePlayersInZone(range, choiceSelfPlayer)
 			timer = GetGameTimer() + 10000
 			selectedPlayer = selectedPlayer + 1
 		elseif IsControlJustPressed(0, 73) then -- X
-
 			Utils.ShowNotification("~r~Vous avez annulé")
-			
+
 
 
 			inChoice = false
@@ -299,7 +297,8 @@ function Utils.DisplayClosetVeh()
 	local pCloset = GetClosestVehicle()
 	if pCloset ~= -1 then
 		local cCoords = GetEntityCoords(pCloset)
-		DrawMarker(20, cCoords.x, cCoords.y, cCoords.z + 1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 0, 255, 0, 170, 0, 1
+		DrawMarker(20, cCoords.x, cCoords.y, cCoords.z + 1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 0, 255, 0, 170,
+			0, 1
 			, 2, 0, nil, nil, 0)
 	end
 end
@@ -310,7 +309,8 @@ function Utils.DisplayClosetPlayer()
 	local pCloset = GetClosestPlayer()
 	if pCloset ~= -1 then
 		local cCoords = GetEntityCoords(GetPlayerPed(pCloset))
-		DrawMarker(20, cCoords.x, cCoords.y, cCoords.z + 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 0, 255, 0, 170, 0, 1
+		DrawMarker(20, cCoords.x, cCoords.y, cCoords.z + 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 0, 255, 0, 170,
+			0, 1
 			, 2, 0, nil, nil, 0)
 	end
 end
@@ -368,7 +368,7 @@ function Utils.LoadModel(model)
 	if models == model then
 		models = model
 	else
-		models =  GetHashKey(model)
+		models = GetHashKey(model)
 	end
 
 	if IsModelInCdimage(model) then
@@ -405,7 +405,8 @@ function Utils.RayCastGamePlayCamera(distance)
 		y = cameraCoord.y + direction.y * distance,
 		z = cameraCoord.z + direction.z * distance
 	}
-	local a, b, c, d, e = GetShapeTestResult(StartShapeTestRay(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x,
+	local a, b, c, d, e = GetShapeTestResult(StartShapeTestRay(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination
+		.x,
 		destination.y, destination.z, 1, p:ped(), 1))
 	return b, c, e
 end
@@ -420,7 +421,8 @@ function Utils.RayCastGamePlayCameraEntity(distance)
 		y = cameraCoord.y + direction.y * distance,
 		z = cameraCoord.z + direction.z * distance
 	}
-	local a, b, c, d, e = GetShapeTestResult(StartShapeTestRay(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x,
+	local a, b, c, d, e = GetShapeTestResult(StartShapeTestRay(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination
+		.x,
 		destination.y, destination.z, -1, p:ped(), 0))
 	return b, c, e
 end
@@ -436,6 +438,20 @@ function Utils.ShowNotification(text, beep)
 	return EndTextCommandThefeedPostTicker(true, true)
 end
 
+local Notification = nil
+function Utils.ShowNotificationWithRemove(text, beep)
+	if Notification then
+		RemoveNotification(Notification)
+	end
+	if beep then
+		PlaySoundFrontend(-1, 'Goon_Paid_Small', 'GTAO_Boss_Goons_FM_Soundset', false)
+	end
+	SetNotificationTextEntry("STRING")
+	AddTextComponentSubstringPlayerName(text)
+	Notification = DrawNotification(0, 1)
+	return Notification
+end
+
 function Utils.ShowNotificationWithButton(button, message, back, ...)
 	PlaySoundFrontend(-1, 'Goon_Paid_Small', 'GTAO_Boss_Goons_FM_Soundset', false)
 	if back then ThefeedNextPostBackgroundColor(back) end
@@ -443,23 +459,21 @@ function Utils.ShowNotificationWithButton(button, message, back, ...)
 	return EndTextCommandThefeedPostReplayInput(1, button, GetPhrase(message, ...))
 end
 
-
-
 function Utils.DrawTopNotificationWithTime(message, beep, time, ...)
 	AddTextEntry("SHOP_JUGG_NONE", GetPhrase(message, ...))
 	BeginTextCommandDisplayHelp("SHOP_JUGG_NONE")
 	EndTextCommandDisplayHelp(0, false, beep, time or -1)
 end
+
 function ShowLoadingPrompt(showText, showType, ...)
 	BeginTextCommandBusyspinnerOn("STRING")
-	AddTextComponentSubstringPlayerName(GetPhrase(showText, table.unpack({...})))
+	AddTextComponentSubstringPlayerName(GetPhrase(showText, table.unpack({ ... })))
 	EndTextCommandBusyspinnerOn(showType)
 end
 
 function RemoveLoadingPrompt()
 	BusyspinnerOff()
 end
-
 
 function DrawTopNotification(message, beep, ...)
 	AddTextEntry("SHOP_JUGG_NONE", GetPhrase(message, ...))
@@ -489,10 +503,11 @@ function Utils.ShowHelpNotification(msg, beep)
 	BeginTextCommandDisplayHelp('core:HelpNotif')
 	EndTextCommandDisplayHelp(0, false, false, 1)
 end
-exports("ShowNotification", function (msg)
+
+exports("ShowNotification", function(msg)
 	Utils.ShowNotification(msg)
 end)
-exports("ShowHelpNotification", function (msg)
+exports("ShowHelpNotification", function(msg)
 	Utils.ShowHelpNotification(msg)
 end)
 function Utils.ShowAdvancedNotification(title, subtitle, msg, img1, img2)
@@ -591,58 +606,8 @@ Citizen.CreateThread(function()
 end)
 
 
-CreateThread(function()
-	while p == nil do Wait(100) end
-	while true do
-		Wait(500)
-		if p:isInVeh() then
-			SetVehicleHandlingFloat(p:currentVeh(), "CHandlingData", "fLowSpeedTractionLossMult", 0.0)
-		else
-			Wait(1500)
-		end
-	end
-end)
 
-TriggerServerCallback = function(eventName, ...)
-	assert(type(eventName) == 'string', 'Invalid Lua type at argument #1, expected string, got ' .. type(eventName))
 
-	local p = promise.new()
-	local ticket = GetGameTimer()
-
-	RegisterNetEvent(('__pmc_callback:client:%s:%s'):format(eventName, ticket))
-	local e = AddEventHandler(('__pmc_callback:client:%s:%s'):format(eventName, ticket), function(...)
-		p:resolve({ ... })
-	end)
-
-	TriggerServerEvent('__pmc_callback:server', eventName, ticket, ...)
-
-	local result = Citizen.Await(p)
-	RemoveEventHandler(e)
-	return table.unpack(result)
-end
-exports("TriggerServerCallback", function(eventName, ...)
-	return TriggerServerCallback(eventName, ...)
-end)
-RegisterClientCallback = function(eventName, fn, ...)
-	assert(type(eventName) == 'string', 'Invalid Lua type at argument #1, expected string, got ' .. type(eventName))
-	assert(type(fn) == 'function', 'Invalid Lua type at argument #2, expected function, got ' .. type(fn))
-
-	AddEventHandler(('c__pmc_callback:%s'):format(eventName), function(cb, ...)
-		cb(fn(...))
-	end)
-end
-
-RegisterNetEvent('__pmc_callback:client', function(eventName, ...)
-	local p = promise.new()
-
-	TriggerEvent(('c__pmc_callback:%s'):format(eventName), function(...)
-		p:resolve({ ... })
-	end, ...)
-
-	local result = Citizen.Await(p)
-
-	TriggerServerEvent(('__pmc_callback:server:%s'):format(eventName), table.unpack(result))
-end)
 
 function Utils.RequestAndWaitDict(dictName)
 	if dictName and DoesAnimDictExist(dictName) and not HasAnimDictLoaded(dictName) then
@@ -660,6 +625,19 @@ function Utils.DrawTexts(x, y, text, center, scale, rgb, font)
 	SetTextCentre(center)
 	AddTextComponentString(text)
 	EndTextCommandDisplayText(x, y)
+end
+
+function Utils.GetPedMugshot(ped, transparent)
+	if not DoesEntityExist(ped) then
+        return
+    end
+    local mugshot = transparent and RegisterPedheadshotTransparent(ped) or RegisterPedheadshot(ped)
+
+    while not IsPedheadshotReady(mugshot) do
+        Wait(0)
+    end
+
+    return mugshot, GetPedheadshotTxdString(mugshot)
 end
 
 function Utils.PlayEmote(dict, anim, flag, duration)
@@ -729,7 +707,7 @@ end
     matrix[1][2] = math.cos(ry)*math.sin(rz) + math.cos(rz)*math.sin(rx)*math.sin(ry)
     matrix[1][3] = -math.cos(rx)*math.sin(ry)
     matrix[1][4] = 1
-    
+
     matrix[2] = {}
     matrix[2][1] = -math.cos(rx)*math.sin(rz)
     matrix[2][2] = math.cos(rz)*math.cos(rx)
@@ -763,33 +741,31 @@ function Utils.RealRandom(x, y)
 	return math.random(x, y)
 end
 
-
-local function DrawTextScreen(Text,Text3,Taille,Text2,Font,Justi,havetext) -- Créer un text 2D a l'écran
-    SetTextFont(Font)
-    SetTextScale(Taille,Taille)
-    SetTextColour(255,255,255,255)
-    SetTextJustification(Justi or 1)
-    SetTextEntry("STRING")
-    if havetext then 
-        SetTextWrap(Text,Text+.1)
-    end;
-    AddTextComponentString(Text2)
-    DrawText(Text,Text3)
+local function DrawTextScreen(Text, Text3, Taille, Text2, Font, Justi, havetext) -- Créer un text 2D a l'écran
+	SetTextFont(Font)
+	SetTextScale(Taille, Taille)
+	SetTextColour(255, 255, 255, 255)
+	SetTextJustification(Justi or 1)
+	SetTextEntry("STRING")
+	if havetext then
+		SetTextWrap(Text, Text + .1)
+	end;
+	AddTextComponentString(Text2)
+	DrawText(Text, Text3)
 end
+
 -- Progres bars
 local HaveProgress
 function ProgressBarExists() -- Si une barre de progression existe
-    return HaveProgress 
+	return HaveProgress
 end
-
-
 
 function SetScaleformParams(scaleform, data) -- Set des éléments dans un scalform
 	data = data or {}
-	for k,v in pairs(data) do
+	for k, v in pairs(data) do
 		PushScaleformMovieFunction(scaleform, v.name)
 		if v.param then
-			for _,par in pairs(v.param) do
+			for _, par in pairs(v.param) do
 				if math.type(par) == "integer" then
 					PushScaleformMovieFunctionParameterInt(par)
 				elseif type(par) == "boolean" then
@@ -805,6 +781,7 @@ function SetScaleformParams(scaleform, data) -- Set des éléments dans un scalf
 		PopScaleformMovieFunctionVoid()
 	end
 end
+
 function CreateScaleform(name, data) -- Créer un scalform
 	if not name or string.len(name) <= 0 then return end
 	local scaleform = RequestScaleformMovie(name)
@@ -823,35 +800,34 @@ function Utils.GetControlLabel(controlName, blIncludeTT)
 	return blIncludeTT and ("~" .. inputName .. "~") or inputName
 end
 
-function Utils.DoesFileExist(file) 
-    local fileHandle = LoadResourceFile(file, "r")
+function Utils.DoesFileExist(file)
+	local fileHandle = LoadResourceFile(file, "r")
 	print(fileHandle)
-    if fileHandle then
-        io.close(fileHandle)
-        return true
-    else
-        return false
-    end
+	if fileHandle then
+		io.close(fileHandle)
+		return true
+	else
+		return false
+	end
 end
 
 function Utils.tableToString(tbl, separator)
-    separator = separator or ", " -- Définit le séparateur par défaut
-    return table.concat(tbl, separator)
+	separator = separator or ", " -- Définit le séparateur par défaut
+	return table.concat(tbl, separator)
 end
 
 function Utils.getNet(entity)
-    return NetworkGetNetworkIdFromEntity(entity)
+	return NetworkGetNetworkIdFromEntity(entity)
 end
 
 function Utils.getEntity(netID)
-    return NetworkGetEntityFromNetworkId(netID)
+	return NetworkGetEntityFromNetworkId(netID)
 end
 
 function Utils.getTrunkOffset(entity)
-    local min, _ = GetModelDimensions(GetEntityModel(entity))
-    return GetOffsetFromEntityInWorldCoords(entity, 0.0, min.y - 0.5, 0.0)
+	local min, _ = GetModelDimensions(GetEntityModel(entity))
+	return GetOffsetFromEntityInWorldCoords(entity, 0.0, min.y - 0.5, 0.0)
 end
-
 
 function Utils.getNearbyObjects(coords, maxDistance)
 	local objects = GetGamePool('CObject')
@@ -862,16 +838,16 @@ function Utils.getNearbyObjects(coords, maxDistance)
 	for i = 1, #objects do
 		local object = objects[i]
 
-        local objectCoords = GetEntityCoords(object)
-        local distance = #(coords - objectCoords)
+		local objectCoords = GetEntityCoords(object)
+		local distance = #(coords - objectCoords)
 
-        if distance < maxDistance then
-            count += 1
-            nearby[count] = {
-                object = object,
-                coords = objectCoords
-            }
-        end
+		if distance < maxDistance then
+			count += 1
+			nearby[count] = {
+				object = object,
+				coords = objectCoords
+			}
+		end
 	end
 
 	return nearby
@@ -902,59 +878,65 @@ function Utils.getNearbyVehicles(coords, maxDistance, includePlayerVehicle)
 
 	return nearby
 end
+
 function Utils.getOptionsWidth(options)
-    if IsDuplicityVersion() then
-        Console.Error('This function is not available on server side')
-        return
-    end
-    local width = 0.0
-    for _, data in ipairs(options) do
-        local factor = (string.len(data.label)) / 370
-        local newWidth = 0.03 + factor
+	if IsDuplicityVersion() then
+		Logger:error('CORE', 'This function is not available on server side')
+		return
+	end
+	local width = 0.0
+	for _, data in ipairs(options) do
+		local factor = (string.len(data.label)) / 370
+		local newWidth = 0.03 + factor
 
-        if newWidth > width then
-            width = newWidth
-        end
-    end
+		if newWidth > width then
+			width = newWidth
+		end
+	end
 
-    return width
+	return width
 end
-
 
 function Utils.getCoordsFromInteract(interaction)
-    if interaction.entity then
-        if DoesEntityExist(interaction.entity) then
-            if interaction.bone then
-                return GetEntityBonePosition_2(interaction.entity, GetEntityBoneIndexByName(interaction.entity, interaction.bone))
-            elseif interaction.model then
-                return GetOffsetFromEntityInWorldCoords(interaction.entity, 0.0 + interaction.offset.x, 0.0 + interaction.offset.y, 0.0 + interaction.offset.z)
-            else
-                if IsEntityAPed(interaction.entity) then
-                    if interaction.offset and interaction.offset ~= vec3(0.0, 0.0, 0.0) then
-                        return GetOffsetFromEntityInWorldCoords(interaction.entity, 0.0 + interaction.offset.x, 0.0 + interaction.offset.y, 0.0 + interaction.offset.z)
-                    end
-                    return GetEntityBonePosition_2(interaction.entity, 0) -- SKEL_ROOT
-                else
-                    if interaction.offset and interaction.offset ~= vec3(0.0, 0.0, 0.0) then
-                        return GetOffsetFromEntityInWorldCoords(interaction.entity, 0.0 + interaction.offset.x, 0.0 + interaction.offset.y, 0.0 + interaction.offset.z)
-                    end
-                    return GetEntityCoords(interaction.entity)
-                end
-            end
-        end
-    end
+	if interaction.entity then
+		if DoesEntityExist(interaction.entity) then
+			if interaction.bone then
+				return GetEntityBonePosition_2(interaction.entity,
+					GetEntityBoneIndexByName(interaction.entity, interaction.bone))
+			elseif interaction.model then
+				return GetOffsetFromEntityInWorldCoords(interaction.entity, 0.0 + interaction.offset.x,
+					0.0 + interaction.offset.y, 0.0 + interaction.offset.z)
+			else
+				if IsEntityAPed(interaction.entity) then
+					if interaction.offset and interaction.offset ~= vec3(0.0, 0.0, 0.0) then
+						return GetOffsetFromEntityInWorldCoords(interaction.entity, 0.0 + interaction.offset.x,
+							0.0 + interaction.offset.y, 0.0 + interaction.offset.z)
+					end
+					return GetEntityBonePosition_2(interaction.entity, 0) -- SKEL_ROOT
+				else
+					if interaction.offset and interaction.offset ~= vec3(0.0, 0.0, 0.0) then
+						return GetOffsetFromEntityInWorldCoords(interaction.entity, 0.0 + interaction.offset.x,
+							0.0 + interaction.offset.y, 0.0 + interaction.offset.z)
+					end
+					return GetEntityCoords(interaction.entity)
+				end
+			end
+		end
+	end
 
-    return vec3(0.0, 0.0, 0.0)
+	return vec3(0.0, 0.0, 0.0)
 end
-
 
 function Utils.SpawnVehicle(modelName, coords, heading, cb)
 	local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
 
-	if not IsModelValid(model) or not IsModelInCdimage(model) then Utils.ShowNotification("~r~Ce modèle de véhicule n'éxiste pas ("..model.." / "..modelName..")") return end
+	if not IsModelValid(model) or not IsModelInCdimage(model) then
+		Utils.ShowNotification("~r~Ce modèle de véhicule n'éxiste pas (" .. model .. " / " .. modelName .. ")")
+		return
+	end
 
 	local ped = PlayerPedId()
-	LoadModel(model)
+	Utils.LoadModel(model)
 	local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, true, false, 3)
 	local id = NetworkGetNetworkIdFromEntity(vehicle)
 	SetNetworkIdCanMigrate(id, true)
@@ -979,124 +961,118 @@ function Utils.SpawnVehicle(modelName, coords, heading, cb)
 end
 
 function Utils.drawOption(coords, text, spriteDict, spriteName, row, width, showDot)
-    SetScriptGfxAlignParams((showDot == true and 0.03 or 0.018) + (width / 2), row * 0.03 - 0.0125, 0.0, 0.0)
-    SetTextScale(0, 0.3)
-    SetTextFont(4)
-    SetTextColour(255, 255, 255, 255)
-    BeginTextCommandDisplayText("STRING")
-    SetTextCentre(true)
-    AddTextComponentSubstringPlayerName(text)
-    SetDrawOrigin(coords.x, coords.y, coords.z, 0)
-    SetTextJustification(0)
-    EndTextCommandDisplayText(0.0, 0.0)
-    ResetScriptGfxAlign()
+	SetScriptGfxAlignParams((showDot == true and 0.03 or 0.018) + (width / 2), row * 0.03 - 0.0125, 0.0, 0.0)
+	SetTextScale(0, 0.3)
+	SetTextFont(4)
+	SetTextColour(255, 255, 255, 255)
+	BeginTextCommandDisplayText("STRING")
+	SetTextCentre(true)
+	AddTextComponentSubstringPlayerName(text)
+	SetDrawOrigin(coords.x, coords.y, coords.z, 0)
+	SetTextJustification(0)
+	EndTextCommandDisplayText(0.0, 0.0)
+	ResetScriptGfxAlign()
 
-    SetScriptGfxAlignParams((showDot == true and 0.03 or 0.018) + (width / 2), row * 0.03 - 0.015, 0.0, 0.0)
-    DrawSprite(spriteDict, spriteName, 0.0, 0.014, width, 0.025, 0.0, 255, 255, 255, 255)
-    ResetScriptGfxAlign()
+	SetScriptGfxAlignParams((showDot == true and 0.03 or 0.018) + (width / 2), row * 0.03 - 0.015, 0.0, 0.0)
+	DrawSprite(spriteDict, spriteName, 0.0, 0.014, width, 0.025, 0.0, 255, 255, 255, 255)
+	ResetScriptGfxAlign()
 
-    if showDot then
-        local newSpritename = spriteName == _INTERACT.Textures.selected and _INTERACT.Textures.select_opt or _INTERACT.Textures.unselect_opt
-        SetScriptGfxAlignParams(0.018, row * 0.03 - 0.015, 0.0, 0.0)
-        DrawSprite(spriteDict, newSpritename, 0.0, 0.014, 0.01, 0.02, 0.0, 255, 255, 255, 255)
-        ResetScriptGfxAlign()
-    end
+	if showDot then
+		local newSpritename = spriteName == _INTERACT.Textures.selected and _INTERACT.Textures.select_opt or
+		_INTERACT.Textures.unselect_opt
+		SetScriptGfxAlignParams(0.018, row * 0.03 - 0.015, 0.0, 0.0)
+		DrawSprite(spriteDict, newSpritename, 0.0, 0.014, 0.01, 0.02, 0.0, 255, 255, 255, 255)
+		ResetScriptGfxAlign()
+	end
 
-    ClearDrawOrigin()
+	ClearDrawOrigin()
 end
-
-
-
-
-
-
 
 function Utils.table_deepclone(tbl)
-    tbl = table.clone(tbl)
+	tbl = table.clone(tbl)
 
-    for k, v in pairs(tbl) do
-        if type(v) == 'table' then
-            tbl[k] = Utils.table_deepclone(v)
-        end
-    end
+	for k, v in pairs(tbl) do
+		if type(v) == 'table' then
+			tbl[k] = Utils.table_deepclone(v)
+		end
+	end
 
-    return tbl
+	return tbl
 end
-
-
-
 
 -- Blips
 
 function Utils.CreateBlipCircle(coords, text, radius, color, sprite)
-    local blip = AddBlipForRadius(coords, radius)
+	local blip = AddBlipForRadius(coords, radius)
 
-    SetBlipHighDetail(blip, true)
-    SetBlipColour(blip, 2)
-    SetBlipAlpha (blip, 128)
+	SetBlipHighDetail(blip, true)
+	SetBlipColour(blip, 2)
+	SetBlipAlpha(blip, 128)
 
 
-    blip = AddBlipForCoord(coords)
-    SetBlipHighDetail(blip, true)
-    SetBlipSprite (blip, sprite)
-    SetBlipScale  (blip, 0.5)
-    SetBlipColour (blip, color)
-    SetBlipAsShortRange(blip, true)
+	blip = AddBlipForCoord(coords)
+	SetBlipHighDetail(blip, true)
+	SetBlipSprite(blip, sprite)
+	SetBlipScale(blip, 0.5)
+	SetBlipColour(blip, color)
+	SetBlipAsShortRange(blip, true)
 
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString(text)
-    EndTextCommandSetBlipName(blip)
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString(text)
+	EndTextCommandSetBlipName(blip)
+	return blip
 end
 
-function Utils.CreateBlips(vector3Pos, intSprite, intColor, stringText, boolRoad, floatScale, intDisplay, intAlpha, Title, Image, InfoName, Texts, InfoText, Header) -- Créer un blips
+function Utils.CreateBlips(vector3Pos, intSprite, intColor, stringText, boolRoad, floatScale, intDisplay, intAlpha, Title,
+						   Image, InfoName, Texts, InfoText, Header)                                                                                                 -- Créer un blips
 	local blip = AddBlipForCoord(vector3Pos.x, vector3Pos.y, vector3Pos.z)
 	SetBlipSprite(blip, intSprite)
 	SetBlipAsShortRange(blip, true)
-	if intColor then 
-		SetBlipColour(blip, intColor) 
+	if intColor then
+		SetBlipColour(blip, intColor)
 	end
-	if floatScale then 
-		SetBlipScale(blip, floatScale) 
+	if floatScale then
+		SetBlipScale(blip, floatScale)
 	end
-	if boolRoad then 
-		SetBlipRoute(blip, boolRoad) 
+	if boolRoad then
+		SetBlipRoute(blip, boolRoad)
 	end
-	if intDisplay then 
-		SetBlipDisplay(blip, intDisplay) 
+	if intDisplay then
+		SetBlipDisplay(blip, intDisplay)
 	end
-	if intAlpha then 
-		SetBlipAlpha(blip, intAlpha) 
+	if intAlpha then
+		SetBlipAlpha(blip, intAlpha)
 	end
 	if stringText and (not intDisplay or intDisplay ~= 8) then
 		BeginTextCommandSetBlipName("STRING")
 		AddTextComponentString(stringText)
 		EndTextCommandSetBlipName(blip)
 	end
-    if Title then
-        SetBlipInfoTitle(blip, Title, false)
-    end
-    if Image then
-        RequestStreamedTextureDict(Image[1], 1)
-        while not HasStreamedTextureDictLoaded(Image[1]) do
-            Wait(0)
-        end
-    
-        SetBlipInfoImage(blip, Image[1], Image[2])
-    end
-    if InfoName then
-        AddBlipInfoName(blip, InfoName[1], InfoName[2])
-    end
-    if Texts then
-        for k, v in pairs (Texts) do
-            AddBlipInfoText(blip, v[1], v[2])
-        end
-    end
-    if InfoText then
-        AddBlipInfoText(blip, InfoText)
-    end
-    if Header then
-        AddBlipInfoHeader(blip, "") 
-    end
+	if Title then
+		SetBlipInfoTitle(blip, Title, false)
+	end
+	if Image then
+		RequestStreamedTextureDict(Image[1], 1)
+		while not HasStreamedTextureDictLoaded(Image[1]) do
+			Wait(0)
+		end
+
+		SetBlipInfoImage(blip, Image[1], Image[2])
+	end
+	if InfoName then
+		AddBlipInfoName(blip, InfoName[1], InfoName[2])
+	end
+	if Texts then
+		for k, v in pairs(Texts) do
+			AddBlipInfoText(blip, v[1], v[2])
+		end
+	end
+	if InfoText then
+		AddBlipInfoText(blip, InfoText)
+	end
+	if Header then
+		AddBlipInfoHeader(blip, "")
+	end
 	return blip
 end
 
@@ -1123,17 +1099,17 @@ local BLIP_INFO_DATA = {}
 ]]
 
 function ensureBlipInfo(blip)
-    if blip == nil then blip = 0 end
-    SetBlipAsMissionCreatorBlip(blip, true)
-    if not BLIP_INFO_DATA[blip] then BLIP_INFO_DATA[blip] = {} end
-    if not BLIP_INFO_DATA[blip].title then BLIP_INFO_DATA[blip].title = "" end
-    if not BLIP_INFO_DATA[blip].rockstarVerified then BLIP_INFO_DATA[blip].rockstarVerified = false end
-    if not BLIP_INFO_DATA[blip].info then BLIP_INFO_DATA[blip].info = {} end
-    if not BLIP_INFO_DATA[blip].money then BLIP_INFO_DATA[blip].money = "" end
-    if not BLIP_INFO_DATA[blip].rp then BLIP_INFO_DATA[blip].rp = "" end
-    if not BLIP_INFO_DATA[blip].dict then BLIP_INFO_DATA[blip].dict = "" end
-    if not BLIP_INFO_DATA[blip].tex then BLIP_INFO_DATA[blip].tex = "" end
-    return BLIP_INFO_DATA[blip]
+	if blip == nil then blip = 0 end
+	SetBlipAsMissionCreatorBlip(blip, true)
+	if not BLIP_INFO_DATA[blip] then BLIP_INFO_DATA[blip] = {} end
+	if not BLIP_INFO_DATA[blip].title then BLIP_INFO_DATA[blip].title = "" end
+	if not BLIP_INFO_DATA[blip].rockstarVerified then BLIP_INFO_DATA[blip].rockstarVerified = false end
+	if not BLIP_INFO_DATA[blip].info then BLIP_INFO_DATA[blip].info = {} end
+	if not BLIP_INFO_DATA[blip].money then BLIP_INFO_DATA[blip].money = "" end
+	if not BLIP_INFO_DATA[blip].rp then BLIP_INFO_DATA[blip].rp = "" end
+	if not BLIP_INFO_DATA[blip].dict then BLIP_INFO_DATA[blip].dict = "" end
+	if not BLIP_INFO_DATA[blip].tex then BLIP_INFO_DATA[blip].tex = "" end
+	return BLIP_INFO_DATA[blip]
 end
 
 --[[
@@ -1141,64 +1117,63 @@ end
 ]]
 
 function ResetBlipInfo(blip)
-    BLIP_INFO_DATA[blip] = nil
+	BLIP_INFO_DATA[blip] = nil
 end
 
 function SetBlipInfoTitle(blip, title, rockstarVerified)
-    local data = ensureBlipInfo(blip)
-    data.title = title or ""
-    data.rockstarVerified = rockstarVerified or false
+	local data = ensureBlipInfo(blip)
+	data.title = title or ""
+	data.rockstarVerified = rockstarVerified or false
 end
 
 function SetBlipInfoImage(blip, dict, tex)
-    local data = ensureBlipInfo(blip)
-    data.dict = dict or ""
-    data.tex = tex or ""
+	local data = ensureBlipInfo(blip)
+	data.dict = dict or ""
+	data.tex = tex or ""
 end
 
 function SetBlipInfoEconomy(blip, rp, money)
-    local data = ensureBlipInfo(blip)
-    data.money = tostring(money) or ""
-    data.rp = tostring(rp) or ""
+	local data = ensureBlipInfo(blip)
+	data.money = tostring(money) or ""
+	data.rp = tostring(rp) or ""
 end
 
 function SetBlipInfo(blip, info)
-    local data = ensureBlipInfo(blip)
-    data.info = info
+	local data = ensureBlipInfo(blip)
+	data.info = info
 end
 
 function AddBlipInfoText(blip, leftText, rightText)
-    local data = ensureBlipInfo(blip)
-    if rightText then
-        table.insert(data.info, {1, leftText or "", rightText or ""})
-    else
-        table.insert(data.info, {5, leftText or "", ""})
-    end
+	local data = ensureBlipInfo(blip)
+	if rightText then
+		table.insert(data.info, { 1, leftText or "", rightText or "" })
+	else
+		table.insert(data.info, { 5, leftText or "", "" })
+	end
 end
 
 function AddBlipInfoName(blip, leftText, rightText)
-    local data = ensureBlipInfo(blip)
-    table.insert(data.info, {3, leftText or "", rightText or ""})
+	local data = ensureBlipInfo(blip)
+	table.insert(data.info, { 3, leftText or "", rightText or "" })
 end
 
 function AddBlipInfoHeader(blip, leftText, rightText)
-    local data = ensureBlipInfo(blip)
-    table.insert(data.info, {4, leftText or "", rightText or ""})
+	local data = ensureBlipInfo(blip)
+	table.insert(data.info, { 4, leftText or "", rightText or "" })
 end
 
 function AddBlipInfoIcon(blip, leftText, rightText, iconId, iconColor, checked)
-    local data = ensureBlipInfo(blip)
-    table.insert(data.info, {2, leftText or "", rightText or "", iconId or 0, iconColor or 0, checked or false})
+	local data = ensureBlipInfo(blip)
+	table.insert(data.info, { 2, leftText or "", rightText or "", iconId or 0, iconColor or 0, checked or false })
 end
-
 
 -- Scalforms
 function SetScaleformParams(scaleform, data) -- Set des éléments dans un scalform
 	data = data or {}
-	for k,v in pairs(data) do
+	for k, v in pairs(data) do
 		PushScaleformMovieFunction(scaleform, v.name)
 		if v.param then
-			for _,par in pairs(v.param) do
+			for _, par in pairs(v.param) do
 				if math.type(par) == "integer" then
 					PushScaleformMovieFunctionParameterInt(par)
 				elseif type(par) == "boolean" then
@@ -1214,6 +1189,7 @@ function SetScaleformParams(scaleform, data) -- Set des éléments dans un scalf
 		PopScaleformMovieFunctionVoid()
 	end
 end
+
 function CreateScaleform(name, data) -- Créer un scalform
 	if not name or string.len(name) <= 0 then return end
 	local scaleform = RequestScaleformMovie(name)
@@ -1225,42 +1201,41 @@ function CreateScaleform(name, data) -- Créer un scalform
 	SetScaleformParams(scaleform, data)
 	return scaleform
 end
-function Utils.Instructions(instructions, cam) -- Mettre une instruction (scalform)
-    local scaleform = RequestScaleformMovie("INSTRUCTIONAL_BUTTONS")
-    while not HasScaleformMovieLoaded(scaleform) do Citizen.Wait(1) end
-    PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
-    PopScaleformMovieFunctionVoid()
 
-    PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
-    PushScaleformMovieFunctionParameterInt(200)
-    PopScaleformMovieFunctionVoid()
+function Utils.Instructions(instructions, cam) -- Mettre une instruction (scalform)
+	local scaleform = RequestScaleformMovie("INSTRUCTIONAL_BUTTONS")
+	while not HasScaleformMovieLoaded(scaleform) do Citizen.Wait(1) end
+	PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
+	PopScaleformMovieFunctionVoid()
+
+	PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
+	PushScaleformMovieFunctionParameterInt(200)
+	PopScaleformMovieFunctionVoid()
 
 	local counter = 0
-    for _, instruction in pairs(instructions) do
+	for _, instruction in pairs(instructions) do
 		PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
 		PushScaleformMovieFunctionParameterInt(counter)
-        PushScaleformMovieMethodParameterButtonName(GetControlInstructionalButton(2, instruction.key, true))
-        BeginTextCommandScaleformString("STRING")
-        AddTextComponentScaleform(instruction.message)
-        EndTextCommandScaleformString()
+		PushScaleformMovieMethodParameterButtonName(GetControlInstructionalButton(2, instruction.key, true))
+		BeginTextCommandScaleformString("STRING")
+		AddTextComponentScaleform(instruction.message)
+		EndTextCommandScaleformString()
 		PopScaleformMovieFunctionVoid()
 		counter = counter + 1
 	end
 
-    PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
-    PopScaleformMovieFunctionVoid()
+	PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
+	PopScaleformMovieFunctionVoid()
 
-    PushScaleformMovieFunction(scaleform, "SET_BACKGROUND_COLOUR")
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(70)
-    PopScaleformMovieFunctionVoid()
-    
-    return scaleform
+	PushScaleformMovieFunction(scaleform, "SET_BACKGROUND_COLOUR")
+	PushScaleformMovieFunctionParameterInt(0)
+	PushScaleformMovieFunctionParameterInt(0)
+	PushScaleformMovieFunctionParameterInt(0)
+	PushScaleformMovieFunctionParameterInt(70)
+	PopScaleformMovieFunctionVoid()
+
+	return scaleform
 end
-
-
 
 function DrawTexts(x, y, text, center, scale, rgb, font)
 	SetTextFont(font)
@@ -1288,8 +1263,6 @@ function PlayEmote(dict, anim, flag, duration)
 	TaskPlayAnim(GetPlayerPed(-1), dict, anim, 1.0, 1.0, duration, flag or 32, 1.0, 0, 0, 0)
 	RemoveAnimDict(dict)
 end
-
-
 
 function TeleportTopCoords(pos, ent, trustPos) -- TP Un joueur (Sans bug de collision)
 	if not pos or not pos.x or not pos.y or not pos.z or (ent and not DoesEntityExist(ent)) then return true end
@@ -1337,7 +1310,7 @@ function TeleportTopCoords(pos, ent, trustPos) -- TP Un joueur (Sans bug de coll
 	Utils.LastCoords = vector3(x, y, foundNewZ and newZ or z)
 	SetEntityCoordsNoOffset(ent, x, y, foundNewZ and newZ or z)
 	--NewLoadSceneStop()
-	
+
 	if type(pos) ~= "vector3" and pos.w then SetEntityHeading(ent, pos.w) end
 	return true
 end
@@ -1351,5 +1324,193 @@ function Utils.GoPlayerToPos(pos, ent) -- TP Un joueur (Sans bug de collision) a
 	while not done do
 		Citizen.Wait(0)
 	end
+end
 
+Utils.GetVehicleProperties = function(vehicle)
+	if DoesEntityExist(vehicle) then
+		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
+		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+		local extras = {}
+
+		for extraId = 0, 12 do
+			if DoesExtraExist(vehicle, extraId) then
+				local state = IsVehicleExtraTurnedOn(vehicle, extraId) == 1
+				extras[tostring(extraId)] = state
+			end
+		end
+
+		return {
+			model             = GetEntityModel(vehicle),
+
+			plate             = all_trim(GetVehicleNumberPlateText(vehicle)),
+			plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
+
+			color1            = colorPrimary,
+			color2            = colorSecondary,
+
+			pearlescentColor  = pearlescentColor,
+			wheelColor        = wheelColor,
+
+			wheels            = GetVehicleWheelType(vehicle),
+			windowTint        = GetVehicleWindowTint(vehicle),
+			xenonColor        = GetVehicleXenonLightsColour(vehicle),
+
+			neonEnabled       = {
+				IsVehicleNeonLightEnabled(vehicle, 0),
+				IsVehicleNeonLightEnabled(vehicle, 1),
+				IsVehicleNeonLightEnabled(vehicle, 2),
+				IsVehicleNeonLightEnabled(vehicle, 3)
+			},
+
+			customWheel       = GetVehicleModVariation(vehicle, 23),
+
+			neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
+			extras            = extras,
+			tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
+
+			modSpoilers       = GetVehicleMod(vehicle, 0),
+			modFrontBumper    = GetVehicleMod(vehicle, 1),
+			modRearBumper     = GetVehicleMod(vehicle, 2),
+			modSideSkirt      = GetVehicleMod(vehicle, 3),
+			modExhaust        = GetVehicleMod(vehicle, 4),
+			modFrame          = GetVehicleMod(vehicle, 5),
+			modGrille         = GetVehicleMod(vehicle, 6),
+			modHood           = GetVehicleMod(vehicle, 7),
+			modFender         = GetVehicleMod(vehicle, 8),
+			modRightFender    = GetVehicleMod(vehicle, 9),
+			modRoof           = GetVehicleMod(vehicle, 10),
+
+			modEngine         = GetVehicleMod(vehicle, 11),
+			modBrakes         = GetVehicleMod(vehicle, 12),
+			modTransmission   = GetVehicleMod(vehicle, 13),
+			modHorns          = GetVehicleMod(vehicle, 14),
+			modSuspension     = GetVehicleMod(vehicle, 15),
+			modArmor          = GetVehicleMod(vehicle, 16),
+
+			modTurbo          = IsToggleModOn(vehicle, 18),
+			modSmokeEnabled   = IsToggleModOn(vehicle, 20),
+			modXenon          = IsToggleModOn(vehicle, 22),
+
+			modFrontWheels    = GetVehicleMod(vehicle, 23),
+			modBackWheels     = GetVehicleMod(vehicle, 24),
+
+			modPlateHolder    = GetVehicleMod(vehicle, 25),
+			modVanityPlate    = GetVehicleMod(vehicle, 26),
+			modTrimA          = GetVehicleMod(vehicle, 27),
+			modOrnaments      = GetVehicleMod(vehicle, 28),
+			modDashboard      = GetVehicleMod(vehicle, 29),
+			modDial           = GetVehicleMod(vehicle, 30),
+			modDoorSpeaker    = GetVehicleMod(vehicle, 31),
+			modSeats          = GetVehicleMod(vehicle, 32),
+			modSteeringWheel  = GetVehicleMod(vehicle, 33),
+			modShifterLeavers = GetVehicleMod(vehicle, 34),
+			modAPlate         = GetVehicleMod(vehicle, 35),
+			modSpeakers       = GetVehicleMod(vehicle, 36),
+			modTrunk          = GetVehicleMod(vehicle, 37),
+			modHydrolic       = GetVehicleMod(vehicle, 38),
+			modEngineBlock    = GetVehicleMod(vehicle, 39),
+			modAirFilter      = GetVehicleMod(vehicle, 40),
+			modStruts         = GetVehicleMod(vehicle, 41),
+			modArchCover      = GetVehicleMod(vehicle, 42),
+			modAerials        = GetVehicleMod(vehicle, 43),
+			modTrimB          = GetVehicleMod(vehicle, 44),
+			modTank           = GetVehicleMod(vehicle, 45),
+			modWindows        = GetVehicleMod(vehicle, 46),
+			modLivery         = GetVehicleLivery(vehicle)
+		}
+	else
+		return
+	end
+end
+
+Utils.SetVehicleProperties = function(vehicle, props)
+	if DoesEntityExist(vehicle) then
+		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
+		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+		SetVehicleModKit(vehicle, 0)
+
+		if props.plate then SetVehicleNumberPlateText(vehicle, props.plate) end
+		if props.plateIndex then SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex) end
+		if props.color1 then SetVehicleColours(vehicle, props.color1, colorSecondary) end
+		if props.color2 then SetVehicleColours(vehicle, props.color1 or colorPrimary, props.color2) end
+		if props.pearlescentColor then SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor) end
+		if props.wheelColor then SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor,
+				props.wheelColor) end
+		if props.wheels then SetVehicleWheelType(vehicle, props.wheels) end
+		if props.windowTint then SetVehicleWindowTint(vehicle, props.windowTint) end
+
+
+		if props.neonEnabled then
+			SetVehicleNeonLightEnabled(vehicle, 0, props.neonEnabled[1])
+			SetVehicleNeonLightEnabled(vehicle, 1, props.neonEnabled[2])
+			SetVehicleNeonLightEnabled(vehicle, 2, props.neonEnabled[3])
+			SetVehicleNeonLightEnabled(vehicle, 3, props.neonEnabled[4])
+		end
+
+		if props.extras then
+			for extraId, enabled in pairs(props.extras) do
+				if enabled then
+					SetVehicleExtra(vehicle, tonumber(extraId), 0)
+				else
+					SetVehicleExtra(vehicle, tonumber(extraId), 1)
+				end
+			end
+		end
+
+		if props.neonColor then SetVehicleNeonLightsColour(vehicle, props.neonColor[1], props.neonColor[2],
+				props.neonColor[3]) end
+		if props.xenonColor then SetVehicleXenonLightsColour(vehicle, props.xenonColor) end
+		if props.modSmokeEnabled then ToggleVehicleMod(vehicle, 20, true) end
+		if props.tyreSmokeColor then SetVehicleTyreSmokeColor(vehicle, props.tyreSmokeColor[1], props.tyreSmokeColor[2],
+				props.tyreSmokeColor[3]) end
+		if props.modSpoilers then SetVehicleMod(vehicle, 0, props.modSpoilers, false) end
+		if props.modFrontBumper then SetVehicleMod(vehicle, 1, props.modFrontBumper, false) end
+		if props.modRearBumper then SetVehicleMod(vehicle, 2, props.modRearBumper, false) end
+		if props.modSideSkirt then SetVehicleMod(vehicle, 3, props.modSideSkirt, false) end
+		if props.modExhaust then SetVehicleMod(vehicle, 4, props.modExhaust, false) end
+		if props.modFrame then SetVehicleMod(vehicle, 5, props.modFrame, false) end
+		if props.modGrille then SetVehicleMod(vehicle, 6, props.modGrille, false) end
+		if props.modHood then SetVehicleMod(vehicle, 7, props.modHood, false) end
+		if props.modFender then SetVehicleMod(vehicle, 8, props.modFender, false) end
+		if props.modRightFender then SetVehicleMod(vehicle, 9, props.modRightFender, false) end
+		if props.modRoof then SetVehicleMod(vehicle, 10, props.modRoof, false) end
+		if props.modEngine then SetVehicleMod(vehicle, 11, props.modEngine, false) end
+		if props.modBrakes then SetVehicleMod(vehicle, 12, props.modBrakes, false) end
+		if props.modTransmission then SetVehicleMod(vehicle, 13, props.modTransmission, false) end
+		if props.modHorns then SetVehicleMod(vehicle, 14, props.modHorns, false) end
+		if props.modSuspension then SetVehicleMod(vehicle, 15, props.modSuspension, false) end
+		if props.modArmor then SetVehicleMod(vehicle, 16, props.modArmor, false) end
+		if props.modTurbo then ToggleVehicleMod(vehicle, 18, props.modTurbo) end
+		if props.modXenon then ToggleVehicleMod(vehicle, 22, props.modXenon) end
+		if props.modFrontWheels then SetVehicleMod(vehicle, 23, props.modFrontWheels, false) end
+		if props.modBackWheels then SetVehicleMod(vehicle, 24, props.modBackWheels, false) end
+		if props.modPlateHolder then SetVehicleMod(vehicle, 25, props.modPlateHolder, false) end
+		if props.modVanityPlate then SetVehicleMod(vehicle, 26, props.modVanityPlate, false) end
+		if props.modTrimA then SetVehicleMod(vehicle, 27, props.modTrimA, false) end
+		if props.modOrnaments then SetVehicleMod(vehicle, 28, props.modOrnaments, false) end
+		if props.modDashboard then SetVehicleMod(vehicle, 29, props.modDashboard, false) end
+		if props.modDial then SetVehicleMod(vehicle, 30, props.modDial, false) end
+		if props.modDoorSpeaker then SetVehicleMod(vehicle, 31, props.modDoorSpeaker, false) end
+		if props.modSeats then SetVehicleMod(vehicle, 32, props.modSeats, false) end
+		if props.modSteeringWheel then SetVehicleMod(vehicle, 33, props.modSteeringWheel, false) end
+		if props.modShifterLeavers then SetVehicleMod(vehicle, 34, props.modShifterLeavers, false) end
+		if props.modAPlate then SetVehicleMod(vehicle, 35, props.modAPlate, false) end
+		if props.modSpeakers then SetVehicleMod(vehicle, 36, props.modSpeakers, false) end
+		if props.modTrunk then SetVehicleMod(vehicle, 37, props.modTrunk, false) end
+		if props.modHydrolic then SetVehicleMod(vehicle, 38, props.modHydrolic, false) end
+		if props.modEngineBlock then SetVehicleMod(vehicle, 39, props.modEngineBlock, false) end
+		if props.modAirFilter then SetVehicleMod(vehicle, 40, props.modAirFilter, false) end
+		if props.modStruts then SetVehicleMod(vehicle, 41, props.modStruts, false) end
+		if props.modArchCover then SetVehicleMod(vehicle, 42, props.modArchCover, false) end
+		if props.modAerials then SetVehicleMod(vehicle, 43, props.modAerials, false) end
+		if props.modTrimB then SetVehicleMod(vehicle, 44, props.modTrimB, false) end
+		if props.modTank then SetVehicleMod(vehicle, 45, props.modTank, false) end
+		if props.modWindows then SetVehicleMod(vehicle, 46, props.modWindows, false) end
+		if props.customWheel then SetVehicleMod(vehicle, 23, GetVehicleMod(vehicle, 23), true) end
+
+		if props.modLivery then
+			SetVehicleMod(vehicle, 48, props.modLivery, false)
+			SetVehicleLivery(vehicle, props.modLivery)
+		end
+	end
 end

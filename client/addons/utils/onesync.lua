@@ -11,7 +11,7 @@ CreateThread(function()
     while not TriggerServerCallback do Wait(1) end
     Wait(2000)
     local Activplayers = TriggerServerCallback("core:GetAllPlayer", token)
-    print("Start experimental onesync")
+    Logger:info('CORE', "Start experimental onesync")
     while true do 
         Wait(8000)
         local playerLoc = GetEntityCoords(PlayerPedId())

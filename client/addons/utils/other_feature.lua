@@ -25,48 +25,6 @@ local CreateThread = Citizen.CreateThread
 
 
 
-local gEquip = false
--- thread to update weapon ammo count every 100ms
-CreateThread(function()
-    while not loaded do
-        Wait(100)
-    end
-    while p == nil do
-        Wait(100)
-    end
-    while true do
-        gEquip = false
-        local ped = PlayerPedId()
-        local hash = GetSelectedPedWeapon(ped)
-        if hash ~= -1569615261 then
-            gEquip = true
-            local ammo = GetAmmoInPedWeapon(ped, hash)
-            if ammo ~= 0 then
-                for k, v in pairs(Weapons) do
-                    if GetHashKey(v.name) == GetSelectedPedWeapon(ped) then
-                        if v.metadatas.ammo ~= ammo then -- if ammo count is different
-                            Weapons[k].metadatas.ammo = ammo
-                            for key, value in pairs(p:getInventaire()) do
-                                if value.name == v.name then
-                                    value.metadatas.ammo = v.metadatas.ammo
-                                end
-                            end
-                            TriggerServerCallback("core:RefreshInventory", token, p:getInventaire())
-                            TriggerServerEvent("core:SetWeaponSave", token, Weapons)
-                        end
-                    end
-                end
-            end
-        end
-        if gEquip then
-            Wait(60 * 1000) -- 1 minute
-        else
-            Wait(2 * 60 * 1000) -- 2 minutes
-        end
-    end
-end)
-
-
 
 -- TODO: faire fouiller la personne si main lever ou Ragdoll (touche: k)
 local relationshipTypes = { "PLAYER", "CIVMALE", "CIVFEMALE", "COP", "SECURITY_GUARD", "PRIVATE_SECURITY", "FIREMAN",
@@ -259,9 +217,3 @@ function coordsIsInSouth(coords)
     return coords.y < yLimitation
 end
 
-
-RegisterNetEvent("Core:PrintChangeInstance")
-AddEventHandler("Core:PrintChangeInstance", function(playerid, instance, reason)
-
-    Console.Log("Vous avez change d'instance : "..reason .. "I Nouvelle instance : ".. instance)
-end)

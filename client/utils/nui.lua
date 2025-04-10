@@ -9,10 +9,8 @@ function _NUI.SetVisible(name, visible, settings)
     if settings.mouse ~= nil or settings.focus ~= nil then
         if settings.focus == nil then settings.focus = true end
         if settings.mouse == nil then settings.mouse = true end
-        Console.Debug('NUI focus:'..tostring(settings.focus)..', mouse:'..tostring(settings.mouse))
         SetNuiFocus(settings.focus, settings.mouse)
     end
-    Console.Debug("NUI show:".. name ..", "..tostring(visible)) 
     _NUI.SendNUIMessage('show' .. name, visible)
 end
 

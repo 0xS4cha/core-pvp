@@ -1,0 +1,237 @@
+.global {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+
+}
+
+.background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://cdn.discordapp.com/attachments/1276573907192774656/1351122289889906729/Screenshot_2024-09-14_123311.png?ex=67f8de30&is=67f78cb0&hm=8352829facc08b36f476bac77deb591d99e47f09dcaccb4477bf58d437b61d0a&");
+
+}
+
+.menu {
+    border-radius: 4px;
+    position: absolute;
+    display: flex;
+    width: 80%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 80%;
+    padding: 3% 0;
+
+
+}
+
+.game {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.header {}
+
+.news {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4%;
+
+}
+
+.playersInformation {
+    display: flex;
+    align-items: center; 
+    background-color: #0e0e0e;
+    width: 60%; 
+    height: 100%; 
+    border-radius: 24px;
+
+    border: 1px solid #555;
+
+    .imageContainer {
+        height: 100%; 
+        width: 278px; 
+        aspect-ratio: 1 / 1; 
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+        }
+    }
+
+    .textContainer {
+        flex: 1;
+
+        margin: 20px;
+
+        display: flex;
+        flex-direction: column;
+        color: white;
+
+
+        div {
+            display: flex;
+            align-items: center; 
+            gap: 10px; 
+        }
+
+        p {
+            margin: 0; 
+            white-space: nowrap; 
+        }
+    }
+
+
+}
+
+
+.box_game {
+    display: flex;
+    position: relative;
+    border: 1px solid #555;
+    width: 30vh;
+    height: 30vh;
+    border-radius: 4px;
+
+    opacity: 0.7;
+    background-size: cover;
+    background-position: center;
+
+    img {
+        box-shadow: rgba(85, 93, 50, 0.5) 0px 30px 60px -12px inset, rgba(0, 0, 0, 1.0) 0px 18px 36px -18px inset;
+    }
+}
+
+.button_container {
+    position: absolute;
+    bottom: 10px; 
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.box_game:hover {
+    opacity: 1;
+}
+
+.button {
+    padding: 10px 15px;
+    background: linear-gradient(180deg, rgb(31, 31, 31) 0%, rgb(8, 8, 8) 100%);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, border-radius 0.3s ease-in-out, background 0.3s ease-in-out;
+
+    border-radius: 4px;
+}
+
+.button:hover {
+    transform: scale(1.1);
+    border-radius: 10%;
+    background: linear-gradient(180deg, #ffd607 0%, rgb(94, 88, 5) 100%);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    display: flex;
+    background-color: #131313;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 2rem;
+
+    max-width: 550px;
+    width: 50%;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+
+}
+
+.modal-image {
+    position: relative;
+    width: 500px;
+    height: 200px;
+    margin: 10px;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &.locked {
+        cursor: not-allowed;
+        filter: brightness(0.5);
+
+        &:hover {
+            transform: none;
+        }
+
+
+    }
+}
+
+.modal-image img {
+    width: 100%;
+    border-radius: 4px;
+    height: 100%;
+    /* Force la hauteur */
+    object-fit: cover;
+    /* Ajuste sans déformation */
+}
+
+.modal-image:hover {
+    opacity: 1;
+}
+
+.modal-close {
+    margin-top: 20px;
+    width: 500px;
+    height: 50px;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    background: var(--degrade-linear-rouge);
+}
+
+.modal-close:hover {
+    background: var(--degrade-linear-rouge-full);
+}

@@ -1,14 +1,13 @@
 Citizen.CreateThread(function()
     while p == nil do Wait(1000) end
-    SetDiscordAppId(999247110392266773)
-    SetDiscordRichPresenceAsset("ldo_logo-upscale")
-    SetDiscordRichPresenceAssetText("discord.gg/LDO-PVP")
+    SetDiscordAppId(1073173549361135626)
+    SetDiscordRichPresenceAsset("quality-upscale")
+    SetDiscordRichPresenceAssetText("discord.gg/SOON")
 
-    SetDiscordRichPresenceAction(0, "Jouer", "https://discord.gg/LDO-PVP")
-    SetDiscordRichPresenceAction(1, "Discord", "https://discord.gg/LDO-PVP")
-end)
-
-RegisterNetEvent("core:UpdateRichPresence")
-AddEventHandler("core:UpdateRichPresence", function(number)
-    SetRichPresence(_CONFIG.ServerName .. " - " .. number .. " " .. GetPhrase('Player_Connected'))
+    SetDiscordRichPresenceAction(0, "Jouer", "https://discord.gg/qkS9DnkweQ")
+    SetDiscordRichPresenceAction(1, "Discord", "https://discord.gg/qkS9DnkweQ")
+    while true do 
+        SetRichPresence(_CONFIG.ServerName .. " - " .. GlobalState["nbJoueur"] .. " " .. GetPhrase('Player_Connected'))
+        Wait(15000)
+    end
 end)

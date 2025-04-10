@@ -1,11 +1,6 @@
-function UpdateRichPresence(source)
-    local number = #GetPlayers()
-    TriggerClientEvent("core:UpdateRichPresence", -1, number)
-end
-
 CreateThread(function ()
     while true do
-        Wait(60*1000)
-        UpdateRichPresence()
+        GlobalState["nbJoueur"] = #GetPlayers()
+        Wait(30000)
     end
 end)

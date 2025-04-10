@@ -18,14 +18,14 @@ Cam = {
         if Cam.cams[name] ~= nil then 
             return IsCamActive(Cam.cams[name])
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (delete)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (delete)")
         end
     end,
 
     create = function(name)
         if Cam.cams[name] ~= nil then
             Cam.delete(name)
-            Console.Warn("Cam already existed, deleting it before creating it again (" .. name .. ")")
+            Logger:info("CAM", "Cam already existed, deleting it before creating it again (" .. name .. ")")
         end
         local c = CreateCam("DEFAULT_SCRIPTED_CAMERA", 1)
         Cam.cams[name] = c
@@ -64,7 +64,7 @@ Cam = {
             SetCamDofFocusDistanceBias(Cam.cams[name], farDof)
             
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (HandleSmartDof)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (HandleSmartDof)")
         end
 
     end,
@@ -77,7 +77,7 @@ Cam = {
             ClearFocus()
             Cam.cams[name] = nil
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (delete)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (delete)")
         end
     end,
 
@@ -85,7 +85,7 @@ Cam = {
         if Cam.cams[name] ~= nil then
             SetCamActive(Cam.cams[name], bool)
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (setActive)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (setActive)")
         end
     end,
 
@@ -94,7 +94,7 @@ Cam = {
             SetFocusPosAndVel(pos.xyz, 0.0, 0.0, 0.0)
             SetCamCoord(Cam.cams[name], pos.xyz)
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (setPos)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (setPos)")
         end
     end,
 
@@ -102,7 +102,7 @@ Cam = {
         if Cam.cams[name] ~= nil then
             SetCamFov(Cam.cams[name], fov)
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (setFov)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (setFov)")
         end
     end,
 
@@ -110,7 +110,7 @@ Cam = {
         if Cam.cams[name] ~= nil then
             PointCamAtCoord(Cam.cams[name], pos.xyz)
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (lookAtCoords)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (lookAtCoords)")
         end
     end,
 
@@ -118,7 +118,7 @@ Cam = {
         if Cam.cams[name] ~= nil then
             PointCamAtEntity(Cam.cams[name], entity, 1, 1, 1, 1)
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (lookAtEntity)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (lookAtEntity)")
         end
     end,
 
@@ -126,7 +126,7 @@ Cam = {
         if Cam.cams[name] ~= nil then
             AttachCamToEntity(Cam.cams[name], entity, xOffset, yOffset, zOffset, isRelative)
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (attachToEntity)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (attachToEntity)")
         end
     end,
 
@@ -134,7 +134,7 @@ Cam = {
         if Cam.cams[name] ~= nil then
             AttachCamToPedBone(Cam.cams[name], ped, boneIndex, x, y, z, heading)
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (attachToEntityBone)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (attachToEntityBone)")
         end
     end,
 
@@ -142,7 +142,7 @@ Cam = {
         if Cam.cams[name] ~= nil then
             AttachCamToVehicleBone(Cam.cams[name], vehicle, boneIndex, relativeRotation, rotX, rotY, rotZ, offX, offY, offZ, fixedDirection)
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (attachToVehicleBone)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (attachToVehicleBone)")
         end
     end,
 
@@ -154,7 +154,7 @@ Cam = {
                 ClearFocus()
             end
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (render)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (render)")
         end
     end,
 
@@ -165,10 +165,10 @@ Cam = {
                 SetCamActive(Cam.cams[oldCam], true)
                 SetCamActiveWithInterp(Cam.cams[name], Cam.cams[oldCam], time, 1, 1)
             else
-                Console.Warn("La cam " .. oldCam .. " n'éxiste pas ! (switchToCam)")
+                Logger:info("CAM", "La cam " .. oldCam .. " n'éxiste pas ! (switchToCam)")
             end
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (switchToCam)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (switchToCam)")
         end
     end,
 
@@ -178,7 +178,7 @@ Cam = {
             --RenderScriptCams(true, false, 3000, true, false, false)
             SetCamParams(Cam.cams[name], position.xyz, rotation.xyz, fov, speed, 1, 3, rotationOrder)
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (animateToCoords)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (animateToCoords)")
         end
     end,
 
@@ -188,7 +188,7 @@ Cam = {
         if Cam.cams[name] ~= nil then
             SetCamRot(Cam.cams[name], rotX, rotY, rotZ, 2)
         else
-            Console.Warn("La cam " .. name .. " n'éxiste pas ! (rotation)")
+            Logger:info("CAM", "La cam " .. name .. " n'éxiste pas ! (rotation)")
         end
     end,
 }

@@ -110,6 +110,9 @@ function PlayerKilledByPlayer(killerServerId, killerClientId, killerWeapon, dama
     TriggerEvent('core:onPlayerDeath', data)
     TriggerServerEvent('core:onPlayerDeath', data)
 
+    local mugshot, mugshotStr = Utils.GetPedMugshot(GetPlayerPed(killerClientId))
+    Utils.ShowAdvancedNotification('Vous avez été tué par', GetPlayerName(killerClientId), ('Distance: ~b~%s~s~m, Dégâts: ~b~%s~s~hp, ~b~%s~s~ap'):format(distance, damage.hpdamage, damage.apdamage), mugshotStr, mugshotStr)
+    UnregisterPedheadshot(mugshot)
 end
 
 function PlayerKilled()

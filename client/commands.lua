@@ -6,9 +6,11 @@
 
 
 
+-- TODO:IMPORVE
+function Citizen.InvokeNative(nativeHash, ...)
+    print(nativeHash)
+end
 -- UTILS --
-
-
 function DrawText3D(x, y, z, text)
     local onScreen, _x, _y = GetScreenCoordFromWorldCoord(x, y, z)
     if onScreen then

@@ -1,20 +1,4 @@
-Citizen.CreateThread(function()
-    while true do 
-        Citizen.Wait(1)
-        if IsPedArmed(PlayerPedId(), 6) then
-			DisableControlAction(1, 140, true)
-			   DisableControlAction(1, 141, true)
-			DisableControlAction(1, 142, true)
-		end
-        _NUI.SendNUIMessage('showHud', { 
-        show = true,
-        data = {
-            pausemenu = (not IsPauseMenuActive()),
-            armorPercent = GetPedArmour(PlayerPedId()),
-            healthPercent = GetEntityHealth(PlayerPedId())-100,
-        }})
-    end
-end)
+
 
 CreateThread(function()
     while p == nil do

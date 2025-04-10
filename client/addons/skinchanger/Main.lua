@@ -427,7 +427,7 @@ function ApplySkin(skin, clothes, freezeface)
 		end
 	end
 
-	if p:skin().sex > 1 then 
+	if p:skin().sex ~= 'mp_m_freemode_01' then 
 		return
 	end
 
@@ -789,7 +789,6 @@ end
 function ApplySkinOnAPed(ped, skin, clothes, freezeface)
 	local plyChar = {}
 	local playerPed = ped
-
 	for k, v in pairs(skin) do
 		plyChar[k] = v
 	end

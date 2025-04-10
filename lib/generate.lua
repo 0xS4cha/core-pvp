@@ -24,7 +24,7 @@ function Generate.Code(Settings)
 
 
     if #combinedChars == 0 then
-        Console.Error("No character sets selected for code generation.")
+        Logger:warn('CORE', "No character sets selected for code generation.")
     end
 
     -- Génération du code

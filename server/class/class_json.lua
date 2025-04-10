@@ -10,7 +10,7 @@ function JsonDB.new(resourceName, beautify, timedSave, saveInterval, debug)
   self.collections = {};
   self.path = _JSON.Path;
   self.beautify = beautify;
-  Console.Success(("[DATABASE] path: %s"):format(_JSON.Path));
+  Logger:info('DATABASE', "path: %s",_JSON.Path);
   return self;
 end
 local function detectCircularReferences(tbl, visited)
@@ -35,7 +35,7 @@ function JsonDB.save(self, collection)
 
     local collectionFile = ("%s%s.json"):format(self.path, collection);
     SaveResourceFile(self.resourceName, collectionFile, json.encode(self.collections[collection], self.beautify and { indent = true, level = 2 } or nil), -1);
-    Console.Success(("[DATABASE] Saved collection %s"):format(collection));
+    Logger:info('DATABASE', "Saved collection", collection);
   end
 
   if collection then
@@ -55,15 +55,15 @@ function JsonDB.init(self, collections)
     local collectionData = LoadResourceFile(self.resourceName, collectionFile);
     if collectionData then
       self.collections[collection] = json.decode(collectionData);
-      Console.Success(("[DATABASE] Loaded collection %s"):format(collection));
+      Logger:info('DATABASE', "Loaded collection %s", collection);
     else
       self.collections[collection] = {};
-      Console.Success(("[DATABASE] Created collection %s"):format(collection));
+      Logger:info('DATABASE', "Created collection %s", collection);
     end
   end
 
   if self.timedSave then
-    Console.Success(("[DATABASE] Saving json every %s seconds"):format(self.saveInterval / 1000));
+    Logger:info('DATABASE', "Saving json every %s seconds", (self.saveInterval / 1000));
     self.saveTimer = function()
       self:save();
       SetTimeout(self.saveInterval, self.saveTimer);
@@ -71,19 +71,19 @@ function JsonDB.init(self, collections)
     self.saveTimer();
   end
 
-  Console.Success(("[DATABASE] initialized"));
+  Logger:info('DATABASE', "initialized");
 
   return self;
 end
 
 function JsonDB.update(self, collection, key, value)
   if not self.collections[collection] then
-    Console.Error(("[DATABASE] Collection %s does not exist"):format(collection));
+    Logger:error('DATABASE', ("Collection %s does not exist"):format(collection));
     return false;
   end
 
   self.collections[collection][key] = value;
-  Console.Success(("[DATABASE] Updated %s in %s"):format(key, collection));
+  Logger:info('DATABASE', ("Updated %s in %s"):format(key, collection));
 
   if not self.timedSave then
     self:save(collection);
@@ -92,12 +92,12 @@ end
 
 function JsonDB.delete(self, collection, key)
   if not self.collections[collection] then
-    Console.Error(("[DATABASE] Collection %s does not exist"):format(collection));
+    Logger:error('DATABASE', ("Collection %s does not exist"):format(collection));
     return false;
   end
 
   self.collections[collection][key] = nil;
-  Console.Success(("[DATABASE] Deleted %s from %s"):format(key, collection));
+  Logger:info('DATABASE', ("Deleted %s from %s"):format(key, collection));
 
   if not self.timedSave then
     self:save(collection);
@@ -106,7 +106,7 @@ end
 
 function JsonDB.get(self, collection, key)
   if not self.collections[collection] then
-    Console.Error(("[DATABASE] Collection %s does not exist"):format(collection));
+    Logger:error('DATABASE', ("Collection %s does not exist"):format(collection));
     return false;
   end
 
@@ -115,7 +115,7 @@ end
 
 function JsonDB.getAll(self, collection)
   if not self.collections[collection] then
-    Console.Error(("[DATABASE] Collection %s does not exist"):format(collection));
+    Logger:error('DATABASE', ("Collection %s does not exist"):format(collection));
     return false;
   end
 
@@ -124,17 +124,17 @@ end
 
 function JsonDB.insert(self, collection, key, value)
   if not self.collections[collection] then
-    Console.Error(("[DATABASE] Collection %s does not exist"):format(collection));
+    Logger:error('DATABASE', ("Collection %s does not exist"):format(collection));
     return false;
   end
 
   if self.collections[collection][key] then
-    Console.Error(("[DATABASE] Key %s already exists in %s"):format(key, collection));
+    Logger:error('DATABASE', ("Key %s already exists in %s"):format(key, collection));
     return false;
   end
 
   self.collections[collection][key] = value;
-  Console.Success(("[DATABASE] Inserted %s into %s"):format(key, collection));
+  Logger:info('DATABASE', ("Inserted %s into %s"):format(key, collection));
   if not self.timedSave then
     self:save(collection);
   end
@@ -142,20 +142,20 @@ end
 
 function JsonDB.insertAll(self, collection, data)
   if not self.collections[collection] then
-    Console.Error(("[DATABASE] Collection %s does not exist"):format(collection));
+    Logger:error('DATABASE', ("Collection %s does not exist"):format(collection));
     return false;
   end
 
   for key, value in pairs(data) do
     if self.collections[collection][key] then
-      Console.Error(("[DATABASE] Key %s already exists in %s"):format(key, collection));
+      Logger:error('DATABASE', ("Key %s already exists in %s"):format(key, collection));
       return false;
     end
 
     self.collections[collection][key] = value;
   end
 
-  Console.Success(("[DATABASE] Inserted %s keys into %s"):format(#data, collection));
+  Logger:info('DATABASE', ("Inserted %s keys into %s"):format(#data, collection));
 
   if not self.timedSave then
     self:save(collection);
@@ -164,7 +164,7 @@ end
 
 function JsonDB.search(self, collection, key, value)
   if not self.collections[collection] then
-    Console.Error(("[DATABASE] Collection %s does not exist"):format(collection));
+    Logger:error('DATABASE', ("Collection %s does not exist"):format(collection));
     return false;
   end
   
@@ -177,7 +177,7 @@ end
 
 function JsonDB.searchAll(self, collection, key, value)
   if not self.collections[collection] then
-    Console.Error(("[DATABASE] Collection %s does not exist"):format(collection));
+    Logger:error('DATABASE', ("Collection %s does not exist"):format(collection));
     return false;
   end
   

@@ -1,3 +1,0 @@
-_EFFECT = {
-    ['blur'] = 'MenuMGIn'
-}

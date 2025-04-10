@@ -51,10 +51,10 @@ Citizen.CreateThread(function()
             for k, v in pairs(player) do
                 players.players[k] = { 
                     id = tonumber(v["source"]), 
+                    uuid = tonumber(v["id"]),
                     name = GetPlayerName(v["source"]),
                     permission = v["permission"],
-                    group = v["group"],
-                    groupid = v["groupID"],
+
                 }
                 players.count += 1
             end
@@ -91,7 +91,12 @@ Citizen.CreateThread(function()
                         returnList[i].owner = {}
                         returnList[i].plate = GetVehicleNumberPlateText(veh)
                         returnList[i].owner.tempId = owner
+                        returnList[i].owner.playerName = GetPlayer(source):getPlayerName()
                         returnList[i].owner.uuid = GetPlayer(source):getId()
+                        returnList[i].owner.permission = GetPlayer(source):getPermission()
+                        returnList[i].owner.groupid = GetPlayer(source):getGroupID()
+                        returnList[i].owner.groupid = GetPlayer(source):getGroup()
+
                     end
                     return returnList
                 else
@@ -138,6 +143,16 @@ AddEventHandler('core:adminPlayerEvent', function(name, target, token, ...)
     end
 end)
 
+RegisterNetEvent('core:admin:announce', function(token, text)
+    local source = source
+    if CheckPlayerToken(source, token) then 
+        local ply = GetPlayer(source)
+        if ply then
+            TriggerClientEvent('core:ShowNotification', -1, GetPhrase('admin_announce_content', text))
+        end
+    end
+end)
+
 RegisterNetEvent('core:admin:RemoveAdvertPlayer', function(token, id)
     local source = source
     if CheckPlayerToken(source, token) then 
@@ -153,7 +168,22 @@ RegisterNetEvent('core:admin:RemoveAdvertPlayer', function(token, id)
     end
 end)
 
-
+RegisterNetEvent('core:admin:giveitem', function(token, item, target, count)
+    local source = source
+    if CheckPlayerToken(source, token) then 
+        if GetPlayer(source) ~= nil then
+            local ply = GetPlayer(source)
+            if ply:getPermission() >= _PERMISSION["GIVEITEM"] then
+                local xTarget = GetPlayer(target)
+                if xTarget and count > 0 and item ~= '' then
+                    GiveItemToPlayer(xTarget:getSource(), item, count)
+                end
+            else
+                TriggerEvent('core:admin:anticheat', 'Execute trigger: core:admin:giveitem', source, 'events_anticheat')
+            end
+        end
+    end
+end)
 RegisterNetEvent('core:admin:kick', function(token, target, reason)
     local source = source
     if CheckPlayerToken(source, token) then 

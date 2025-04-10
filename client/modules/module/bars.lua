@@ -1,11 +1,11 @@
-local ScreenCoords = { baseX = 0.918, baseY = 0.984, titleOffsetX = 0.012, titleOffsetY = -0.009, valueOffsetX = 0.0785, valueOffsetY = -0.0165, pbarOffsetX = 0.047, pbarOffsetY = 0.0015 }
+local ScreenCoords = { baseX = 0.918, baseY = 0.984, titleOffsetX = 0.012, titleOffsetY = -0.012, valueOffsetX = 0.0785, valueOffsetY = -0.0165, pbarOffsetX = 0.047, pbarOffsetY = 0.0015 }
 local Sizes = {	timerBarWidth = 0.165, timerBarHeight = 0.035, timerBarMargin = 0.038, pbarWidth = 0.0616, pbarHeight = 0.0105 }
 
 local activeBars = {}
 local totalBars = 0
 
 function AddTimerBar(title, itemData)
-	Console.Debug("AddTimerBar", title)
+	Logger:info("Core", "AddTimerBar", title)
 
 	if not itemData then return end
 
@@ -47,12 +47,16 @@ function AddStageBar(title, itemData)
 end
 
 function RemoveTimerBar()
-	Console.Debug("RemoveTimerBar", "ALL")
+	Logger:info("Core", "RemoveTimerBar", "ALL")
 	activeBars = {}
 end
 
+function IsTimerBarValid(barIndex)
+	return barIndex and activeBars[barIndex] and true or false
+end
+
 function SetTimerBarAsNoLongerNeeded(barIndex)
-	Console.Debug( "SetTimerBarAsNoLongerNeeded", barIndex)
+	Logger:info("Core", "SetTimerBarAsNoLongerNeeded", barIndex)
 	activeBars[barIndex] = nil
 end
 
@@ -63,7 +67,6 @@ function UpdateTimerBar(barIndex, itemData)
 	end
 end
 
-if GetCurrentResourceName() ~= "gtalife" then return end
 
 local HideHudComponentThisFrame = HideHudComponentThisFrame
 local GetSafeZoneSize = GetSafeZoneSize
@@ -131,3 +134,4 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
+

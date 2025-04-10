@@ -136,6 +136,12 @@ AddEventHandler("core:RegisterPlayerToken", function(t)
 end)
 
 
+RegisterNetEvent("core:DropMe")
+AddEventHandler("core:DropMe", function()
+    DropPlayer(source, '')
+end)
+
+
 RegisterNetEvent("core:WrongTokenRequest")
 AddEventHandler("core:WrongTokenRequest", function(ressource)
     DropPlayer(source, "Red is kidda sus nah ? " .. ressource) -- TODO Vrais système de ban
@@ -160,9 +166,9 @@ local discordwb = "achanger"
 
 RegisterNetEvent("sw:detect2222", function(hasreason)
     local src = source
-    if GetResourceState("SunWise") ~= hasreason then
+    if GetResourceState("core") ~= hasreason then
         if not StoreSunWise then
-            SendToDiscIGAC(src, hasreason and "La personne a essayé de stop la ressource SunWise. Etat de la ressource : " .. hasreason or "La personne a essayé de stop la ressource SunWise (check core)", true)
+            --SendToDiscIGAC(src, hasreason and "La personne a essayé de stop la ressource SunWise. Etat de la ressource : " .. hasreason or "La personne a essayé de stop la ressource SunWise (check core)", true)
         end
     end
 end)
@@ -176,88 +182,6 @@ local function getGoodDiscord(discord)
     return discord
 end
 
-local BanIds = {}
-function SendToDiscIGAC(sourcep, message, shouldsendimage, webhh)
-    local embeded = {}
-    local img    
-    TriggerClientEvent("core:takescreensw", tonumber(sourcep), "http://imageserver.visionrp.fr/upload/", sourcep)
-    Wait(1000)
-    local license, identifier, liveid, xblid, discord, playerip = "N/A", "N/A","N/A","N/A","N/A","N/A"
-    for k,v in ipairs(GetPlayerIdentifiers(sourcep))do
-        if string.sub(v, 1, string.len("license:")) == "license:" then
-            license = v
-        elseif string.sub(v, 1, string.len("steam:")) == "steam:" then
-            identifier = v
-        elseif string.sub(v, 1, string.len("live:")) == "live:" then
-            liveid = v
-        elseif string.sub(v, 1, string.len("xbl:")) == "xbl:" then
-            xblid  = v
-        elseif string.sub(v, 1, string.len("discord:")) == "discord:" then
-            discord = v
-        elseif string.sub(v, 1, string.len("ip:")) == "ip:" then
-            playerip = v
-        end
-    end
-    local RandomizeNumber1 = math.random(11, 999)
-    local RandomizeNumber2 = math.random(22, 8888)                        
-    local banid = RandomizeNumber1 .. "TEMPCORE" .. RandomizeNumber2
-    if shouldsendimage and Images then
-        local shouldbreak = 1000
-        while Images[sourcep] == nil do Wait(1) shouldbreak = shouldbreak - 1 if shouldbreak < 0 then break end end
-        img = Images[sourcep]
-        discord = getGoodDiscord(discord)
-        local tokens = {}
-        for i = 0, GetNumPlayerTokens(sourcep)-1 do
-            if GetPlayerToken(sourcep, i) ~= nil then
-                table.insert(tokens, GetPlayerToken(sourcep, i))
-            end
-        end
-        Wait(80)
-        local table = {}
-        table.banid = banid
-        table.id = sourcep
-        table.license = license
-        table.liveid = liveid
-        table.identifier = identifier
-        table.discord = discord
-        table.xblid = xblid
-        table.msg = message
-        table.playerip = playerip
-        table.tokens = tokens
-        table.img = img
-        Wait(50)
-        TriggerEvent("sw:sendinfoban", table)
-        embeded = {
-            {
-                ["title"]= GetPlayerName(sourcep) .. " (ID : ".. sourcep ..")",
-                ["type"]="rich",
-                ["color"] =15105570,
-                ["description"] = "**License** : " .. license .. "\n**Steam** : ".. identifier .."\n**LiveID** : ".. liveid .."\n**Discord** : ".. discord .."\n**Player Endpoint** : ".. playerip .." (ping : ".. GetPlayerPing(sourcep) .." ms)\n\n" .. message ..  "\n**BanID** : " .. banid,
-                ["footer"]=  {
-                    ["text"]= "by Flozii#0502",
-                    ["icon_url"] = logo,
-                },
-                ["image"] = {
-                    ["url"] = img,
-                }
-            }
-        }
-    else
-        embeded = {
-            {
-                ["title"]= GetPlayerName(sourcep) .. " " .. "(ID : ".. sourcep ..")",
-                ["type"]="rich",
-                ["color"] =15105570,
-                ["description"] = "**License** : " .. license .. "\n**Steam** : ".. identifier .."\n**LiveID** : ".. liveid .."\n**Discord** : ".. discord .."\n**Player Endpoint** : ".. playerip .." (ping : ".. GetPlayerPing(sourcep) .." ms)\n\n" .. message ..  "\n**BanID** : " .. banid,
-                ["footer"]=  {
-                    ["text"]= "by Flozii#0502",
-                    ["icon_url"] = logo,
-                }
-            }
-        }
-    end
-    PerformHttpRequest(webhh and webhh or discordwb, function(err, text, headers) end, 'POST', json.encode({ username = "SunWise Anticheat",  embeds = embeded}), { ['Content-Type'] = 'application/json' })
-end
 
 local Checkings = {}
 
@@ -286,7 +210,7 @@ CreateThread(function()
                         Checkings[k].count = Checkings[k].count + 1
                         if Checkings[k].count > 15 then 
                             if GetPlayerName(Checkings[k].src) and GetPlayerPing(Checkings[k].src) < 1000.0 then
-                                SendToDiscIGAC(tonumber(Checkings[k].src), "La personne a essayé de **freeze** la ressource SunWise. Temps sans réponse : " .. Checkings[k].count .. " secondes", true)
+                                --SendToDiscIGAC(tonumber(Checkings[k].src), "La personne a essayé de **freeze** la ressource SunWise. Temps sans réponse : " .. Checkings[k].count .. " secondes", true)
                                 Checkings[k].count = 1
                                 --Checkings[k].checked = true
                             else

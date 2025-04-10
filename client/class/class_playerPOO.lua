@@ -14,13 +14,9 @@ player = {
     discord = "", ---@private
     playerip = "", ---@private
     playerName = "", ---@private
-    inventaire = {}, ---@private
-    storage = {}, ---@private
     weapons = {}, ---@private
     cloths = { skin = {}, cloths = {} }, ---@private
     permission = 0, ---@private
-    group = "None", ---@private
-    groupID = 0, ---@private
     vip = 0,
     needSave = false, ---@private
     active = 1,
@@ -34,7 +30,6 @@ function player:new(data)
     setmetatable(obj, self)
     self.__index = self
     obj.id = data.id
-
     obj.license = data.license ---@private
     obj.identifier = data.identifier ---@private
     obj.liveid = data.liveid ---@private
@@ -42,10 +37,8 @@ function player:new(data)
     obj.discord =   data.discord ---@private
     obj.playerip = data.playerip ---@private
     obj.playerName = data.playerName ---@private
-    obj.inventaire = data.inventaire ---@private
     obj.cloths = data.cloths ---@private
     obj.permission = data.permission ---@private
-    obj.storage = data.storage --@private
 
     obj.group = data.group
     obj.vip = data.vip ---@private
@@ -61,13 +54,10 @@ function player:new(data)
 end
 
 --getters and setters
+function player:getPlayerName()
+    return self.playerName
+end
 
-function player:getStorage()
-    return self.storage
-end
-function player:setStorage(storage)
-    self.storage = storage
-end
 function player:getId()
     return self.id
 end
@@ -84,55 +74,8 @@ function player:getLicense()
     return self.license
 end
 
-function player:getFullName()
-    return self.firstname.." "..self.lastname
-end
-
-function player:getFirstname()
-    return self.firstname
-end
 
 
-
-function player:getAge()
-    return self.age
-end
-
-function player:setAge(age)
-    self.age = age
-end
-
-function player:getSex()
-    return self.sex
-end
-
-function player:setSex(sex)
-    self.sex = sex
-end
-
-function player:getSize()
-    return self.size
-end
-
-function player:setSize(size)
-    self.size = size
-end
-
-function player:getBirthplaces()
-    return self.birthplaces
-end
-
-function player:setBirthplaces(birthplaces)
-    self.birthplaces = birthplaces
-end
-
-function player:setInventaire(inventaire)
-    self.inventaire = inventaire
-end
-
-function player:getInventaire()
-    return self.inventaire
-end
 
 function player:getWeapons()
     return self.weapons
@@ -166,41 +109,14 @@ function player:getClothsCloths()
     return self.cloths.cloths
 end
 
-function player:setTattoos(tattoo)
-    self.tattoos = tattoo
-end
 
-function player:getTattoos()
-    return self.tattoos
-end
 
-function player:getDegrader()
-    return self.degrader
-end
-
-function player:setDegrader(degrader)
-    self.degrader = degrader
-end
-
-function player:setBanque(banque)
-    self.banque = banque
-end
-
-function player:getBanque()
-    return self.banque
-end
 
 function player:getPermission()
     return self.permission
 end
 
-function player:setJob(job)
-    self.job = job
-end
 
-function player:getBalance()
-    return self.balance
-end
 
 function player:getSubscription()
     return self.subscription
@@ -232,14 +148,6 @@ function player:getVip()
     return self.vip
 end
 
-function player:setStatus(status)
-    self.status = status
-end
-
-function player:getStatus()
-    return self.status
-end
-
 
 
 function player:setHealth(health)
@@ -250,9 +158,7 @@ function player:getHealth()
     return self.status.health
 end
 
-function player:setPosMethods(position)
-    self.position = position
-end
+
 
 function player:getPos()
     return self.position
@@ -284,6 +190,8 @@ end
 function player:setActive()
     return self.active
 end
+
+
 
 -- weapon
 
@@ -467,74 +375,27 @@ function player:isInVeh()
     return IsPedInAnyVehicle(self:ped(), false)
 end
 
-function player:getPlayerName()
-    return self:playerName()
-end
--- banks fct
-
-function player:haveEnoughMoney(number)
-    for k, v in pairs(p:getInventaire()) do
-        if v.name == "money" then
-            if v.count >= number then
-                return true
-            else
-                return false
-            end
-        end
-    end
-    return false
+function player:getGodmode()
+    return GetPlayerInvincible(self:ped())
 end
 
-function player:pay(number)
-    local pay = TriggerServerCallback("core:pay", Token, tonumber(number))
-    return pay
+function player:setGodmode(bool)
+    return SetPlayerInvincible(self:ped(), bool)
 end
 
-function player:payLiquide(number)
-    local pay = TriggerServerCallback("core:payLiquide", Token, tonumber(number))
-    return pay
+function player:getInvisible()
+    return IsEntityVisible(self:ped())
 end
 
--- inventory fct
-
-function player:haveItem(item)
-    for k, v in pairs(p:getInventaire()) do
-        if v.name == item then
-            return true
-        end
-    end
-    return false
+function player:setInvisible(bool)
+    return SetEntityVisible(self:ped(), bool)
 end
 
-function player:haveItemWithCount(item, number)
-    for k, v in pairs(p:getInventaire()) do
-        if v.name == item then
-            if v.count >= number then
-                return true
-            else
-                return false
-            end
-        end
-    end
-    return false
-end
 
-function player:getItemCount(item)
-    for k, v in pairs(p:getInventaire()) do
-        if v.name == item then
-            if v.count >= 1 then
-                return v.count
-            else
-                return 0
-            end
-        end
-    end
-    return false
-end
 
-function player:AddItem(item, count, metadatas)
-    TriggerSecurGiveEvent("core:addItemToInventory", Token, item, count, metadatas)
-end
+
+
+
 
 -- others fct
 
@@ -607,9 +468,6 @@ exports('getPlayer', function()
     return p
 end)
 
-exports('GetInventoryPlayer', function()
-    return p:getInventaire()
-end)
 
 exports('getPermission', function()
     return p:getPermission()

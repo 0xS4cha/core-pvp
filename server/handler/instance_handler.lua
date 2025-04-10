@@ -1,6 +1,6 @@
 SetRoutingBucketPopulationEnabled(0, false)
-
-
+SetRoutingBucketPopulationEnabled(1, false)
+SetRoutingBucketPopulationEnabled(-1, false)
 RegisterNetEvent("core:InstancePlayer")
 AddEventHandler("core:InstancePlayer", function(token, instance, reason)
     local src = source

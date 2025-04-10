@@ -5,29 +5,22 @@ import { isEnvBrowser } from "../utils/misc";
 import { debugData } from "../utils/debugData";
 import ClothingStore from "./ClothingStore";
 import GroupCreaComponent from "./group_creator";
-import HudComponent from "./Hudui";
-import SpawnSelector from "./SpawnSelector";
+
 import InputComponent from "./Input";
-import Redzoneui  from "./Redzonesb";
 import CharCreator from "./CharCreator";
-import Inventory from "./Inventory/Inventory";
 import Screenshot from "./Screenshot";
-import Cardealer from "./Cardealer";
-import Rental from "./Rental";
 import PinComponent from "./Pin";
-import ShopComponent from "./Shop"
+import AnimationComponent from "./Animation"
+import LobbyUI from "./Choice_gamemode";
 import PromptComponent from "./Prompt";
-import Death from "./Death";
-import GroupManagement from "./Crew/Global";
+
+import Speedometer from "./Speedometer"
+
 
 import Copy from "./Copy";
 
 const App: React.FC = () => {
   const [contextVisible, setContextVisible] = useState(false);
-  const [currentMenuID, setCurrentMenuID] = useState<string | null>(null);
-  const [buttonVisible, setButtonVisible] = useState(false);
-  const [binderControls, setBinderControls] = useState<any>({});
-  const [schema, setSchema] = useState<any>({});
 
 
 
@@ -48,25 +41,20 @@ const App: React.FC = () => {
 
   return (
     <>
+      <LobbyUI/>
+     <AnimationComponent/>
       <Copy/>
-      <HudComponent/>
+      
+      <Speedometer/>
       <Screenshot/>
       <CharCreator/>
-      <Rental />
-      <Cardealer />
-      <ShopComponent/>
+      
       <ClothingStore />
-      <SpawnSelector/>
-      <Redzoneui />
-      <Inventory />
-      <Death/>
       <PromptComponent />
       <PinComponent />
-      <GroupManagement/>
       <GroupCreaComponent />
       <InputComponent />
-
-
+       {/**/}
 
 
 

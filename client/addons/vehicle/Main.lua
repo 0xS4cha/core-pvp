@@ -26,10 +26,9 @@ RegisterNUICallback('vehicleSpawner:Spawn', function(data, cb)
     SetNuiFocus(false, false)
     _NUI.SendNUIMessage('showRental', {
         show = false,
-
         data = {}
     })
-    if vehListSelector[data].type == "PAID" then
+    if vehListSelector[data].type == "Payant" then
         TriggerServerEvent('core:vehicle:spawn', Token, vehListSelector[data].vehicle, safeZoneId, true, vehListSelector[data].plate)
     else
         TriggerServerEvent('core:vehicle:spawn', Token, vehListSelector[data].vehicle, safeZoneId, false)

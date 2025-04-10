@@ -27,7 +27,7 @@ end
 
 ---@param props PinProps | nil
 function PIN.open(props)
-    if pinRes then Console.Warn('Pin already open') return end
+    if pinRes then Logger:warn('PIN', 'Pin already open') return end
     
     props = setDefaultProps(props)
     pinRes = promise.new()
@@ -38,7 +38,7 @@ function PIN.open(props)
 end
 
 function PIN.close()
-    if not pinRes then Console.Warn('No pin open') return end
+    if not pinRes then Logger:warn('PIN', 'No pin open') return end
 
     SendNUIMessage({
         action = 'closePin',

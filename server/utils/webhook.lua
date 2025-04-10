@@ -16,6 +16,41 @@ function SendDiscordLog(type, source, ...)
                 },
             }
         }
+        if _LOGS[type].player then
+            local p = GetPlayer(source)
+            embed = {
+                {
+                    ["color"] = color,
+                    ["title"] = _LOGS[type].title,
+    
+                    ["description"] = ('%s\n\n```💾 Information du joueur :```'):format(text),
+                    ['fields'] = {
+                        {
+                            ['name'] = 'Discord',
+                            ['value'] = ('<@%s>'):format(string.sub(GetDiscord(source), 9, -1)),
+                        },
+                        {
+                            ['name'] = 'TempID',
+                            ['value'] = ('```%s```'):format(source),
+                        },
+                        {
+                            ['name'] = 'UUID',
+                            ['value'] = ('```%s```'):format(p:getId()),
+                        },
+                        {
+                            ['name'] = 'Pseudo',
+                            ['value'] = ('```%s```'):format(p:getPlayerName()),
+                        },
+                    },
+
+                    ["footer"] = {
+                        ["text"] = os.date("%Y/%m/%d %X"),
+                        ["icon_url"] = "https://sacha-dev.fr/ldo_logo.PNG",
+    
+                    },
+                }
+            }
+        end
         PerformHttpRequest(_LOGS[type].hook, function(err, text, headers) end, 'POST',
             json.encode({
                 username = "LOG",
@@ -24,7 +59,7 @@ function SendDiscordLog(type, source, ...)
             })
             , { ['Content-Type'] = 'application/json' })
     else
-        Console.Warn("Webhook not found for type: " .. type)
+        Logger:warn('CORE', "Webhook not found for type: " .. type)
     end
 end
 
@@ -59,7 +94,7 @@ function SendDiscordLogImage(type, source, url, ...)
             })
             , { ['Content-Type'] = 'application/json' })
     else
-        Console.Warn("Webhook not found for type: " .. type)
+        Logger:warn('CORE', "Webhook not found for type: " .. type)
     end
 end
 
@@ -99,6 +134,6 @@ function SendDiscordLogVideo(type, source, url, ...)
             })
             , { ['Content-Type'] = 'application/json' })
     else
-        Console.Warn("Webhook not found for type: " .. type)
+        Logger:warn('CORE', "Webhook not found for type: " .. type)
     end
 end

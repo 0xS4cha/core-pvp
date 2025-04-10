@@ -7,12 +7,11 @@ function CreatePlayerData(src, perm)
         players[src] = obj
 
         MySQL.Async.insert(
-            "INSERT INTO players (cloths, license, inventaire, permission, active, playerName, identifier, liveid, xblid, discord, playerip, storage) " ..
-            "VALUES (@1, @key, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11)",
+            "INSERT INTO players (cloths, license, permission, active, playerName, identifier, liveid, xblid, discord, playerip) " ..
+            "VALUES (@1, @key, @3, @4, @5, @6, @7, @8, @9, @10)",
             {
                 ["key"] = obj:getLicense(),
                 ["1"] = json.encode(obj:getCloths()),
-                ["2"] = json.encode(obj:getInventaire()),
                 ["3"] = obj:getPermission(),
                 ["4"] = obj:getActive(),
                 ["5"] = obj:getPlayerName(),
@@ -21,11 +20,11 @@ function CreatePlayerData(src, perm)
                 ["8"] = obj:getXblid(),
                 ["9"] = obj:getDiscord(),
                 ["10"] = obj:getPlayerIp(),
-                ["11"] = json.encode(obj:getStorage())
+
             },
             function(result)
                 GetPlayer(src):setId(result)
-                Console.Success("Player " .. src .. " saved.")
+                Logger:info('CORE', "Player " .. src .. " saved.")
                 RefreshPlayerData(src)
                 TriggerClientEvent("core:InitPlayer", src, GetImportantInfo())
             end
@@ -38,14 +37,7 @@ function LoadPlayerData(source, data, id)
         local data = data
         local obj = player:new(data, false, source) ---@return player
         players[source] = obj
-        local pGroup, pGroupId = Group.getPlayerGroup(obj:getId())
-        if pGroup then
-            obj:setGroup(pGroup)
-            obj:setGroupID(pGroupId)
-        else
-            obj:setGroup("None")
-            obj:setGroupID(0)
-        end
+
         RefreshPlayerData(source)
         TriggerEvent("core:playerLoaded", source)
         --TriggerClientEvent("core:updateBankPhoneValue", source, Bank.GetPlayerCommonAccount(tonumber(source)).balance)
@@ -54,7 +46,7 @@ function LoadPlayerData(source, data, id)
         SendDiscordLog("connexion", source, obj:getId(), string.sub(discord, 9, -1), obj:getPlayerName())
         obj:setActive(1)
         Wait(8000)
-        Console.Success("Player " .. source .. " loaded.")
+        Logger:info('CORE', "Player " .. source .. " loaded.")
         SavePlayerData(source, false)
     end
 end
@@ -86,14 +78,12 @@ function SavePlayerData(source, isnewpersonnage)
     if GetPlayer(source) ~= nil then
         local obj = GetPlayer(source)
         if isnewpersonnage then
-   
-            MySQL.Async.execute("UPDATE players SET cloths = @1, inventaire = @2 , permission = @3,  active = @4, storage = @5, playerName = @6, identifier = @7, liveid = @8, xblid = @9, discord = @10, playerip = @11 WHERE license = @license AND id = @id"
+            MySQL.Async.execute("UPDATE players SET cloths = @1, permission = @3,  active = @4, playerName = @6, identifier = @7, liveid = @8, xblid = @9, discord = @10, playerip = @11 WHERE license = @license AND id = @id"
                 ,{
                     ["@1"] = json.encode(obj:getCloths()),
-                    ["@2"] = json.encode(obj:getInventaire()),
                     ["@3"] = obj:getPermission(),
                     ["@4"] = json.encode(obj:getActive()),
-                    ["@5"] = json.encode(obj:getStorage()),
+
                     ["@license"] = obj:getLicense(),
                     ["@id"] = obj:getId(),
                     ["6"] = obj:getPlayerName(),
@@ -109,14 +99,12 @@ function SavePlayerData(source, isnewpersonnage)
                 obj:setNeedSave(false)
             end)
         else
-            MySQL.Async.execute("UPDATE players SET cloths = @1, inventaire = @2 , permission = @3,  active = @4, storage = @5, playerName = @6, identifier = @7, liveid = @8, xblid = @9, discord = @10, playerip = @11 WHERE license = @license AND id = @id"
+            MySQL.Async.execute("UPDATE players SET cloths = @1, permission = @3,  active = @4, playerName = @6, identifier = @7, liveid = @8, xblid = @9, discord = @10, playerip = @11 WHERE license = @license AND id = @id"
                 ,{
       
                     ["@1"] = json.encode(obj:getCloths()),
-                    ["@2"] = json.encode(obj:getInventaire()),
                     ["@3"] = obj:getPermission(),
                     ["@4"] = json.encode(obj:getActive()),
-                    ["@5"] = json.encode(obj:getStorage()),
                     ["@license"] = obj:getLicense(),
                     ["@id"] = obj:getId(),
                     ["6"] = obj:getPlayerName(),
@@ -200,7 +188,7 @@ end
 
 AddEventHandler("onResourceStop", function(resource)
     if resource == GetCurrentResourceName() then
-        Console.Warn("Resource stopping, saving players.")
+        Logger:warn('CORE', "Resource stopping, saving players.")
         --[[ --REMETRE
         for k, v in pairs(casier) do
             for key, value in pairs(casier[k]) do
@@ -234,7 +222,7 @@ end)
 AddEventHandler("playerDropped", function(reason)
     local _source = source
     local obj = GetPlayer(_source)
-    Console.Success("Player " .. _source .. " dropped (" .. reason .. ").")
+    Logger:info('CORE', "Player " .. _source .. " dropped (" .. reason .. ").")
     if obj ~= nil then
         local discord = GetDiscord(_source)
         local identifiers = PlayersIdentifierToString(_source)

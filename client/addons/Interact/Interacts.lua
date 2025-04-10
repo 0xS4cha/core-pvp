@@ -61,7 +61,6 @@ local function CreateInteractions()
     for i = 1, #nearby do
         local interaction = nearby[i]
         local coords = interaction.coords or Utils.getCoordsFromInteract(interaction)
-
         if CheckCanInteract(interaction) then
 
             if GetScreenCoordFromWorldCoord(coords.x, coords.y, coords.z) then
@@ -142,7 +141,7 @@ CreateThread(function ()
     RequestStreamedTextureDict(_INTERACT.Style, 1)
 	while not HasStreamedTextureDictLoaded(_INTERACT.Style) do
 		Wait(50)
-		Console.Debug("wait texture")
+		Logger:warn('INTERACTIONS', "wait texture")
 	end
     while true do
         local wait = 500

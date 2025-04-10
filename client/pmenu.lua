@@ -107,32 +107,60 @@ function PMenu:ShouldCloseMenu()
 	return false
 end
 
+local function checkForFilter(filtersList, userFilter, payload)
+	if not userFilter or payload.bypassFilter then return true end
+	if not filtersList then return string.find(string.lower(payload.name), userFilter) end
+    local filters = {}
+    for word in userFilter:gmatch("%S+") do
+        local matched = false
+        for key, pattern in pairs(filtersList) do
+            local value = word:match(pattern)
+            if value then
+                filters[key] = value
+                matched = true
+                break
+            end
+        end
+        if not matched then
+            filters.name = word
+        end
+    end
+
+    local match = true
+    for key, value in pairs(filters) do
+        if key == "name" then
+            if not string.find(string.lower(payload.name), value) then
+                match = false
+                break
+            end
+        else
+            local testValue = tostring(type(payload[key]) == "boolean" and (payload[key] == true and 1 or 0) or payload[key])
+
+            if testValue ~= value then
+                match = false
+                break
+            end
+        end
+    end
+
+    return match
+end
+
+
 function PMenu:GetButtons(customMenu)
 	local menu = customMenu or self.Data.currentMenu
 	local menuData = self.Menu and self.Menu[menu]
 	local allButtons = menuData and menuData.b
-	if not allButtons then
-		self.tempData = { {}, 1 }
-		return {}, 0
-	end
+	if not allButtons then self.tempData = { {}, 1 } return {}, 0 end
 
 	local tblFilter = {}
 	allButtons = type(allButtons) == "function" and allButtons(self, menu) or allButtons
-	if not allButtons or type(allButtons) ~= "table" then
-		self.tempData = { {}, 1 }
-		return {}, 0
-	end
+	if not allButtons or type(allButtons) ~= "table" then self.tempData = { {}, 1 } return {}, 0 end
 
-	if self.Events and self.Events["onLoadButtons"] then
-		allButtons = self.Events["onLoadButtons"](self, menu, allButtons) or
-			allButtons
-	end
-	for _, v in pairs(allButtons) do
-		if v and type(v) == "table" and (v.canSee and (type(v.canSee) == "function" and v.canSee() or v.canSee == true) or v.canSee == nil) and (not menuData.filter or v.bypassFilter or string.find(string.lower(v.name), menuData.filter)) then
-			if v.customSlidenum then
-				v.slidenum = type(v.customSlidenum) == "function" and v.customSlidenum() or
-					v.customSlidenum
-			end
+	if self.Events and self.Events["onLoadButtons"] then allButtons = self.Events["onLoadButtons"](self, menu, allButtons) or allButtons end
+	for _,v in pairs(allButtons) do
+		if v and type(v) == "table" and (v.canSee and (type(v.canSee) == "function" and v.canSee() or v.canSee == true) or v.canSee == nil) and checkForFilter(menuData.filters, menuData.filter, v) then
+			if v.customSlidenum then v.slidenum = type(v.customSlidenum) == "function" and v.customSlidenum() or v.customSlidenum end
 
 			local max = type(v.slidemax) == "function" and v.slidemax(v, self) or v.slidemax
 			if type(max) == "number" then
@@ -181,8 +209,7 @@ function PMenu:OpenMenu(stringName, boolBack, selectedButtonIndex)
 	self.Data.currentMenu = stringName
 
 	if self.Events and self.Events["onButtonSelected"] then
-		self.Events["onButtonSelected"](self.Data.currentMenu,
-			self.Pag[3], self.Data.back, newButtons[self.Pag[3]] or {}, self)
+		self.Events["onButtonSelected"](self, self.Data, newButtons[self.Pag[3]] or {}, self.Pag[3])
 	end
 end
 
@@ -246,7 +273,7 @@ function PMenu:CreateMenu(tableMenu, tempData)
 		if self.Events["onButtonSelected"] then
 			-- maybe get buttons
 			local allButtons, count = self:GetButtons()
-			self.Events["onButtonSelected"](self.Data.currentMenu, self.Pag[3] or 1, {}, allButtons[1] or {}, self)
+			self.Events["onButtonSelected"](self, self.Data, allButtons[1] or {}, self.Pag[3])
 		end
 
 		self:OpenMenu(self.Data.currentMenu)
@@ -307,7 +334,7 @@ function PMenu:ProcessControl()
 
 		local newButton = currentButtons[self.Pag[3]]
 		if self.Events["onButtonSelected"] and newButton and (self:canUseButton(newButton) or currentMenu.allowButtonSelectedLocked) then
-			self.Events["onButtonSelected"](self.Data.currentMenu, self.Pag[3], self.Data.back, newButton, self)
+			self.Events["onButtonSelected"](self, self.Data, newButton, self.Pag[3])
 		end
 
 		Citizen.Wait(125)
@@ -339,7 +366,8 @@ function PMenu:ProcessControl()
 				local Offset = MeasureStringWidth(currentBtn.slidename, 0, 0.35)
 
 				currentBtn.offset = Offset
-				if slide then slide(self.Data, currentBtn, self.Pag[3], self) end
+				
+				if slide then slide(self, self.Data, currentBtn, self.Pag[3]) end
 				Citizen.Wait(currentMenu.slidertime or 175)
 			end
 		end
@@ -365,9 +393,7 @@ function PMenu:ProcessControl()
 
 			if left or right then
 				local advPadding = 1
-				currentBtn.advSlider[3] = math.max(currentBtn.advSlider[1],
-					math.min(currentBtn.advSlider[2],
-						right and currentBtn.advSlider[3] - advPadding or left and currentBtn.advSlider[3] + advPadding))
+				currentBtn.advSlider[3] = math.max(currentBtn.advSlider[1], math.min(currentBtn.advSlider[2], right and currentBtn.advSlider[3] - advPadding or left and currentBtn.advSlider[3] + advPadding))
 				self.Events["onAdvSlide"](self, self.Data, currentBtn, self.Pag[3], currentButtons)
 			end
 
@@ -646,8 +672,8 @@ function PMenu:DrawButtons(tableButtons)
 
 			if data.multiline then
 				stringButton = MultilineFormat(GetPhrase(stringButton), buttonTextScale)
-
 				local linesCount = #stringsplit(stringButton, "\n")
+
 				buttonHeight = buttonHeight + textLineHeight * (linesCount - 1)
 			end
 
@@ -659,12 +685,11 @@ function PMenu:DrawButtons(tableButtons)
 				if self.Events["setCheckbox"] then self.Events["setCheckbox"](self.Data, data) end
 
 				local slideEvent = data.slide or self.Events["onSlide"]
-				if slideEvent or data.checkbox ~= nil then
-					if not slideEvent then
-						data.checkbox = not data.checkbox
-					else
-						slideEvent(self.Data, data, intID, self)
-					end
+
+				if data.checkbox ~= nil then
+					data.checkbox = not data.checkbox
+				elseif slideEvent then
+					slideEvent(self.Data, data, intID, self)
 				end
 
 				local selectFunc, shouldContinue = self.Events["onSelected"], false
@@ -727,7 +752,8 @@ function PMenu:DrawHeader(intCount)
 
 	self.Height = self.Height + 0.06
 	local rectW, rectH = _intW, _intH - .005
-	DrawRect(self.Width - rectW / 2, self.Height - rectH / 2, rectW, rectH, 40, 40, 40, 240)
+	DrawRect(self.Width - rectW / 2, self.Height - rectH / 2, rectW, rectH, self.Base.Color[1], self.Base.Color[2],
+		self.Base.Color[3], 255)
 	DrawRect(self.Width - rectW / 2, self.Height - rectH / 1, rectW, rectH / 5, 255, 255, 255, 255)
 	self.Height = self.Height + 0.005
 
@@ -791,7 +817,7 @@ function PMenu:DrawHelpers(tableButtons)
 		local padding = 0.015
 
 		DrawSprite("commonmenu", "gradient_bgd", self.Width - _intW / 2, self.Height + nwintH / 2 - padding, _intW, nwintH, .0, 255, 255, 255, 255)
-		--DrawRect(self.Width - _intW / 2, self.Height + nwintH / 2 - padding, _intW, nwintH, 40, 40, 40, 240)
+		--DrawRect(self.Width - _intW / 2, self.Height + nwintH / 2 - padding, _intW, nwintH, 0, 0, 0, 100)
 		DrawText2(defaultFont, descText, scale, self.Width - _intW + .005, self.Height - padding + 0.008, color_white)
 	end
 end
@@ -828,7 +854,7 @@ function PMenu:DrawExtra(tableButtons)
 		if IsDisabledControlPressed(0, 24) and IsMouseInBounds(rectX, rectY, rectW, rectH) then
 			local mouseXPos = GetControlNormal(0, 239) - proH / 2
 			button.opacity = round(math.max(0.0, math.min(1.0, mouseXPos / rectW)), 2)
-			self.Events["onSlide"](self.Data, button, self.Pag[3], self)
+			self.Events["onSlide"](self, self.Data, button, self.Pag[3])
 		end
 		self.Height = self.Height + 0.025
 	end
@@ -897,8 +923,8 @@ function PMenu:Draw()
 		end -- 0.00ms
 	end
 	if self.Events and self.Events["onRender"] then
-		self.Events["onRender"](self, tableButtons, tableButtons
-			[self.Pag[3]], self.Pag[3])
+		self.Events["onRender"](self, self.Data, tableButtons[self.Pag[3]], self.Pag[3], tableButtons)
+		
 	end
 end
 
@@ -907,7 +933,7 @@ function CloseMenu(force)
 end
 
 function CreateMenu(arrayMenu, tempData)
-	Console.Warn("Create menu called")
+	Logger:info('PMENU', "Create menu called")
 	return PMenu:CreateMenu(arrayMenu, tempData)
 end
 
@@ -931,27 +957,6 @@ function AskEntry(callback, name, lim, default)
 		end
 	end
 end
-
-function CreateRoue(currentMenu)
-	local menuData = Deepcopy(currentMenu)
-	for k, v in pairs(menuData.menu) do
-		if v and type(v) == "function" then
-			menuData.menu[k] = v()
-		end
-
-		if v and type(v) == "table" then
-			for _, l in pairs(v) do
-				if type(l) == "table" and l.name then
-					l.name = GetPhrase(l.name)
-				end
-			end
-		end
-	end
-
-	TriggerEvent("pichot:toggleRoue", menuData)
-end
-
-exports("CreateRoue", CreateRoue)
 
 function DrawNiceText(x, y, scale, text, font, j, wrap)
 	SetTextFont(font)
@@ -1002,7 +1007,8 @@ function CreateProgressBar(stringText, intTime, persistent)
 			local customW = math.max(0, math.min(diffW, diffW * progressFloat))
 			local Timer = (startTime - GetGameTimer()) / 1000
 			DrawRect((x - diffW / 2) + customW / 2, y, customW, diffH, 30, 77, 138, 100)
-			DrawText2(defaultFont, translatedText .. dotStr..' ('..Utils.Round(Timer, 2)..'s)', 0.3, x, y - 0.0125, { 255, 255, 255, 255 }, 0, 0, 0)
+			DrawText2(defaultFont, translatedText .. dotStr .. ' (' .. Utils.Round(Timer, 2) .. 's)', 0.3, x, y - 0.0125,
+				{ 255, 255, 255, 255 }, 0, 0, 0)
 		end
 
 		KillProgressBar()

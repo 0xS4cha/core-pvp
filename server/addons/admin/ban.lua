@@ -44,7 +44,7 @@ function ActualizeAllBanList()
                     end
                 end
             end
-            Console.Success("Actualize banlist")
+            Logger:info('CORE', "Actualize banlist")
         end
     end)
 end
@@ -109,7 +109,7 @@ RegisterNetEvent('core:admin:banoffline', function(token, uuid, raison, time, ty
                 }, function(affectedRows)
                     
                    TriggerClientEvent('core:ShowNotification', source, GetPhrase('ADMIN_BANNED_ADMIN', TargetInformation.playerName, raison))
-                    Console.Success("Ban " .. TargetInformation.playerName .. " for " .. raison)
+                    Logger:info('CORE', "Ban " .. TargetInformation.playerName .. " for " .. raison)
                     ActualizeAllBanList()
                 end)
         end
@@ -176,7 +176,7 @@ AddEventHandler('core:admin:ban', function(token, target, raison, time, type)
                     local targetName = xTarget:getPlayerName() 
                     DropPlayer(target,"A component of your computer is preventing you from being able to play FiveM.\nPlease wait out your original ban (expiring in 21 days + 23:59:55) to be able to play FiveM.\nThe associated correlation ID is 78e546-cgh8j-478Jd-c832-dax9246_01cd.")
 
-                    Console.Success("Ban " .. targetName .. " for " .. raison)
+                    Logger:info('CORE', "Ban " .. targetName .. " for " .. raison)
                     ActualizeAllBanList()
                 end)
         end
@@ -224,7 +224,7 @@ AddEventHandler('core:admin:anticheat', function(reason, src, type, img)
         }, function(affectedRows)
             local name = GetPlayerName(_source) or 'unknow'
    
-            Console.Success("Ban " .. name .. " for Anticheat")
+            Logger:info('CORE', "Ban " .. name .. " for Anticheat")
             if type ~= nil then
                 if img ~= nil then
 

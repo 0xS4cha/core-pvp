@@ -209,9 +209,8 @@ CreateThread(function()
     end
     
     while true do
-        HudWeaponWheelIgnoreSelection()
-        HideHudComponentThisFrame(19)
-        NetworkOverrideClockTime(_CONFIG.TIME, 00, 0)
+
+        SetPlayerTargetingMode(3)
         if GetPlayerWantedLevel(PlayerId()) ~= 0 then
             SetPlayerWantedLevel(PlayerId(), 0, false)
             SetPlayerWantedLevelNow(PlayerId(), false)
@@ -225,14 +224,6 @@ CreateThread(function()
         DisablePlayerVehicleRewards(PlayerId())
         SetEveryoneIgnorePlayer(p:ped(), true)
 
-        HideHudComponentThisFrame(20)
-        DisableControlAction(0, 37, true)
-        DisableControlAction(0, 12, true)
-        DisableControlAction(0, 13, true)
-        DisableControlAction(0, 14, true)
-        DisableControlAction(0, 15, true)
-        DisableControlAction(0, 16, true)
-        DisableControlAction(0, 17, true)
         SetPedConfigFlag(PlayerPedId(), 438, true)
         Wait(1)
     end
@@ -241,32 +232,6 @@ local Detect = {
     found = false,
     weapon = nil,
 }
-CreateThread(function()
-    while p == nil do
-        Wait(0)
-    end
-    while true do
-        Detect.found = false
-        if IsPedArmed(PlayerPedId(), 1) or IsPedArmed(PlayerPedId(), 4) or IsPedArmed(PlayerPedId(), 2) then
-            for k, v in pairs(p:getInventaire()) do
-                if v.name and string.find(v.name, "WEAPON_") then 
-                    if GetSelectedPedWeapon(PlayerPedId()) == GetHashKey(v.name) then 
-                        Detect.found = true
-                    end
-                end
-            end
-            if not Detect.found then 
-                if weaponHashes[GetSelectedPedWeapon(PlayerPedId())] then
-                    Detect.weapon = weaponHashes[GetSelectedPedWeapon(PlayerPedId())]
-                else
-                    Detect.weapon = GetSelectedPedWeapon(PlayerPedId()).." (Hash)"
-                end
-               SetCurrentPedWeapon(PlayerPedId(), GetHashKey('WEAPON_UNARMED'), true)
-            end
-        end
-        Wait(3000)
-    end
-end)
 
 
 RegisterNetEvent("core:takescreensw", function(http, id)
@@ -300,3 +265,99 @@ if not _CONFIG.Debug then
         end
     end)
 end
+
+local TimerAimbot = 0
+local counttriggerbot = 0
+Citizen.CreateThread(function()
+    while true do
+        Wait(1000)
+        local dp, Entity = GetEntityPlayerIsFreeAimingAt(PlayerId())
+        if dp then
+            if IsEntityAPed(Entity)  and IsPedAPlayer(Entity) and not IsPedDeadOrDying(Entity, 0) then
+                if IsPedShooting(PlayerPedId()) then
+                    
+                    local head = GetPedBoneCoords(Entity, GetEntityBoneIndexByName(Entity, 'SKEL_HEAD'), 0.0, 0.0, 0.0)
+                    local hit, hitCoords = GetPedLastWeaponImpactCoord(PlayerPedId())
+                    local distance = #(head - hitCoords)
+                    if IsPedShootingInArea(PlayerPedId(), head.x, head.y, head.z) or distance <= 0.68 then
+                        counttriggerbot = counttriggerbot + 1
+                        if counttriggerbot > 5 then
+                            print('here')
+                            exports['screenshot-basic']:requestVideoUpload(time,
+                            "https://discord.com/api/webhooks/1335640357563535471/dliWjKzOumldnqtkWt2UUCnJQNmhDc_HXUuvQ6lf8m69p98Xrq9B1G9Ro-zWDrq8hCcc",
+                            "files[]", function(data)
+                                local resp = json.decode(data)
+                                if resp ~= nil then
+                                    local videoUrl = resp.attachments[1].proxy_url
+
+                                    TriggerServerEvent('core:admin:warning', token, videoUrl, "Used TriggerBot/Aimbot with more than " .. counttriggerbot .. " headshots")
+                                end
+                    
+                        end)                           return
+                        elseif TimerAimbot == 0 then
+                            CreateThread(function()
+                                while TimerAimbot < 15 do
+                                    Wait(1000)
+                                    TimerAimbot = TimerAimbot + 1
+                                end
+                                counttriggerbot = 0
+                                TimerAimbot = 0
+                            end)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
+
+
+--[[
+local firstSpawn = true
+
+AddEventHandler('playerSpawned', function()
+    if firstSpawn then
+        firstSpawn = false
+
+        CreateThread(function()
+            local test = false
+            local player = PlayerId()
+            local ped = PlayerPedId()
+            local ControlPressed = IsControlPressed
+            local Aiming = IsPlayerFreeAiming
+            while true do
+                if ControlPressed(0, 25) or Aiming(player) then
+                    if ControlPressed(0, 25) or Aiming(player) then
+                        test = true
+
+                    else
+                        test = false
+
+                    end
+                end
+
+                if IsPedReloading(ped) or not Aiming(player) then
+                    test = false
+                else
+
+                    test = true
+                end
+
+                Wait(750)
+
+                CreateThread(function()
+                    while test do
+                        if ControlPressed(0, 25) then
+                            SetGameplayCamRelativeRotation(0, 0, 0)
+                        else
+
+                            test = false
+                        end
+                        
+                        Wait(0)
+                    end
+                end)
+            end
+        end)
+    end
+end)]]

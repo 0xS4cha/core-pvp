@@ -1,0 +1,2 @@
+function ApplyRules(rules)
+end

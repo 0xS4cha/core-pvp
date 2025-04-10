@@ -270,14 +270,15 @@ local bones = {
     ["PH_R_Hand"] = 28422,
     ["FB_L_Lip_Corner_000"] = 29868,
     ["SKEL_Head"] = 31086,
-    ["IK_R_Foot"] = 35502,
+    
+    --["IK_R_Foot"] = 35502,
     ["RB_Neck_1"] = 35731,
     ["IK_L_Hand"] = 36029,
     ["SKEL_R_Calf"] = 36864,
-    ["RB_R_ArmRoll"] = 37119,
+    --["RB_R_ArmRoll"] = 37119,
     ["FB_Brow_Centre_000"] = 37193,
     ["SKEL_Neck_1"] = 39317,
-    ["SKEL_R_UpperArm"] = 40269,
+    --["SKEL_R_UpperArm"] = 40269,
     ["FB_R_Lid_Upper_000"] = 43536,
     ["RB_R_ForeArmRoll"] = 43810,
     ["SKEL_L_UpperArm"] = 45509,
@@ -418,7 +419,6 @@ function TooglePropsName()
                     local dst = #(GetEntityCoords(pPed) - coords)
                     if dst <= 15.0 then
                         if IsEntityOnScreen(v) then
-                            -- show a box around the prop, draw a text with the prop hash
                             local x, y, z = table.unpack(GetEntityCoords(v))
                             local heading = GetEntityHeading(v)
                             local rx, ry, rz = table.unpack(GetEntityRotation(v, 2))
@@ -583,7 +583,6 @@ function CreateBlips()
 end
 function ToogleGamerTag()
     tagBoucle = true
-    local perm
     GamerTag = {}
     Citizen.CreateThread(function()
         blips = {}
@@ -591,25 +590,26 @@ function ToogleGamerTag()
             for k, v in pairs(GetActivePlayers()) do
                 if #(p:pos() - GetEntityCoords(GetPlayerPed(v))) < 100.0 then
                     local serverId = GetPlayerServerId(v)
-                    if data_checked[serverId] == nil then
-                        perm = TriggerServerCallback("core:admin:getAdminData", serverId)
-                        data_checked[serverId] = perm
-                    else
-                        if data_checked[serverId].permission > 0 then
-                            data_checked[serverId] = TriggerServerCallback("core:admin:getAdminData", serverId)
+                    if not data_checked[serverId] or (data_checked[serverId].isStaff or data_checked[serverId].permission > 0) then
+                        local permData = TriggerServerCallback("core:admin:getAdminData", serverId)
+                        if permData then
+                            data_checked[serverId] = permData
+                        else
+                            data_checked[serverId] = { permission = 0, isStaff = false, isStaffMode = false } -- Valeurs par défaut
                         end
-                        perm = data_checked[serverId]
                     end
-
+                    
+                    -- Vérifie si la permission est valide
+                    local permissionLevel = data_checked[serverId].permission or 0
+                    local permissionData = _PERMISSION_ROLE[permissionLevel]
+                    
+                    -- Sécurité : Si la permission n'existe pas, utiliser une couleur par défaut
+                    local colorHex = permissionData and permissionData.colorHex or "FFFFFF"
+                    local prefix = permissionData and permissionData.prefix or "Joueur"
+                    
                     GamerTag[serverId] = CreateFakeMpGamerTag(GetPlayerPed(v),
-                        "[" ..
-                        serverId ..
-                        "<FONT color='#ffffff'>] [<FONT color='#" ..
-                        _PERMISSION_ROLE[perm.permission].colorHex ..
-                        "'>" ..
-                        _PERMISSION_ROLE[perm.permission].prefix .. "<FONT color='#ffffff'>] " .. GetPlayerName(v),
+                        "[" .. serverId .. "<FONT color='#ffffff'>] [<FONT color='#" .. colorHex .. "'>" .. prefix .. "<FONT color='#ffffff'>] " .. GetPlayerName(v),
                         false, false, "", 0)
-
 
                     SetMpGamerTagAlpha(GamerTag[serverId], 4, 255)
                     SetMpGamerTagAlpha(GamerTag[serverId], 2, 255)
@@ -619,7 +619,6 @@ function ToogleGamerTag()
                     SetMpGamerTagColour(GamerTag[serverId], 0, 0)
 
                     SetMpGamerTagVisibility(GamerTag[serverId], 4, isPlayerTalking)
-                    -- see the health
                     SetMpGamerTagVisibility(GamerTag[serverId], 2, true)
                     if IsPedInAnyVehicle(GetPlayerPed(GetPlayerFromServerId(serverId))) and GetPedInVehicleSeat(GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(serverId))), -1) == GetPlayerPed(GetPlayerFromServerId(serverId)) then
                         SetMpGamerTagVisibility(GamerTag[serverId], 8, true)
@@ -627,12 +626,8 @@ function ToogleGamerTag()
                         SetMpGamerTagVisibility(GamerTag[serverId], 8, false)
                     end
 
-                    if perm.isStaffMode then
-                        SetMpGamerTagVisibility(GamerTag[serverId], 7, true)
-                    else
-                        SetMpGamerTagVisibility(GamerTag[serverId], 7, false)
-                    end
-                    -- SetMpGamerTagVisibility(GamerTag[serverId], 7, true) -- VIP
+                    SetMpGamerTagVisibility(GamerTag[serverId], 7, data_checked[serverId].isStaffMode)
+
                 end
             end
             Wait(500)

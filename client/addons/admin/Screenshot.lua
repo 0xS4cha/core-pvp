@@ -30,7 +30,6 @@ function ShowScreenShot(link, type)
 end
 
 RegisterNetEvent('core:admin:ShowScreenshot', function(link, type)
-    Console.Success('ShowScreenshot', link, type)
     ShowScreenShot(link, type)
 end)
 
@@ -41,7 +40,6 @@ RegisterNetEvent('core:admin:SendScreenShot', function()
             local resp = json.decode(data)
             if resp ~= nil and resp.attachments ~= nil and resp.attachments[1] ~= nil and resp.attachments[1].proxy_url ~= nil then
                 SCREENSHOT_URL = resp.attachments[1].proxy_url
-                Console.Debug('SCREENSHOT_URL', SCREENSHOT_URL)
                 TriggerServerEvent('core:admin:SendScreenShot', SCREENSHOT_URL)
             end
         end)
@@ -54,7 +52,6 @@ RegisterNetEvent('core:admin:SendVideo', function(time)
             local resp = json.decode(data)
             if resp ~= nil then
                 local videoUrl = resp.attachments[1].proxy_url
-                Console.Debug('VIDEO_URL', videoUrl)
                 TriggerServerEvent('core:admin:SendScreenShot', videoUrl)
             end
 
@@ -62,12 +59,3 @@ RegisterNetEvent('core:admin:SendVideo', function(time)
 end)
 
 
-RegisterCommand("video", function()
-    -- duration, webhook
-    exports['screenshot-basic']:requestVideoUpload(5000,
-        "https://discord.com/api/webhooks/1077657680354758676/tg2wDi4Eqsepd8kE_1w81_O0m_dBQJb8XDh9kIzcl8huuFvRH7mI7UZrAkES5mvZKawb",
-        "files[]", function(data)
-        local videoUrl = json.decode(data).attachments[1].proxy_url
-        --TriggerServerEvent('core:admin:warning', Token, videoUrl, 'Aimbot')
-    end)
-end, false)

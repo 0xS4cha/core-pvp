@@ -127,3 +127,8 @@
     display: none;
 }
 
+
+#glassmorphism {
+    backdrop-filter: blur(0.75em);
+    -webkit-backdrop-filter: blur(0.75em);
+}

@@ -16,22 +16,22 @@ end)
 
 local function checkParams(entity, options)
     if not entity then
-        Console.Error('Entity is required to add an interaction')
+        Logger:error('INTERACTIONS', 'Entity is required to add an interaction')
         return
     else
         if type(entity) ~= 'number' then
-            Console.Error('Entity must be a number')
+            Logger:error('INTERACTIONS', 'Entity must be a number')
             return
         end
 
         if not DoesEntityExist(entity) then
-            Console.Error('Entity %s does not exist', entity)
+            Logger:error('INTERACTIONS', 'Entity %s does not exist', entity)
             return
         end
     end
 
     if not options then
-        Console.Error('Options are required to add an interaction')
+        Logger:error('INTERACTIONS', 'Options are required to add an interaction')
         return
     end
 
@@ -61,12 +61,12 @@ local function addModel(model, options, data)
     end
 
     if not IsModelValid(model) then
-        Console.Error('Model %s is not valid', model)
+        Logger:error('INTERACTIONS', 'Model %s is not valid', model)
         return
     end
 
     if not MODELS[model] then
-        Console.Log('Adding model %s to interactions', model)
+        Logger:info('INTERACTIONS', 'Adding model %s to interactions', model)
         MODELS[model] = {
             model = model,
             offset = data.offset,
@@ -76,7 +76,7 @@ local function addModel(model, options, data)
             resource = data.resource,
         }
     else
-        Console.Log(('Updating model %s in interactions'):format(model))
+        Logger:info('INTERACTIONS', ('Updating model %s in interactions'):format(model))
         for _, option in pairs(options) do
             MODELS[model].options[#MODELS[model].options + 1] = option
         end
@@ -102,12 +102,12 @@ end
 -- Add an interaction point at a set of coords
 function InteractAPI.addInteraction(data)
     if not data.coords then
-        Console.Error('Coords are required to add an interaction')
+        Logger:error('INTERACTIONS', 'Coords are required to add an interaction')
         return
     end
 
     if not data.options then
-        Console.Error('Options are required to add an interaction')
+        Logger:error('INTERACTIONS', 'Options are required to add an interaction')
         return
     end
 
@@ -142,7 +142,7 @@ function InteractAPI.addLocalEntityInteraction(data)
     local id = #interactions + 1
     -- If then entity not registered yet, add it
     if not ENTITIES[entity] then
-        Console.Debug(('Adding entity %s to interactions'):format(entity))
+        Logger:info('INTERACTIONS', ('Adding entity %s to interactions'):format(entity))
         
         interactions[id] = {
             id = id,
@@ -163,10 +163,10 @@ function InteractAPI.addLocalEntityInteraction(data)
     end
 
     -- If the entity is already registered, update it
-    Console.Log('Updating entity %s in interactions', entity)
+    Logger:info('INTERACTIONS', 'Updating entity %s in interactions', entity)
     for index, option in pairs(data.options) do
         if option.name and ENTITIES[entity].options[index]?.name == option.name then
-            Console.Log(('Option with name: ( %s ) already exists, updating'):format(option.name))
+            Logger:info('INTERACTIONS', ('Option with name: ( %s ) already exists, updating'):format(option.name))
             ENTITIES[entity].options[index] = option
         else
             ENTITIES[entity].options[#ENTITIES[entity].options + 1] = option
@@ -224,7 +224,7 @@ function InteractAPI.addEntityInteraction(data)
 
     -- If the entity is not networked, add it as a local entity
     if not NetworkGetEntityIsNetworked(entity) then
-        Console.Log(('Entity %s is not networked, adding as a local entity'):format(entity))
+        Logger:info('INTERACTIONS', ('Entity %s is not networked, adding as a local entity'):format(entity))
         data.entity = entity
         return InteractAPI.addLocalEntityInteraction(data)
     end
@@ -232,7 +232,7 @@ function InteractAPI.addEntityInteraction(data)
     -- If then netId not registered yet, add it
     --if not NETWORKED_ENTITIES[netId] then #TODO: REMETTRE
     if true then
-        Console.Log(('Adding networkID %s to interactions'):format(netId))
+        Logger:info('INTERACTIONS', ('Adding networkID %s to interactions'):format(netId))
 
         
         interactions[id] = {
@@ -254,10 +254,10 @@ function InteractAPI.addEntityInteraction(data)
     end
 
     -- If the networkID is already registered, update it
-    Console.Log(('Updating networkID %s in interactions'):format(netId))
+    Logger:info('INTERACTIONS', ('Updating networkID %s in interactions'):format(netId))
     for index, option in pairs(data.options) do
         if option.name and NETWORKED_ENTITIES[netId].options[index]?.name == option.name then
-            Console.Log(('Option with name: ( %s ) already exists, updating'):format(option.name))
+            Logger:info('INTERACTIONS', ('Option with name: ( %s ) already exists, updating'):format(option.name))
             NETWORKED_ENTITIES[netId].options[index] = option
         else
             NETWORKED_ENTITIES[netId].options[#NETWORKED_ENTITIES[netId].options + 1] = option
@@ -299,24 +299,24 @@ end exports('AddEntityInteraction', InteractAPI.addEntityInteraction)
 function InteractAPI.addEntityBoneInteraction(data)
  
     if not data.entity then
-        Console.Error('Entity is required to add an interaction')
+        Logger:error('INTERACTIONS', 'Entity is required to add an interaction')
         return
     end
 
     if not data.bone then
-        Console.Error('Bone is required to add an interaction')
+        Logger:error('INTERACTIONS', 'Bone is required to add an interaction')
         return
     end
 
     if not data.options then
-        Console.Error('Options are required to add an interaction')
+        Logger:error('INTERACTIONS', 'Options are required to add an interaction')
         return
     end
 
     -- temp workaround until table refactoring.
     local key = string.format('%s:%s', data.entity, data.bone)
     if not ENTITY_BONES[key] then
-        Console.Log(('Added new entity bone interaction: %s'):format(key))
+        Logger:info('INTERACTIONS', ('Added new entity bone interaction: %s'):format(key))
         ENTITY_BONES[key] = {
             entity = data.entity,
             bone = data.bone,
@@ -327,11 +327,11 @@ function InteractAPI.addEntityBoneInteraction(data)
             groups = data.groups or nil,
         }
     else
-        Console.Log(('Updating %s in bone interactions'):format(key))
+        Logger:info('INTERACTIONS', ('Updating %s in bone interactions'):format(key))
 
         for index, option in pairs(data.options) do
             if option.name and NETWORKED_ENTITIES[netId].options[index]?.name == option.name then
-                Console.Log(('Option with name: ( %s ) already exists, updating'):format(option.name))
+                Logger:info('INTERACTIONS', ('Option with name: ( %s ) already exists, updating'):format(option.name))
                 ENTITY_BONES[key].options[index] = option
             else
                 ENTITY_BONES[key].options[#ENTITY_BONES[key].options + 1] = option
@@ -352,7 +352,7 @@ function InteractAPI.addEntityBoneInteraction(data)
             ENTITY_BONES[key].offset = data.offset
         end
 
-        Console.Log(('Updated entity bone interaction: %s'):format(key))
+        Logger:info('INTERACTIONS', ('Updated entity bone interaction: %s'):format(key))
         ENTITY_BONES[key] = {
             entity = data.entity,
             bone = data.bone,
@@ -391,7 +391,7 @@ end exports('AddModelInteraction', InteractAPI.addModelInteraction)
 -- Remove an interaction point by id.
 function InteractAPI.removeInteraction(id)
     interactions[id] = nil
-    Console.Log(('Removed interaction %s'):format(id))
+    Logger:info('INTERACTIONS', ('Removed interaction %s'):format(id))
     filterInteractions()
 end 
 exports('RemoveInteraction', InteractAPI.removeInteraction)
@@ -413,7 +413,7 @@ end exports('RemoveInteractionByEntity', InteractAPI.removeInteractionByEntity)
 -- Remove an option from an interaction point by id.
 function InteractAPI.removeInteractionOption(id, name)
     if not interactions[id] then
-        Console.Error(('Interaction with id: ( %s ) does not exist'):format(id))
+        Logger:error('INTERACTIONS', ('Interaction with id: ( %s ) does not exist'):format(id))
         return
     end
 
@@ -425,7 +425,7 @@ function InteractAPI.removeInteractionOption(id, name)
     local options = interactions[id].options
 
     if not options then
-        Console.Error(('Interaction with id: ( %s ) does not have any options'):format(id))
+        Logger:error('INTERACTIONS', ('Interaction with id: ( %s ) does not have any options'):format(id))
         InteractAPI.removeInteraction(id)
         return
     end
@@ -435,7 +435,7 @@ function InteractAPI.removeInteractionOption(id, name)
 
         if option.name == name then
             options[i] = nil
-            Console.Log(('Removed option %s from interaction %s'):format(name, id))
+            Logger:info('INTERACTIONS', ('Removed option %s from interaction %s'):format(name, id))
         end
     end
 end exports('RemoveInteractionOption', InteractAPI.removeInteractionOption)
@@ -445,12 +445,12 @@ end exports('RemoveInteractionOption', InteractAPI.removeInteractionOption)
 -- Update an interaction point by id.
 function InteractAPI.updateInteraction(id, options)
     if not options then
-        Console.Error('Options are required to update an interaction')
+        Logger:error('INTERACTIONS', 'Options are required to update an interaction')
         return
     end
 
     if not interactions[id] then
-        Console.Error(('Interaction with id: ( %s ) does not exist'):format(id))
+        Logger:error('INTERACTIONS', ('Interaction with id: ( %s ) does not exist'):format(id))
         return
     end
 

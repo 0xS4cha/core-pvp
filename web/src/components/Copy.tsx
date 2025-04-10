@@ -19,12 +19,12 @@ const Copy = () => {
         try {
           const successful = document.execCommand("copy");
           if (successful) {
-            console.log(text);
+            console.log();
           } else {
-            console.error(text);
+            console.error();
           }
         } catch (err) {
-          console.error(text, err);
+          console.error(err);
         }
       
         document.body.removeChild(textArea);
